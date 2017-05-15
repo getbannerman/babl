@@ -1,0 +1,228 @@
+AllCops:
+  Include:
+    - Gemfile
+    - '**/*.babl'
+  TargetRubyVersion: 2.3
+
+# Begin -- Keep the following
+CaseIndentation:
+    EnforcedStyle: end
+
+Metrics/LineLength:
+    Max: 130
+
+Metrics/PerceivedComplexity:
+    Max: 12
+
+ParameterLists:
+    Max: 5
+    CountKeywordArgs: false
+
+Rails:
+    Enabled: False
+
+Style/AlignParameters:
+    EnforcedStyle: with_fixed_indentation
+
+Style/AndOr:
+    EnforcedStyle: conditionals
+
+Style/BlockDelimiters:
+    Enabled: False
+
+Style/CollectionMethods:
+    Enabled: True
+
+Style/Documentation:
+    Enabled: False
+
+Style/ExtraSpacing:
+    Enabled: True
+
+Style/IndentationWidth:
+    Width: 4
+
+Style/IndentHash:
+    EnforcedStyle: consistent
+
+Style/Lambda:
+    Enabled: False
+
+Style/MultilineIfModifier:
+    Enabled: False
+
+Style/MultilineOperationIndentation:
+    EnforcedStyle: indented
+
+Style/NumericLiterals:
+    Enabled: False
+
+Style/SignalException:
+    EnforcedStyle: only_raise
+# End -- Keep the following
+
+Lint/AmbiguousBlockAssociation:
+    Enabled: False
+
+Lint/EmptyWhen:
+    Enabled: False
+
+Lint/EndAlignment:
+    Enabled: False
+
+Lint/InheritException:
+    Enabled: False
+
+Lint/NestedMethodDefinition:
+    Enabled: False
+
+Lint/SafeNavigationChain:
+    Enabled: True
+
+Lint/UnneededSplatExpansion:
+    Enabled: False
+
+Lint/UselessAccessModifier:
+    Enabled: False
+
+
+Metrics/AbcSize:
+    Enabled: False
+    Max: 30
+
+Metrics/BlockLength:
+    Enabled: False
+    Max: 25
+
+Metrics/ClassLength:
+    Enabled: False
+    Max: 200
+
+Metrics/CyclomaticComplexity:
+    Enabled: False
+    Max: 10
+
+Metrics/MethodLength:
+    Enabled: False
+    Max: 20
+
+Metrics/ModuleLength:
+    Enabled: False
+
+
+Performance/Casecmp:
+    Enabled: False
+
+
+Rails/Blank:
+    Enabled: False
+
+Rails/Date:
+    Enabled: False
+
+Rails/DynamicFindBy:
+    Enabled: False
+
+Rails/FilePath:
+    Enabled: False
+
+Rails/PluralizationGrammar:
+    Enabled: False
+
+Rails/RelativeDateConstant:
+    Enabled: False
+
+Rails/SkipsModelValidations:
+    Enabled: False
+
+Rails/TimeZone:
+    Enabled: False
+
+
+Security/YAMLLoad:
+    Enabled: False
+
+
+Style/Alias:
+    Enabled: False
+
+Style/ConditionalAssignment:
+    Enabled: False
+
+Style/ClassVars:
+    Enabled: False
+
+Style/EmptyCaseCondition:
+    Enabled: False
+
+Style/EmptyLineAfterMagicComment:
+    Enabled: False
+
+Style/EmptyMethod:
+    Enabled: False
+
+Style/FileName:
+    Enabled: False
+
+Style/FrozenStringLiteralComment:
+    Enabled: False
+
+Style/GuardClause:
+    Enabled: False
+
+Style/IndentArray:
+    Enabled: False
+
+Style/IndentHeredoc:
+    Enabled: False
+
+Style/MixinGrouping:
+    Enabled: False
+
+Style/MultilineBlockChain:
+    Enabled: False
+
+Style/MultilineMemoization:
+    Enabled: False
+
+Style/MultilineMethodCallIndentation:
+    Enabled: False
+
+Style/MutableConstant:
+    Enabled: False
+
+Style/NestedParenthesizedCalls:
+    Enabled: False
+
+Style/Next:
+    Enabled: False
+
+Style/NumericPredicate:
+    Enabled: False
+
+Style/ParallelAssignment:
+    Enabled: False
+
+Style/RedundantParentheses:
+    Enabled: False
+
+Style/RedundantSelf:
+    Enabled: False
+
+Style/SafeNavigation:
+    Enabled: False
+
+Style/SingleLineBlockParams:
+    Enabled: False
+
+Style/CaseEquality:
+    Enabled: False
+
+Style/StringLiterals:
+    Enabled: False
+
+Style/SymbolArray:
+    Enabled: False
+
+Style/VariableNumber:
+    Enabled: False
