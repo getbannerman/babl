@@ -15,7 +15,7 @@ module Babl
                     when ::Proc then call(&arg)
                     when ::Hash then object(**arg.map { |k, v| [k.to_s.to_sym, v] }.to_h)
                     when ::Array then array(*arg)
-                    when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass then unscoped.static(arg)
+                    when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass then static(arg)
                     else raise ::Babl::InvalidTemplateError, "call() received invalid argument: #{arg}"
                     end
                 end
