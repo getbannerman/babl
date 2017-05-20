@@ -1,11 +1,7 @@
-require 'babl'
+require 'spec_helper'
 
-describe ::Babl::Template do
-    let(:dsl) { ::Babl::Template.new }
-    let(:compiled) { template.compile }
-    let(:json) { Oj.load(compiled.json(object)) }
-    let(:dependencies) { compiled.dependencies }
-    let(:documentation) { compiled.documentation }
+describe ::Babl::Operators::Pin do
+    include SpecHelper::Operators
 
     describe '#pin' do
         context 'simple pinning' do

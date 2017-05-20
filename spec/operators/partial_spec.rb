@@ -1,6 +1,8 @@
-require 'babl'
+require 'spec_helper'
 
 describe ::Babl::Operators::Partial do
+    include SpecHelper::Operators
+
     before {
         stub_const('TestLookupContext', Class.new {
             attr_reader :code, :childs
@@ -17,11 +19,6 @@ describe ::Babl::Operators::Partial do
             end
         })
     }
-
-    let(:dsl) { ::Babl::Template.new }
-    let(:compiled) { template.compile }
-    let(:json) { Oj.load(compiled.json(object)) }
-    let(:object) { { some_property: 12 } }
 
     let(:custom_lookup_context) {
         TestLookupContext.new(
@@ -40,6 +37,7 @@ describe ::Babl::Operators::Partial do
         )
     }
     let(:ctx_dsl) { dsl.with_lookup_context(custom_lookup_context) }
+    let(:object) { { some_property: 12 } }
 
     context 'missing partial' do
         let(:template) { ctx_dsl.partial('i_do_not_exist') }
