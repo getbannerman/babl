@@ -6,12 +6,17 @@ describe ::Babl::Operators::Call do
     describe '#call' do
         let(:object) { nil }
 
-        context 'false' do
+        context 'primitive' do
             let(:template) { dsl.call(false) }
 
             it { expect(json).to eq false }
             it { expect(dependencies).to eq({}) }
             it { expect(documentation).to eq false }
+
+            context 'call primitive after a conditional' do
+                let(:template) { dsl.nullable.call(34) }
+                it { expect(json).to eq nil }
+            end
         end
 
         context 'block' do
