@@ -64,7 +64,7 @@ As of today, the only compatible preloader implementation *has not been released
 
 ### Automatic documentation
 
-Support for automatic documentation is very limited, and the output is indecently ugly. It is more a proof-of-concept that a useful feature.
+Support for automatic documentation is very limited, and the output is indecently ugly. It is more a proof-of-concept than a useful feature.
 
 The mid-term goal is to generate a [JSON schema](http://json-schema.org/) documentation.
 
