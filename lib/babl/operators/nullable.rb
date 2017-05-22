@@ -5,10 +5,12 @@ module Babl
                 # Nullify the current construction if
                 # the current element is Nil.
                 def nullable
-                    switch(
-                        unscoped.nav(&:nil?) => nil,
-                        unscoped.default => unscoped.continue
-                    )
+                    source {
+                        switch(
+                            nav(&:nil?) => nil,
+                            default => continue
+                        )
+                    }
                 end
             end
         end
