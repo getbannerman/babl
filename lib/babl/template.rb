@@ -7,6 +7,7 @@ require 'babl/operators/each'
 require 'babl/operators/enter'
 require 'babl/operators/merge'
 require 'babl/operators/nav'
+require 'babl/operators/null'
 require 'babl/operators/nullable'
 require 'babl/operators/object'
 require 'babl/operators/parent'
@@ -35,6 +36,7 @@ module Babl
         include Operators::Enter::DSL
         include Operators::Merge::DSL
         include Operators::Nav::DSL
+        include Operators::Null::DSL
         include Operators::Nullable::DSL
         include Operators::Object::DSL
         include Operators::Parent::DSL

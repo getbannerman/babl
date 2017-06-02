@@ -5,7 +5,7 @@ module Babl
                 # To be used as a switch(...) condition. It is strictly equivalent to write 'true' instead,
                 # but convey more meaning.
                 def default
-                    unscoped.static(true)
+                    static(true)
                 end
 
                 # Return a special placeholder that can be used as a switch(...) value. It tells BABL to continue
