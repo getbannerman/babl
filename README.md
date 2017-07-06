@@ -4,7 +4,7 @@
 
 BABL (Bannerman API Builder Language) is a templating langage for generating JSON in APIs.
 
-It plays a role similar to [RABL](https://github.com/nesquena/rabl), [JBuilder](https://github.com/rails/jbuilder), [Grape Entity](https://github.com/ruby-grape/grape-entity), and many others. However, unlike existing tools, BABL has several advantages.
+It plays a role similar to [RABL](https://github.com/nesquena/rabl), [JBuilder](https://github.com/rails/jbuilder), [Grape Entity](https://github.com/ruby-grape/grape-entity), [AMS](https://github.com/rails-api/active_model_serializers), and many others. However, unlike existing tools, BABL has several advantages.
 
 
 ### Static compilation
@@ -50,11 +50,11 @@ Output:
 }
 ```
 
-Interestingly, this JSON output is also a valid BABL template. It makes it very easy to mix static JSON and dynamic content during developpement.
+Interestingly, this JSON output is also a valid BABL template. This property makes it very easy to mix static JSON and dynamic content during developpement.
 
 ## Documentation
 
-TODO
+Not yet available.
 
 ## Current limitations
 
@@ -68,7 +68,7 @@ As of today, the only compatible preloader implementation *has not been released
 
 Support for automatic documentation is very limited, and the output is indecently ugly. It is more a proof-of-concept than a useful feature.
 
-Mid-term goal is to generate a [JSON schema](http://json-schema.org/) documentation.
+Mid-term goal is to generate a [JSON schema](http://json-schema.org/).
 
 ### Rails integration
 

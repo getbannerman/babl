@@ -8,21 +8,12 @@ AllCops:
 CaseIndentation:
     EnforcedStyle: end
 
-Metrics/LineLength:
-    Max: 130
-
-Metrics/PerceivedComplexity:
-    Max: 12
-
 ParameterLists:
     Max: 5
     CountKeywordArgs: false
 
 Rails:
     Enabled: False
-
-Style/AlignParameters:
-    EnforcedStyle: with_fixed_indentation
 
 Style/AndOr:
     EnforcedStyle: conditionals
@@ -36,30 +27,44 @@ Style/CollectionMethods:
 Style/Documentation:
     Enabled: False
 
-Style/ExtraSpacing:
-    Enabled: True
-
-Style/IndentationWidth:
-    Width: 4
-
-Style/IndentHash:
-    EnforcedStyle: consistent
-
 Style/Lambda:
     Enabled: False
 
 Style/MultilineIfModifier:
     Enabled: False
 
-Style/MultilineOperationIndentation:
-    EnforcedStyle: indented
-
 Style/NumericLiterals:
     Enabled: False
 
 Style/SignalException:
     EnforcedStyle: only_raise
-# End -- Keep the following
+
+Layout/AlignParameters:
+    EnforcedStyle: with_fixed_indentation
+
+Layout/ExtraSpacing:
+    Enabled: True
+
+Layout/IndentationWidth:
+    Width: 4
+
+Layout/IndentHash:
+    EnforcedStyle: consistent
+
+Layout/MultilineOperationIndentation:
+    EnforcedStyle: indented
+
+Layout/EmptyLineAfterMagicComment:
+    Enabled: False
+
+Layout/IndentArray:
+    Enabled: False
+
+Layout/IndentHeredoc:
+    Enabled: False
+
+Layout/MultilineMethodCallIndentation:
+    Enabled: False
 
 Lint/AmbiguousBlockAssociation:
     Enabled: False
@@ -85,6 +90,11 @@ Lint/UnneededSplatExpansion:
 Lint/UselessAccessModifier:
     Enabled: False
 
+Metrics/LineLength:
+    Max: 130
+
+Metrics/PerceivedComplexity:
+    Max: 12
 
 Metrics/AbcSize:
     Enabled: False
@@ -109,39 +119,14 @@ Metrics/MethodLength:
 Metrics/ModuleLength:
     Enabled: False
 
-
 Performance/Casecmp:
-    Enabled: False
-
-
-Rails/Blank:
-    Enabled: False
-
-Rails/Date:
-    Enabled: False
-
-Rails/DynamicFindBy:
-    Enabled: False
-
-Rails/FilePath:
-    Enabled: False
-
-Rails/PluralizationGrammar:
-    Enabled: False
-
-Rails/RelativeDateConstant:
-    Enabled: False
-
-Rails/SkipsModelValidations:
     Enabled: False
 
 Rails/TimeZone:
     Enabled: False
 
-
 Security/YAMLLoad:
     Enabled: False
-
 
 Style/Alias:
     Enabled: False
@@ -153,9 +138,6 @@ Style/ClassVars:
     Enabled: False
 
 Style/EmptyCaseCondition:
-    Enabled: False
-
-Style/EmptyLineAfterMagicComment:
     Enabled: False
 
 Style/EmptyMethod:
@@ -170,12 +152,6 @@ Style/FrozenStringLiteralComment:
 Style/GuardClause:
     Enabled: False
 
-Style/IndentArray:
-    Enabled: False
-
-Style/IndentHeredoc:
-    Enabled: False
-
 Style/MixinGrouping:
     Enabled: False
 
@@ -183,9 +159,6 @@ Style/MultilineBlockChain:
     Enabled: False
 
 Style/MultilineMemoization:
-    Enabled: False
-
-Style/MultilineMethodCallIndentation:
     Enabled: False
 
 Style/MutableConstant:

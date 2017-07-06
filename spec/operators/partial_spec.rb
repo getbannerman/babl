@@ -3,23 +3,6 @@ require 'spec_helper'
 describe ::Babl::Operators::Partial do
     include SpecHelper::Operators
 
-    before {
-        stub_const('TestLookupContext', Class.new {
-            attr_reader :code, :childs
-
-            def initialize(code = nil, **childs)
-                @code = code
-                @childs = childs
-            end
-
-            def find(name)
-                name = name.to_sym
-                return unless childs[name]
-                [name.to_s, childs[name].code, childs[name]]
-            end
-        })
-    }
-
     let(:custom_lookup_context) {
         TestLookupContext.new(
             blabla: TestLookupContext.new(

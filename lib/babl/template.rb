@@ -5,6 +5,7 @@ require 'babl/operators/call'
 require 'babl/operators/dep'
 require 'babl/operators/each'
 require 'babl/operators/enter'
+require 'babl/operators/extends'
 require 'babl/operators/merge'
 require 'babl/operators/nav'
 require 'babl/operators/null'
@@ -34,6 +35,7 @@ module Babl
         include Operators::Dep::DSL
         include Operators::Each::DSL
         include Operators::Enter::DSL
+        include Operators::Extends::DSL
         include Operators::Merge::DSL
         include Operators::Nav::DSL
         include Operators::Null::DSL
