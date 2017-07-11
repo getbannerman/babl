@@ -42,8 +42,9 @@ module Babl
             def render_array(array, stack)
                 array.each_with_index.map { |obj, index|
                     stack.push index
-                    render_object(obj, stack)
+                    out = render_object(obj, stack)
                     stack.pop
+                    out
                 }
             end
 

@@ -42,8 +42,9 @@ describe Babl::Operators::Nav do
         end
 
         context 'block navigation' do
-            let(:object) { 42 }
             template { nav { |x| x * 2 } }
+
+            let(:object) { 42 }
 
             it { expect(json).to eq(84) }
             it { expect(dependencies).to eq({}) }
@@ -57,6 +58,13 @@ describe Babl::Operators::Nav do
         context '#nav should stop key propagation for #enter' do
             template { object(a: nav._) }
             it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
+        end
+
+        context 'nav to array of complex objects' do
+            template { nav(:arr) }
+            let(:object) { { arr: [nil, 1, 'lol', { a: [1] }, [], {}, true, false] } }
+            it { expect(json).to eq([nil, 1, 'lol', { 'a' => [1] }, [], {}, true, false]) }
+            it { expect(schema).to eq s_anything }
         end
     end
 end
