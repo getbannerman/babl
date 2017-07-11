@@ -1,18 +1,14 @@
 require 'spec_helper'
 
-describe ::Babl::Operators::Dep do
-    include SpecHelper::Operators
+describe Babl::Operators::Dep do
+    extend SpecHelper::OperatorTesting
 
     describe '#dep' do
-        let(:template) {
-            dsl.source {
-                dep(a: [:b, :c]).nav(:b).dep(x: :y).nav(:z)
-            }
-        }
+        template { dep(a: [:b, :c]).nav(:b).dep(x: :y).nav(:z) }
 
         let(:object) { { b: { z: 42 } } }
 
-        it { expect(documentation).to eq :__value__ }
+        it { expect(schema).to eq s_anything }
         it { expect(dependencies).to eq(a: { b: {}, c: {} }, b: { x: { y: {} }, z: {} }) }
         it { expect(json).to eq(42) }
     end

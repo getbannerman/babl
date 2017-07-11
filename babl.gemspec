@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), 'lib/babl/version')
 
 Gem::Specification.new do |gem|
     gem.name          = "babl-json"
-    gem.version       = ::Babl::VERSION
+    gem.version       = Babl::VERSION
     gem.licenses      = ['MIT']
     gem.authors       = ['Frederic Terrazzoni']
     gem.email         = ['frederic.terrazzoni@gmail.com']
@@ -18,6 +18,8 @@ Gem::Specification.new do |gem|
     gem.add_development_dependency 'pry', '~> 0'
     gem.add_development_dependency 'rspec', '~> 3'
     gem.add_development_dependency 'rubocop', '~> 0.48'
+    gem.add_development_dependency 'json-schema', '~> 2.8'
 
     gem.add_dependency 'oj', '~> 3.0'
+    gem.add_dependency 'values', '~> 1.8'
 end

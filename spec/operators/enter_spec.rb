@@ -1,24 +1,26 @@
 require 'spec_helper'
 
-describe ::Babl::Operators::Enter do
-    include SpecHelper::Operators
+describe Babl::Operators::Enter do
+    extend SpecHelper::OperatorTesting
 
     describe '#enter' do
         context 'invalid usage' do
-            let(:template) { dsl.source { enter } }
-            it { expect { compiled }.to raise_error Babl::InvalidTemplateError }
+            template { enter }
+
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
         end
 
         context 'valid usage' do
-            let(:template) { dsl.source { object(a: enter) } }
+            template { object(a: enter) }
+
             let(:object) { { a: 42 } }
 
-            it { expect(documentation).to eq(a: :__value__) }
+            it { expect(schema).to eq(s_object(s_property(:a, s_anything))) }
             it { expect(dependencies).to eq(a: {}) }
             it { expect(json).to eq('a' => 42) }
 
             context 'using alias' do
-                let(:template) { dsl.source { object(a: _) } }
+                template { object(a: _) }
                 it { expect(json).to eq('a' => 42) }
             end
         end

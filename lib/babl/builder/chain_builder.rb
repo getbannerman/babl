@@ -1,3 +1,7 @@
+require 'babl/nodes/internal_value'
+require 'babl/nodes/terminal_value'
+require 'babl/errors'
+
 module Babl
     module Builder
         # Builder provides a simple framework for defining & chaining BABL's operators easily.
@@ -36,8 +40,8 @@ module Babl
             # Append a terminal operator, and return a new Builder object
             def construct_terminal
                 construct_node do |node, context|
-                    unless [Rendering::InternalValueNode.instance, Rendering::TerminalValueNode.instance].include?(node)
-                        raise ::Babl::InvalidTemplateError, 'Chaining is not allowed after a terminal operator'
+                    unless [Nodes::InternalValue.instance, Nodes::TerminalValue.instance].include?(node)
+                        raise Errors::InvalidTemplateError, 'Chaining is not allowed after a terminal operator'
                     end
                     yield context
                 end

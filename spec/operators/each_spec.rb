@@ -1,23 +1,42 @@
 require 'spec_helper'
 
-describe ::Babl::Operators::Each do
-    include SpecHelper::Operators
+describe Babl::Operators::Each do
+    extend SpecHelper::OperatorTesting
 
     describe '#each' do
         context 'when everything is fine' do
-            let(:template) { dsl.source { each.nav(:a) } }
+            template { each.nav(:a) }
+
             let(:object) { [{ a: 3 }, { a: 2 }, { a: 1 }] }
 
             it { expect(json).to eq [3, 2, 1] }
             it { expect(dependencies).to eq(__each__: { a: {} }) }
-            it { expect(documentation).to eq [:__value__] }
+            it { expect(schema).to eq s_dyn_array(s_anything) }
         end
 
         context 'error while navigating' do
+            template { nav(:box).each.nav(:trololol) }
+
             let(:object) { { box: [{ trololol: 2 }, 42] } }
-            let(:template) { dsl.source { nav(:box).each.nav(:trololol) } }
 
             it { expect { json }.to raise_error(/\__root__\.box\.1\.trololol/) }
+        end
+
+        context 'not enumerable' do
+            template { nav(:lol).each }
+
+            let(:object) { { lol: 'not enumerable' } }
+
+            it { expect { json }.to raise_error(Babl::Errors::RenderingError, /\__root__\.lol/) }
+        end
+
+        context 'nullable array' do
+            template { nullable.each.nullable.object }
+
+            let(:object) { [1, nil] }
+
+            it { expect(json).to eq [{}, nil] }
+            it { expect(schema).to eq s_dyn_array(s_object(nullable: true), nullable: true) }
         end
     end
 end

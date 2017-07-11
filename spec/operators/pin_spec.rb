@@ -1,18 +1,16 @@
 require 'spec_helper'
 
-describe ::Babl::Operators::Pin do
-    include SpecHelper::Operators
+describe Babl::Operators::Pin do
+    extend SpecHelper::OperatorTesting
 
     describe '#pin' do
         context 'simple pinning' do
-            let(:template) {
-                dsl.source {
-                    nav(:a).pin { |a|
-                        nav(:b).object(
-                            x: _,
-                            y: a.nav(:y)
-                        )
-                    }
+            template {
+                nav(:a).pin { |a|
+                    nav(:b).object(
+                        x: _,
+                        y: a.nav(:y)
+                    )
                 }
             }
 
@@ -22,15 +20,20 @@ describe ::Babl::Operators::Pin do
 
             it { expect(json).to eq('x' => 42, 'y' => 13) }
             it { expect(dependencies).to eq(a: { y: {}, b: { x: {} } }) }
-            it { expect(documentation).to eq(x: :__value__, y: :__value__) }
+            it {
+                expect(schema).to eq(
+                    s_object(
+                        s_property(:x, s_anything),
+                        s_property(:y, s_anything)
+                    )
+                )
+            }
         end
 
         context 'when visiting parent from pin' do
-            let(:template) {
-                dsl.source {
-                    nav(:a).pin { |p1|
-                        object(x: _, y: p1.parent.pin { |p2| p2.nav(:a, :b) })
-                    }
+            template {
+                nav(:a).pin { |p1|
+                    object(x: _, y: p1.parent.pin { |p2| p2.nav(:a, :b) })
                 }
             }
 
@@ -38,32 +41,35 @@ describe ::Babl::Operators::Pin do
 
             it { expect(json).to eq('x' => 12, 'y' => 42) }
             it { expect(dependencies).to eq(a: { x: {}, b: {} }) }
-            it { expect(documentation).to eq(x: :__value__, y: :__value__) }
+            it {
+                expect(schema).to eq(
+                    s_object(
+                        s_property(:x, s_anything),
+                        s_property(:y, s_anything)
+                    )
+                )
+            }
         end
 
         context 'when pinning is misused (out of context)' do
-            let(:template) {
-                dsl.source {
-                    pinref = nil
-                    object(
-                        a: pin { |p| pinref = p },
-                        b: pinref.nav(:lol)
-                    )
-                }
+            template {
+                pinref = nil
+                object(
+                    a: pin { |p| pinref = p },
+                    b: pinref.nav(:lol)
+                )
             }
 
-            it { expect { compiled }.to raise_error Babl::InvalidTemplateError }
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
         end
 
         context 'when pinning is mixed with a "with" context' do
-            let(:template) {
-                dsl.source {
-                    pin { |root|
-                        with(:a) { |a| a }.object(
-                            x: _,
-                            y: root.nav(:lol)
-                        )
-                    }
+            template {
+                pin { |root|
+                    with(:a) { |a| a }.object(
+                        x: _,
+                        y: root.nav(:lol)
+                    )
                 }
             }
 
@@ -71,35 +77,48 @@ describe ::Babl::Operators::Pin do
 
             it { expect(json).to eq('x' => 34, 'y' => 1) }
             it { expect(dependencies).to eq(a: {}, lol: {}) }
-            it { expect(documentation).to eq(x: :__value__, y: :__value__) }
+            it {
+                expect(schema).to eq(
+                    s_object(
+                        s_property(:x, s_anything),
+                        s_property(:y, s_anything)
+                    )
+                )
+            }
         end
 
         context 'navigating pinning' do
-            let(:template) {
-                dsl.source {
-                    pin(:timezone) { |timezone| object(applicant: _.object(:id, tz: timezone)) }
-                }
+            template {
+                pin(:timezone) { |timezone| object(applicant: _.object(:id, tz: timezone)) }
             }
 
             let(:object) { { applicant: { id: 1 }, timezone: 'LA' } }
 
             it { expect(json).to eq('applicant' => { 'id' => 1, 'tz' => 'LA' }) }
             it { expect(dependencies).to eq(timezone: {}, applicant: { id: {} }) }
-            it { expect(documentation).to eq(applicant: { id: :__value__, tz: :__value__ }) }
+            it {
+                expect(schema).to eq(
+                    s_object(
+                        s_property(:applicant,
+                            s_object(
+                                s_property(:id, s_anything),
+                                s_property(:tz, s_anything)
+                            ))
+                    )
+                )
+            }
         end
 
         context 'pin used twice in same chain' do
-            let(:template) {
-                dsl.source {
-                    nav(:a).pin { |a|
-                        object(
-                            h: nav(:h),
-                            a: a.object(
-                                x: _,
-                                y: a.nav(:lol).parent.nav(:mdr)
-                            )
+            template {
+                nav(:a).pin { |a|
+                    object(
+                        h: nav(:h),
+                        a: a.object(
+                            x: _,
+                            y: a.nav(:lol).parent.nav(:mdr)
                         )
-                    }
+                    )
                 }
             }
 
@@ -107,19 +126,31 @@ describe ::Babl::Operators::Pin do
 
             it { expect(json).to eq('h' => 42, 'a' => { 'x' => 13, 'y' => 34 }) }
             it { expect(dependencies).to eq(a: { h: {}, x: {}, lol: {}, mdr: {} }) }
-            it { expect(documentation).to eq(h: :__value__, a: { x: :__value__, y: :__value__ }) }
+
+            it {
+                expect(schema).to eq(
+                    s_object(
+                        s_property(
+                            :a,
+                            s_object(
+                                s_property(:x, s_anything),
+                                s_property(:y, s_anything)
+                            )
+                        ),
+                        s_property(:h, s_anything)
+                    )
+                )
+            }
         end
 
         context 'nested pinning' do
-            let(:template) {
-                dsl.source {
-                    pin { |root|
-                        nav(:a).pin { |a|
-                            object(
-                                a: a.nav(:x),
-                                root: root.nav(:y)
-                            )
-                        }
+            template {
+                pin { |root|
+                    nav(:a).pin { |a|
+                        object(
+                            a: a.nav(:x),
+                            root: root.nav(:y)
+                        )
                     }
                 }
             }
@@ -127,7 +158,15 @@ describe ::Babl::Operators::Pin do
             let(:object) { { a: { x: 42 }, y: 13 } }
 
             it { expect(json).to eq('a' => 42, 'root' => 13) }
-            it { expect(documentation).to eq(a: :__value__, root: :__value__) }
+
+            it {
+                expect(schema).to eq(
+                    s_object(
+                        s_property(:a, s_anything),
+                        s_property(:root, s_anything)
+                    )
+                )
+            }
         end
     end
 end

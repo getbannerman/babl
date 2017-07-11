@@ -1,12 +1,10 @@
 require 'babl/railtie' if defined?(Rails)
 require 'babl/template'
 require 'babl/version'
+require 'babl/rendering/noop_preloader'
+require 'babl/operators/partial'
 
 module Babl
-    class BablError < StandardError; end
-    class InvalidTemplateError < BablError; end
-    class RenderingError < BablError; end
-
     class Config
         attr_accessor :search_path, :preloader, :pretty
 
@@ -18,9 +16,9 @@ module Babl
     end
 
     class << self
-        def compile(template: ::Babl::Template.new, &source)
+        def compile(template: Babl::Template.new, &source)
             if config.search_path
-                ctx = ::Babl::Operators::Partial::AbsoluteLookupContext.new(config.search_path)
+                ctx = Babl::Operators::Partial::AbsoluteLookupContext.new(config.search_path)
                 template = template.with_lookup_context(ctx)
             end
 

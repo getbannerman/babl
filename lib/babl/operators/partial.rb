@@ -1,3 +1,5 @@
+require 'babl/errors'
+
 module Babl
     module Operators
         module Partial
@@ -5,10 +7,10 @@ module Babl
                 # Load a partial template given its name
                 # A 'lookup_context' must be defined
                 def partial(partial_name)
-                    raise InvalidTemplateError, "Cannot use partial without lookup context" unless lookup_context
+                    raise Errors::InvalidTemplateError, "Cannot use partial without lookup context" unless lookup_context
 
                     path, source, partial_lookup_context = lookup_context.find(partial_name)
-                    raise InvalidTemplateError, "Cannot find partial '#{partial_name}'" unless path
+                    raise Errors::InvalidTemplateError, "Cannot find partial '#{partial_name}'" unless path
 
                     with_lookup_context(partial_lookup_context)
                         .source(source, path, 0)

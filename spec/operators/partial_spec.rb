@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe ::Babl::Operators::Partial do
-    include SpecHelper::Operators
+describe Babl::Operators::Partial do
+    extend SpecHelper::OperatorTesting
 
     let(:custom_lookup_context) {
         TestLookupContext.new(
@@ -19,16 +19,18 @@ describe ::Babl::Operators::Partial do
             )
         )
     }
-    let(:ctx_dsl) { dsl.with_lookup_context(custom_lookup_context) }
+    let(:dsl) { Babl::Template.new.with_lookup_context(custom_lookup_context) }
     let(:object) { { some_property: 12 } }
 
     context 'missing partial' do
-        let(:template) { ctx_dsl.partial('i_do_not_exist') }
-        it { expect { compiled }.to raise_error Babl::InvalidTemplateError }
+        template { partial('i_do_not_exist') }
+
+        it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
     end
 
     context 'found partial' do
-        let(:template) { ctx_dsl.partial('blabla') }
+        template { partial('blabla') }
+
         it { expect(json).to eq [13, 23] }
     end
 end

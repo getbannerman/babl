@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe ::Babl::Operators::Nav do
-    include SpecHelper::Operators
+describe Babl::Operators::Nav do
+    extend SpecHelper::OperatorTesting
 
     describe '#nav' do
-        let(:template) { dsl.source { nav(:a) } }
+        template { nav(:a) }
 
         context 'hash navigation' do
             let(:object) { { a: 42 } }
@@ -12,15 +12,27 @@ describe ::Babl::Operators::Nav do
             it { expect(dependencies).to eq(a: {}) }
 
             context 'block navigation propagate dependency chain' do
-                let(:template) { dsl.source { nav(:a).nav(:to_i) } }
+                template { nav(:a).nav(:to_i) }
                 it { expect(dependencies).to eq(a: { to_i: {} }) }
             end
         end
 
         context 'navigate to non serializable' do
-            let(:template) { dsl.source { nav(:a) } }
+            template { nav(:a) }
             let(:object) { { a: :test } }
-            it { expect { json }.to raise_error Babl::RenderingError }
+            it { expect { json }.to raise_error Babl::Errors::RenderingError }
+        end
+
+        context 'navigate to non serializable in nested object' do
+            template { nav(:a) }
+            let(:object) { { a: { b: [1, 2, { c: 1, d: Object.new }] } } }
+            it { expect { json }.to raise_error Babl::Errors::RenderingError, /\__root__\.a\.b\.2\.d/ }
+        end
+
+        context 'navigate to non serializable in nested object with invalid key' do
+            template { nav(:a) }
+            let(:object) { { a: { b: [1, 2, { c: 1, Object.new => 1 }] } } }
+            it { expect { json }.to raise_error Babl::Errors::RenderingError, /\__root__\.a\.b\.2/ }
         end
 
         context 'object navigation' do
@@ -31,20 +43,20 @@ describe ::Babl::Operators::Nav do
 
         context 'block navigation' do
             let(:object) { 42 }
-            let(:template) { dsl.source { nav { |x| x * 2 } } }
+            template { nav { |x| x * 2 } }
 
             it { expect(json).to eq(84) }
             it { expect(dependencies).to eq({}) }
 
             context 'block navigation breaks dependency chain' do
-                let(:template) { dsl.source { nav { |x| x * 2 }.nav(:to_i) } }
+                template { nav { |x| x * 2 }.nav(:to_i) }
                 it { expect(dependencies).to eq({}) }
             end
         end
 
         context '#nav should stop key propagation for #enter' do
-            let(:template) { dsl.source { object(a: nav._) } }
-            it { expect { compiled }.to raise_error Babl::InvalidTemplateError }
+            template { object(a: nav._) }
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
         end
     end
 end

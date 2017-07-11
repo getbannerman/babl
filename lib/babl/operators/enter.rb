@@ -1,3 +1,5 @@
+require 'babl/errors'
+
 module Babl
     module Operators
         module Enter
@@ -7,8 +9,8 @@ module Babl
                 def enter
                     construct_node(key: nil, continue: nil) { |node, context|
                         key = context[:key]
-                        raise InvalidTemplateError, "No key to enter into" unless key
-                        Nav::NavNode.new(key, node)
+                        raise Errors::InvalidTemplateError, "No key to enter into" unless key
+                        Nodes::Nav.new(key, node)
                     }
                 end
 

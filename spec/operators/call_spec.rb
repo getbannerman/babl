@@ -1,62 +1,64 @@
 require 'spec_helper'
 
-describe ::Babl::Operators::Call do
-    include SpecHelper::Operators
+describe Babl::Operators::Call do
+    extend SpecHelper::OperatorTesting
 
     describe '#call' do
-        let(:object) { nil }
-
         context 'primitive' do
-            let(:template) { dsl.call(false) }
+            template { call(false) }
 
             it { expect(json).to eq false }
             it { expect(dependencies).to eq({}) }
-            it { expect(documentation).to eq false }
+            it { expect(schema).to eq s_static(false) }
 
             context 'call primitive after a conditional' do
-                let(:template) { dsl.nullable.call(34) }
+                template { nullable.call(34) }
+
                 it { expect(json).to eq nil }
             end
         end
 
         context 'block' do
+            template { call { self * 2 } }
+
             let(:object) { 2 }
-            let(:template) { dsl.call { self * 2 } }
 
             it { expect(json).to eq 4 }
         end
 
         context 'hash' do
-            let(:object) { nil }
-            let(:template) { dsl.call('a' => 1, b: 2) }
+            template { call('a' => 1, b: 2) }
 
             it { expect(json).to eq('a' => 1, 'b' => 2) }
             it { expect(dependencies).to eq({}) }
         end
 
         context 'array' do
+            template { call(['a', 2, :b]) }
+
             let(:object) { { b: 42 } }
-            let(:template) { dsl.call(['a', 2, :b]) }
 
             it { expect(json).to eq(['a', 2, 42]) }
             it { expect(dependencies).to eq(b: {}) }
         end
 
         context 'block' do
+            template { call(:lol) }
+
             let(:object) { OpenStruct.new(lol: 'tam') }
-            let(:template) { dsl.call(:lol) }
 
             it { expect(json).to eq 'tam' }
             it { expect(dependencies).to eq(lol: {}) }
         end
 
         context 'template' do
+            template { object(coucou: nav(:a).call(nav(:b))) }
+
             let(:object) { OpenStruct.new(a: OpenStruct.new(b: 1)) }
-            let(:template) { dsl.source { object(coucou: nav(:a).call(nav(:b))) } }
 
             it { expect(dependencies).to eq(a: { b: {} }) }
             it { expect(json).to eq('coucou' => 1) }
-            it { expect(documentation).to eq(coucou: :__value__) }
+            it { expect(schema).to eq(s_object(s_property(:coucou, s_anything))) }
         end
     end
 end

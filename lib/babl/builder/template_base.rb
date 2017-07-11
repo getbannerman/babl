@@ -1,3 +1,8 @@
+require 'babl/nodes/terminal_value'
+require 'babl/builder/chain_builder'
+require 'babl/rendering/compiled_template'
+require 'babl/rendering/noop_preloader'
+
 module Babl
     module Builder
         # TemplateBase is a thin wrapper around Builder.
@@ -9,8 +14,16 @@ module Babl
                 @builder = builder
             end
 
-            def compile(**options)
-                Rendering::CompiledTemplate.new(precompile, **options)
+            def compile(preloader: Rendering::NoopPreloader, pretty: true)
+                node = precompile
+
+                Rendering::CompiledTemplate.with(
+                    preloader: preloader,
+                    pretty: pretty,
+                    node: node,
+                    dependencies: node.dependencies,
+                    json_schema: node.schema.json
+                )
             end
 
             protected
@@ -20,7 +33,7 @@ module Babl
             end
 
             def precompile
-                builder.precompile(Babl::Rendering::TerminalValueNode.instance)
+                builder.precompile(Nodes::TerminalValue.instance)
             end
 
             def construct_node(**new_context, &block)

@@ -1,9 +1,11 @@
+require 'babl/errors'
+
 module Babl
     module Rendering
         # The rendering context stores the 'current' object.
         # Additionally, the context also:
-        # - Keep a reference to the parent context, in order to implement the parent operation (ParentNode)
-        # - Keep a reference to all pinned contexts, in order to goto a pinned context at any time (GotoPinNode)
+        # - Keep a reference to the parent context, in order to implement the parent operation (Parent)
+        # - Keep a reference to all pinned contexts, in order to goto a pinned context at any time (GotoPin)
         #
         # It is important to keep this object as small as possible, since an instance is created each time
         # we navigate into a property.
@@ -24,14 +26,14 @@ module Babl
 
             # Go back to parent
             def move_backward
-                raise Babl::RenderingError, 'There is no parent element' unless parent
+                raise Errors::RenderingError, 'There is no parent element' unless parent
                 Context.new(parent.object, parent.key, parent.parent, pins)
             end
 
             # Go to a pinned context
             def goto_pin(ref)
                 pin = pins&.[](ref)
-                raise Babl::RenderingError, 'Pin reference cannot be used here' unless pin
+                raise Errors::RenderingError, 'Pin reference cannot be used here' unless pin
                 Context.new(pin.object, pin.key, pin.parent, (pin.pins || {}).merge(pins))
             end
 
@@ -42,13 +44,17 @@ module Babl
 
             # Wrapper around #move_forward navigating into the return value of
             # the block. However, if an error occurs, it is wrapped in a
-            # Babl::RenderingError and the navigation stack trace is added
+            # RenderingError and the navigation stack trace is added
             # to the error message.
             def move_forward_block(key)
                 move_forward(yield, key)
             rescue StandardError => e
-                stack_trace = ([:__root__] + stack + [key]).join('.')
-                raise Babl::RenderingError, "#{e.message}\nBABL @ #{stack_trace}", e.backtrace
+                raise Errors::RenderingError, "#{e.message}\n" + formatted_stack(key), e.backtrace
+            end
+
+            def formatted_stack(*additional_stack_items)
+                stack_trace = ([:__root__] + stack + additional_stack_items).join('.')
+                "BABL @ #{stack_trace}"
             end
 
             # Return an array containing the navigation history

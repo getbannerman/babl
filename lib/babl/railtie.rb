@@ -12,7 +12,7 @@ module Babl
                     # template somewhere. However, I've not yet measured how much like is wasted.
                     # Maybe it is negligible ?
                     <<~RUBY
-                        ::Babl.compile { #{template.source} }.json(local_assigns)
+                        Babl.compile { #{template.source} }.json(local_assigns)
                     RUBY
                 end
             end
@@ -22,7 +22,7 @@ module Babl
     class Railtie < Rails::Railtie
         initializer "babl.initialize" do
             ActiveSupport.on_load(:action_view) do
-                ::ActionView::Template.register_template_handler(:babl, ::Babl::ActionView::Template::Handler)
+                ::ActionView::Template.register_template_handler(:babl, Babl::ActionView::Template::Handler)
             end
         end
     end
