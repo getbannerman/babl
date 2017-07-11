@@ -1,5 +1,9 @@
 # BABL Changelog
 
+## 0.2.1 (July 11, 2017)
+
+- Fix: array serialization is broken.
+
 ## 0.2.0 (July 11, 2017)
 
 - Added support for producing documentation using [JSON-Schema](http://json-schema.org/).
@@ -16,9 +20,9 @@
 
 ## 0.1.2 (May 22, 2017)
 
-- Fixed a bug in `call(primitive)`
-- Improved test suite
+- Fixed a bug in `call(primitive)`.
+- Improved test suite.
 
 ## 0.1.1 (May 16, 2017)
 
-- First released version
+- First released version.
