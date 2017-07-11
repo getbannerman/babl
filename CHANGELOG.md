@@ -1,5 +1,11 @@
 # BABL Changelog
 
+## 0.2.0 (July 11, 2017)
+
+- Added support for producing documentation using [JSON-Schema](http://json-schema.org/).
+- Improved some error messages occurring during rendering phase.
+- Stricter validation of templates passed to the `merge` operator. Compilation will fail if at least one of them is not producing object.
+
 ## 0.1.4 (July 6, 2017)
 
 - Added operator `extends`, to simplify the common usage pattern `merge(partial(...), ...)`.

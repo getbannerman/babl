@@ -66,9 +66,7 @@ As of today, the only compatible preloader implementation *has not been released
 
 ### Automatic documentation
 
-Support for automatic documentation is very limited, and the output is indecently ugly. It is more a proof-of-concept than a useful feature.
-
-Mid-term goal is to generate a [JSON schema](http://json-schema.org/).
+The structure of the JSON produced by a BABL template can be documentated using [JSON-Schema](http://json-schema.org/).
 
 ### Rails integration
 
