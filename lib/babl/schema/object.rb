@@ -3,13 +3,16 @@ require 'set'
 
 module Babl
     module Schema
-        class Object < Value.new(:property_set, :additional, :nullable)
+        class Object < Value.new(:property_set, :additional)
             attr_reader :properties
 
-            def initialize(properties, additional, nullable)
+            def initialize(properties, additional)
                 @properties = properties
-                super(properties.to_set, additional, nullable)
+                super(properties.to_set, additional)
             end
+
+            EMPTY = new([], false)
+            EMPTY_WITH_ADDITIONAL = new([], true)
 
             class Property < Value.new(:name, :value, :required)
                 def initialize(name, value, required)
@@ -17,11 +20,8 @@ module Babl
                 end
             end
 
-            EMPTY = new([], false, false)
-            EMPTY_WITH_ADDITIONAL = new([], true, false)
-
             def json
-                { type: nullable ? %w[object null] : 'object' }.tap { |out|
+                { type: 'object' }.tap { |out|
                     next if properties.empty?
                     out[:properties] = properties.map { |property| [property.name, property.value.json] }.to_h
                     out[:additionalProperties] = additional

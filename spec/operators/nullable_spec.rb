@@ -19,7 +19,7 @@ describe Babl::Operators::Nullable do
             expect(schema).to eq(
                 s_object(
                     s_property(:nullprop, s_anything),
-                    s_property(:notnullprop, s_object(s_property(:abc, s_anything), nullable: true))
+                    s_property(:notnullprop, s_any_of(s_object(s_property(:abc, s_anything)), s_null))
                 )
             )
         }

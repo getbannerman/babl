@@ -53,11 +53,11 @@ module Babl
             # on left, right or both sides.
             def merge_extended(doc1, doc2)
                 # Ensure doc1 & doc2 are both Schema::AnyOf
-                doc1ext = Schema::AnyOf.new([doc1])
-                doc2ext = Schema::AnyOf.new([doc2])
+                choices1 = Schema::AnyOf === doc1 ? doc1.choices : [doc1]
+                choices2 = Schema::AnyOf === doc2 ? doc2.choices : [doc2]
 
                 # Generate all possible combinations
-                all_docs = doc1ext.choices.product(doc2ext.choices)
+                all_docs = choices1.product(choices2)
                     .map { |choice1, choice2| merge_doc(choice1, choice2) }
 
                 # Analyze each property accross all combination to
@@ -68,13 +68,13 @@ module Babl
                     .map do |name, properties|
                     Schema::Object::Property.new(
                         name,
-                        Schema::AnyOf.new(properties.map(&:value)).simplify,
+                        Schema::AnyOf.canonical(properties.map(&:value)),
                         properties.size == all_docs.size && properties.all?(&:required)
                     )
                 end
 
                 # Generate the final Schema::Object
-                Schema::Object.new(final_properties, all_docs.any?(&:additional), false)
+                Schema::Object.new(final_properties, all_docs.any?(&:additional))
             end
 
             # Merge two Schema::Object
@@ -86,14 +86,14 @@ module Babl
                     doc2.properties
                 ).each_with_object({}) { |property, acc| acc[property.name] = property }.values
 
-                Schema::Object.new properties, additional, false
+                Schema::Object.new(properties, additional)
             end
 
             # Rewrite a property to allow Schema::Anything as value
             def allow_anything(property)
                 Schema::Object::Property.new(
                     property.name,
-                    Schema::AnyOf.new([property.value, Schema::Anything.instance]).simplify,
+                    Schema::AnyOf.canonical([property.value, Schema::Anything.instance]),
                     property.required
                 )
             end

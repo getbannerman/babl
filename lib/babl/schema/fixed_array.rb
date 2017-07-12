@@ -2,11 +2,11 @@ require 'values'
 
 module Babl
     module Schema
-        class FixedArray < Value.new(:items, :nullable)
-            EMPTY = new([], false)
+        class FixedArray < Value.new(:items)
+            EMPTY = new([])
 
             def json
-                { type: nullable ? %w[array null] : 'array', items: items.map(&:json) }
+                { type: 'array', items: items.map(&:json) }
             end
         end
     end

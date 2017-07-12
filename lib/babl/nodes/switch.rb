@@ -17,7 +17,7 @@ module Babl
             end
 
             def schema
-                Schema::AnyOf.new(nodes.values.map(&:schema)).simplify
+                Schema::AnyOf.canonical(nodes.values.map(&:schema))
             end
 
             def render(ctx)

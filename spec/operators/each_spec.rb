@@ -36,7 +36,7 @@ describe Babl::Operators::Each do
             let(:object) { [1, nil] }
 
             it { expect(json).to eq [{}, nil] }
-            it { expect(schema).to eq s_dyn_array(s_object(nullable: true), nullable: true) }
+            it { expect(schema).to eq s_any_of(s_dyn_array(s_any_of(s_object, s_null)), s_null) }
         end
     end
 end

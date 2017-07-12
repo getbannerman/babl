@@ -76,7 +76,7 @@ describe Babl::Operators::Switch do
         context 'switch between fixed array and a dyn array producing identical output' do
             template { switch(1 => nullable.each.static(1), 2 => [1]) }
 
-            it { expect(schema).to eq s_dyn_array(s_static(1), nullable: true) }
+            it { expect(schema).to eq s_any_of(s_null, s_dyn_array(s_static(1))) }
         end
 
         context 'switch between similar objects having only one different property' do
@@ -108,9 +108,9 @@ describe Babl::Operators::Switch do
         end
 
         context 'switch between two possible dyn arrays' do
-            template { switch(1 => each.static('a'), 2 => each.static('b')) }
+            template { switch(1 => each.static('a'), 2 => each.static('b'), 3 => nullable.each.static('c')) }
 
-            it { expect(schema).to eq s_dyn_array(s_any_of(s_static('a'), s_static('b'))) }
+            it { expect(schema).to eq s_any_of(s_null, s_dyn_array(s_any_of(s_static('a'), s_static('c'), s_static('b')))) }
         end
 
         context 'with dependencies' do

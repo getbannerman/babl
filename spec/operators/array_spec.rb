@@ -31,7 +31,7 @@ describe Babl::Operators::Array do
             let(:object) { 1 }
 
             it { expect(json).to eq([1]) }
-            it { expect(schema).to eq s_fixed_array(s_anything, nullable: true) }
+            it { expect(schema).to eq s_any_of(s_null, s_fixed_array(s_anything)) }
         end
     end
 end

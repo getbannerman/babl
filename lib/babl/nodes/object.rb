@@ -15,7 +15,7 @@ module Babl
 
             def schema
                 properties = nodes.map { |k, v| Schema::Object::Property.new(k, v.schema, true) }
-                Schema::Object.new(properties, false, false)
+                Schema::Object.new(properties, false)
             end
 
             def render(ctx)

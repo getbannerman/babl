@@ -10,7 +10,7 @@ module Babl
             end
 
             def schema
-                Schema::DynArray.new(node.schema, false)
+                Schema::DynArray.new(node.schema)
             end
 
             def pinned_dependencies

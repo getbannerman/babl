@@ -6,7 +6,7 @@ module Babl
     module Nodes
         class FixedArray < Value.new(:nodes)
             def schema
-                Schema::FixedArray.new(nodes.map(&:schema), false)
+                Schema::FixedArray.new(nodes.map(&:schema))
             end
 
             def dependencies
