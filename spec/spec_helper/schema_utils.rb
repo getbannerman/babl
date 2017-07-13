@@ -18,6 +18,22 @@ module SpecHelper
             Babl::Schema::Static::NULL
         end
 
+        def s_integer
+            Babl::Schema::Typed::INTEGER
+        end
+
+        def s_string
+            Babl::Schema::Typed::STRING
+        end
+
+        def s_boolean
+            Babl::Schema::Typed::BOOLEAN
+        end
+
+        def s_number
+            Babl::Schema::Typed::NUMBER
+        end
+
         def s_fixed_array(*schemas)
             Babl::Schema::FixedArray.new(schemas)
         end

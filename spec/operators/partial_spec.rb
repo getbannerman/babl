@@ -25,7 +25,7 @@ describe Babl::Operators::Partial do
     context 'missing partial' do
         template { partial('i_do_not_exist') }
 
-        it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
+        it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
     end
 
     context 'found partial' do

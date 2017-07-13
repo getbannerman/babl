@@ -17,6 +17,7 @@ require 'babl/operators/pin'
 require 'babl/operators/source'
 require 'babl/operators/static'
 require 'babl/operators/switch'
+require 'babl/operators/typed'
 require 'babl/operators/with'
 
 require 'babl/builder/template_base'
@@ -42,6 +43,7 @@ module Babl
         include Operators::Source::DSL
         include Operators::Static::DSL
         include Operators::Switch::DSL
+        include Operators::Typed::DSL
         include Operators::With::DSL
     end
 end

@@ -41,7 +41,7 @@ module Babl
             def construct_terminal
                 construct_node do |node, context|
                     unless [Nodes::InternalValue.instance, Nodes::TerminalValue.instance].include?(node)
-                        raise Errors::InvalidTemplateError, 'Chaining is not allowed after a terminal operator'
+                        raise Errors::InvalidTemplate, 'Chaining is not allowed after a terminal operator'
                     end
                     yield context
                 end

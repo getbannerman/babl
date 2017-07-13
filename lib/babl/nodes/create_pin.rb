@@ -3,7 +3,7 @@ require 'values'
 
 module Babl
     module Nodes
-        class CreatePin < Value.new(:node, :ref)
+        class CreatePin < ::Value.new(:node, :ref)
             def render(ctx)
                 node.render(ctx.create_pin(ref))
             end

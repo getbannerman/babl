@@ -25,6 +25,6 @@ describe Babl::Operators::Extends do
 
     context 'extend a non-object and try to add properties' do
         template { each.extends('string_partial', test: 1) }
-        it { expect { schema }.to raise_error Babl::Errors::InvalidTemplateError }
+        it { expect { schema }.to raise_error Babl::Errors::InvalidTemplate }
     end
 end

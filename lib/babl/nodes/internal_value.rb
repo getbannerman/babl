@@ -12,7 +12,7 @@ module Babl
             include Singleton
 
             def schema
-                raise Errors::InvalidTemplateError, 'Internal nodes cannot be documented'
+                raise Errors::InvalidTemplate, 'Internal nodes cannot be documented'
             end
 
             def dependencies

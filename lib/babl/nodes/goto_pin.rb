@@ -3,7 +3,7 @@ require 'values'
 
 module Babl
     module Nodes
-        class GotoPin < Value.new(:node, :ref)
+        class GotoPin < ::Value.new(:node, :ref)
             def dependencies
                 {}
             end

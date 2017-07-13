@@ -60,7 +60,7 @@ describe Babl::Operators::Pin do
                 )
             }
 
-            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
         end
 
         context 'when pinning is mixed with a "with" context' do

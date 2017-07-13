@@ -25,7 +25,7 @@ module Babl
                 # Override TemplateBase#precompile to ensure that all pin dependencies are satisfied.
                 def precompile
                     super.tap do |node|
-                        raise Errors::InvalidTemplateError, 'Unresolved pin' unless node.pinned_dependencies.empty?
+                        raise Errors::InvalidTemplate, 'Unresolved pin' unless node.pinned_dependencies.empty?
                     end
                 end
             end

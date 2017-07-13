@@ -4,7 +4,7 @@ require 'values'
 
 module Babl
     module Nodes
-        class Object < Value.new(:nodes)
+        class Object < ::Value.new(:nodes)
             def dependencies
                 nodes.values.map(&:dependencies).reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end

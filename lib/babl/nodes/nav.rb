@@ -2,7 +2,7 @@ require 'values'
 
 module Babl
     module Nodes
-        class Nav < Value.new(:through, :node)
+        class Nav < ::Value.new(:through, :node)
             def dependencies
                 { through => node.dependencies }
             end

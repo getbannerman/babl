@@ -13,7 +13,7 @@ module Babl
                     else call(Nodes::TerminalValue.instance.render_object(val))
                     end
                 rescue Errors::RenderingError => exception
-                    raise Errors::InvalidTemplateError, exception.message
+                    raise Errors::InvalidTemplate, exception.message
                 end
             end
         end

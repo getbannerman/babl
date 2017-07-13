@@ -7,12 +7,13 @@ describe Babl::Operators::Nav do
         template { nav(:a) }
 
         context 'hash navigation' do
-            let(:object) { { a: 42 } }
-            it { expect(json).to eq(42) }
+            let(:object) { { a: '42' } }
+            it { expect(json).to eq('42') }
             it { expect(dependencies).to eq(a: {}) }
 
-            context 'block navigation propagate dependency chain' do
+            context 'method navigation propagate dependency chain' do
                 template { nav(:a).nav(:to_i) }
+                it { expect(json).to eq(42) }
                 it { expect(dependencies).to eq(a: { to_i: {} }) }
             end
         end
@@ -57,7 +58,7 @@ describe Babl::Operators::Nav do
 
         context '#nav should stop key propagation for #enter' do
             template { object(a: nav._) }
-            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
         end
 
         context 'nav to array of complex objects' do

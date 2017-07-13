@@ -25,7 +25,7 @@ describe Babl::Operators::Parent do
         context 'invalid usage' do
             template { parent }
 
-            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
         end
 
         context 'deeply nested parent chain' do

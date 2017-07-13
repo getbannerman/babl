@@ -2,7 +2,7 @@ require 'values'
 
 module Babl
     module Schema
-        class Static < Value.new(:value)
+        class Static < ::Value.new(:value)
             NULL = new(nil)
 
             def json

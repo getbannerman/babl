@@ -9,7 +9,7 @@ module Babl
                 def continue
                     construct_terminal { |context|
                         node = context[:continue]
-                        raise Errors::InvalidTemplateError, 'continue() cannot be used outside switch()' unless node
+                        raise Errors::InvalidTemplate, 'continue() cannot be used outside switch()' unless node
                         node
                     }
                 end

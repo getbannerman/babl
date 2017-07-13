@@ -5,7 +5,7 @@ require 'babl/schema/object'
 
 module Babl
     module Schema
-        class AnyOf < Value.new(:choice_set)
+        class AnyOf < ::Value.new(:choice_set)
             attr_reader :choices
 
             def initialize(choices)

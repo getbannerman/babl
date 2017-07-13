@@ -4,11 +4,7 @@ require 'values'
 
 module Babl
     module Nodes
-        class Merge < Value.new(:nodes)
-            def initialize(nodes)
-                super
-            end
-
+        class Merge < ::Value.new(:nodes)
             def dependencies
                 nodes.map(&:dependencies).reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
@@ -45,7 +41,7 @@ module Babl
                 when Schema::Anything === doc1 && Schema::Object === doc2
                     merge_object(Schema::Object::EMPTY_WITH_ADDITIONAL, doc2)
                 else
-                    raise Errors::InvalidTemplateError, 'Only objects can be merged'
+                    raise Errors::InvalidTemplate, 'Only objects can be merged'
                 end
             end
 

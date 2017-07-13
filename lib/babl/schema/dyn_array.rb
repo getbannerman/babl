@@ -2,7 +2,7 @@ require 'values'
 
 module Babl
     module Schema
-        class DynArray < Value.new(:item)
+        class DynArray < ::Value.new(:item)
             def json
                 { type: 'array', items: item.json }
             end

@@ -24,7 +24,7 @@ describe Babl::Operators::Object do
         context 'misused (chaining after object)' do
             template { object(:a).object(:b) }
 
-            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
         end
     end
 end

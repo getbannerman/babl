@@ -4,7 +4,7 @@ require 'values'
 
 module Babl
     module Nodes
-        class FixedArray < Value.new(:nodes)
+        class FixedArray < ::Value.new(:nodes)
             def schema
                 Schema::FixedArray.new(nodes.map(&:schema))
             end

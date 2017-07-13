@@ -7,7 +7,7 @@ module Babl
                 # Interpret whatever is passed to this method as BABL template. It is idempotent.
                 def call(*args, &block)
                     return with(*args, &block) unless block.nil?
-                    raise Errors::InvalidTemplateError, 'call() expects exactly 1 argument (unless block)' unless args.size == 1
+                    raise Errors::InvalidTemplate, 'call() expects exactly 1 argument (unless block)' unless args.size == 1
 
                     arg = args.first
 
@@ -18,7 +18,7 @@ module Babl
                     when ::Hash then object(**arg.map { |k, v| [:"#{k}", v] }.to_h)
                     when ::Array then array(*arg)
                     when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass then static(arg)
-                    else raise Errors::InvalidTemplateError, "call() received invalid argument: #{arg}"
+                    else raise Errors::InvalidTemplate, "call() received invalid argument: #{arg}"
                     end
                 end
             end

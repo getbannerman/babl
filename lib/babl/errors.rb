@@ -1,7 +1,7 @@
 module Babl
     module Errors
-        class BablError < StandardError; end
-        class InvalidTemplateError < BablError; end
-        class RenderingError < BablError; end
+        class Base < StandardError; end
+        class InvalidTemplate < Base; end
+        class RenderingError < Base; end
     end
 end

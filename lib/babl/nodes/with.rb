@@ -3,7 +3,7 @@ require 'values'
 
 module Babl
     module Nodes
-        class With < Value.new(:node, :nodes, :block)
+        class With < ::Value.new(:node, :nodes, :block)
             def schema
                 node.schema
             end

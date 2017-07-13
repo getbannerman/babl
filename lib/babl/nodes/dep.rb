@@ -3,7 +3,7 @@ require 'values'
 
 module Babl
     module Nodes
-        class Dep < Value.new(:node, :path)
+        class Dep < ::Value.new(:node, :path)
             def initialize(node, path)
                 super(node, canonicalize(path))
             end

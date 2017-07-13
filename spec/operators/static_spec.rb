@@ -21,7 +21,7 @@ describe Babl::Operators::Static do
         context 'invalid' do
             template { static(test: Object.new) }
 
-            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
         end
     end
 end

@@ -7,7 +7,7 @@ describe Babl::Operators::Enter do
         context 'invalid usage' do
             template { enter }
 
-            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplateError }
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
         end
 
         context 'valid usage' do

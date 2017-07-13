@@ -4,7 +4,7 @@ require 'values'
 
 module Babl
     module Nodes
-        class Each < Value.new(:node)
+        class Each < ::Value.new(:node)
             def dependencies
                 { __each__: node.dependencies }
             end

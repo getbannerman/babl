@@ -4,17 +4,13 @@ require 'values'
 
 module Babl
     module Nodes
-        class Static < Value.new(:serialized_value)
-            def initialize(value)
-                super(value)
-            end
-
+        class Static < ::Value.new(:value)
             def schema
-                Schema::Static.new(serialized_value)
+                Schema::Static.new(value)
             end
 
             def render(_ctx)
-                serialized_value
+                value
             end
 
             def dependencies

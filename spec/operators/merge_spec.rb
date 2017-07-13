@@ -66,13 +66,13 @@ describe Babl::Operators::Merge do
                 )
             }
 
-            it { expect { schema }.to raise_error Babl::Errors::InvalidTemplateError }
+            it { expect { schema }.to raise_error Babl::Errors::InvalidTemplate }
         end
 
         context 'merge only one static value' do
             template { merge(42) }
 
-            it { expect { schema }.to raise_error Babl::Errors::InvalidTemplateError }
+            it { expect { schema }.to raise_error Babl::Errors::InvalidTemplate }
         end
 
         context 'merge only one dynamic value' do

@@ -4,10 +4,10 @@ require 'values'
 
 module Babl
     module Nodes
-        class Parent < Value.new(:node)
+        class Parent < ::Value.new(:node)
             PARENT_MARKER = Utils::Ref.new
 
-            class Resolver < Value.new(:node)
+            class Resolver < ::Value.new(:node)
                 def dependencies
                     backpropagate_dependencies(node.dependencies)
                 end
@@ -27,7 +27,7 @@ module Babl
                 private
 
                 def backpropagate_dependencies(deps)
-                    raise Errors::InvalidTemplateError, 'Out of context parent dependency' if deps.key? PARENT_MARKER
+                    raise Errors::InvalidTemplate, 'Out of context parent dependency' if deps.key? PARENT_MARKER
                     new_deps = backpropagate_dependencies_one_level(deps)
                     deps == new_deps ? new_deps : backpropagate_dependencies(new_deps)
                 end
