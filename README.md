@@ -66,7 +66,7 @@ As of today, the only compatible preloader implementation *has not been released
 
 ### Automatic documentation
 
-The structure of the JSON produced by a BABL template can be documentated using [JSON-Schema](http://json-schema.org/).
+The structure of the JSON produced by a BABL template can be documented using [JSON-Schema](http://json-schema.org/).
 
 ### Rails integration
 

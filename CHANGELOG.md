@@ -1,5 +1,9 @@
 # BABL Changelog
 
+## 0.2.2 (July 13, 2017)
+
+- Added four typing operators: `integer`, `number`, `string` and `boolean`.
+
 ## 0.2.1 (July 11, 2017)
 
 - Fix: array serialization is broken.
