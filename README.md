@@ -26,7 +26,7 @@ BABL template:
 ```ruby
 object(
     document: object(
-        :id, :title
+        :id, :title,
 
         owner: _.nullable.object(:id, :name),
         authors: _.each.object(:id, :name),
