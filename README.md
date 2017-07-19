@@ -1,5 +1,7 @@
 # BABL #
 
+![BABL Logo](https://github.com/getbannerman/babl/raw/master/logo-babl.png)
+
 [![Build Status](https://travis-ci.org/getbannerman/babl.svg?branch=master)](https://travis-ci.org/getbannerman/babl)
 
 BABL (Bannerman API Builder Language) is a templating langage for generating JSON in APIs.
