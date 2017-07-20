@@ -113,6 +113,21 @@ describe Babl::Operators::Switch do
             it { expect(schema).to eq s_any_of(s_null, s_dyn_array(s_any_of(s_static('a'), s_static('c'), s_static('b')))) }
         end
 
+        context 'switch between true, a boolean and a number' do
+            template { switch(1 => true, 2 => boolean, 3 => number) }
+            it { expect(schema).to eq s_any_of(s_boolean, s_number) }
+        end
+
+        context 'switch between true, false and a string' do
+            template { switch(1 => true, 2 => false, 3 => string) }
+            it { expect(schema).to eq s_any_of(s_boolean, s_string) }
+        end
+
+        context 'switch between true and a string' do
+            template { switch(1 => true, 3 => string) }
+            it { expect(schema).to eq s_any_of(s_static(true), s_string) }
+        end
+
         context 'with dependencies' do
             template { nav(:test).switch(nav(:keke) => parent.nav(:lol)) }
 

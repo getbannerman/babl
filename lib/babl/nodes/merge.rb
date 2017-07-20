@@ -64,7 +64,7 @@ module Babl
                     .map do |name, properties|
                     Schema::Object::Property.new(
                         name,
-                        Schema::AnyOf.canonical(properties.map(&:value)),
+                        Schema::AnyOf.canonicalized(properties.map(&:value)),
                         properties.size == all_docs.size && properties.all?(&:required)
                     )
                 end
@@ -89,7 +89,7 @@ module Babl
             def allow_anything(property)
                 Schema::Object::Property.new(
                     property.name,
-                    Schema::AnyOf.canonical([property.value, Schema::Anything.instance]),
+                    Schema::AnyOf.canonicalized([property.value, Schema::Anything.instance]),
                     property.required
                 )
             end

@@ -22,6 +22,7 @@ module Babl
             # schema.
             def simplify
                 simplify_single ||
+                    simplify_boolean ||
                     simplify_nullability ||
                     simplify_empty_array ||
                     simplify_push_down_dyn_array ||
@@ -30,7 +31,7 @@ module Babl
                     self
             end
 
-            def self.canonical(choices)
+            def self.canonicalized(choices)
                 new(choices).simplify
             end
 
@@ -41,20 +42,30 @@ module Babl
                 choices.size == 1 ? choices.first : nil
             end
 
-            # Try to merge null with another Anything
+            # Anything is nullable, so AnyOf[null, Anything] can be replaced by Anything
+            # (in general, everything can be merged into Anything but I decided not to do it in order
+            # to retain as much information as possible)
             def simplify_nullability
-                AnyOf.canonical(choices - [Static::NULL]) if ([Static::NULL, Anything.instance] - choices).empty?
+                return unless choice_set.include?(Static::NULL) && choice_set.include?(Anything.instance)
+                AnyOf.canonicalized(choice_set - [Static::NULL])
+            end
+
+            # AnyOf[true, false] is just boolean
+            # AnyOf[boolean, false] & AnyOf[boolean, true] are also just booleans
+            def simplify_boolean
+                return unless (choice_set & [Static::TRUE, Static::FALSE, Typed::BOOLEAN]).size >= 2
+                AnyOf.canonicalized(choice_set - [Static::TRUE, Static::FALSE] + [Typed::BOOLEAN])
             end
 
             # An always empty FixedArray is just a special case of a DynArray
             # We can get rid of the former and only keep the DynArray
             def simplify_empty_array
-                return unless choices.include?(FixedArray::EMPTY)
-                others = choices - [FixedArray::EMPTY]
+                return unless choice_set.include?(FixedArray::EMPTY)
+                others = choice_set - [FixedArray::EMPTY]
                 others.each do |other|
                     next unless DynArray === other
                     new_other = DynArray.new(other.item)
-                    return AnyOf.canonical(others - [other] + [new_other])
+                    return AnyOf.canonicalized(others - [other] + [new_other])
                 end
                 nil
             end
@@ -68,7 +79,7 @@ module Babl
                     next unless DynArray === dyn
                     fixed_arrays.each do |fixed|
                         new_dyn = DynArray.new(dyn.item)
-                        return AnyOf.canonical(choices - [fixed, dyn] + [new_dyn]) if dyn.item == fixed.items.first
+                        return AnyOf.canonicalized(choice_set - [fixed, dyn] + [new_dyn]) if dyn.item == fixed.items.first
                     end
                 end
 
@@ -95,14 +106,14 @@ module Babl
                                 next property unless property == diff1.first
                                 Object::Property.new(
                                     property.name,
-                                    AnyOf.canonical([diff1.first.value, diff2.first.value]),
+                                    AnyOf.canonicalized([diff1.first.value, diff2.first.value]),
                                     property.required
                                 )
                             },
                             obj1.additional
                         )
 
-                        return AnyOf.canonical(choices - [obj1, obj2] + [merged])
+                        return AnyOf.canonicalized(choice_set - [obj1, obj2] + [merged])
                     }
                 }
 
@@ -115,8 +126,8 @@ module Babl
                     choices.each_with_index { |arr2, index2|
                         next if index2 <= index1
                         next unless DynArray === arr1 && DynArray === arr2
-                        new_arr = DynArray.new(AnyOf.canonical([arr1.item, arr2.item]))
-                        return AnyOf.canonical(choices - [arr1, arr2] + [new_arr])
+                        new_arr = DynArray.new(AnyOf.canonicalized([arr1.item, arr2.item]))
+                        return AnyOf.canonicalized(choice_set - [arr1, arr2] + [new_arr])
                     }
                 }
                 nil
