@@ -3,11 +3,13 @@ require 'babl/schema/typed'
 
 module Babl
     module Nodes
-        class Typed < ::Value.new(:types, :schema, :node)
-            BOOLEAN = method(:new).curry(3).call([TrueClass, FalseClass], Schema::Typed::BOOLEAN)
-            INTEGER = method(:new).curry(3).call([Integer], Schema::Typed::INTEGER)
-            NUMBER = method(:new).curry(3).call([Numeric], Schema::Typed::NUMBER)
-            STRING = method(:new).curry(3).call([String], Schema::Typed::STRING)
+        class Typed < ::Value.new(:schema, :node)
+            CURRIED = method(:new).curry(2)
+
+            BOOLEAN = CURRIED.call(Schema::Typed::BOOLEAN)
+            INTEGER = CURRIED.call(Schema::Typed::INTEGER)
+            NUMBER = CURRIED.call(Schema::Typed::NUMBER)
+            STRING = CURRIED.call(Schema::Typed::STRING)
 
             def dependencies
                 node.dependencies
@@ -19,10 +21,8 @@ module Babl
 
             def render(ctx)
                 value = node.render(ctx)
-                unless types.any? { |type| type === value }
-                    raise Errors::RenderingError, "Expected type '#{schema.type}': #{value}\n#{ctx.formatted_stack}"
-                end
-                value
+                return value if schema.classes.any? { |clazz| clazz === value }
+                raise Errors::RenderingError, "Expected type '#{schema.type}': #{value}\n#{ctx.formatted_stack}"
             end
 
             private

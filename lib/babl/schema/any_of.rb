@@ -23,6 +23,7 @@ module Babl
             def simplify
                 simplify_single ||
                     simplify_boolean ||
+                    simplify_typed_and_static ||
                     simplify_nullability ||
                     simplify_empty_array ||
                     simplify_push_down_dyn_array ||
@@ -51,21 +52,35 @@ module Babl
             end
 
             # AnyOf[true, false] is just boolean
-            # AnyOf[boolean, false] & AnyOf[boolean, true] are also just booleans
             def simplify_boolean
-                return unless (choice_set & [Static::TRUE, Static::FALSE, Typed::BOOLEAN]).size >= 2
+                return unless choice_set.include?(Static::TRUE) && choice_set.include?(Static::FALSE)
                 AnyOf.canonicalized(choice_set - [Static::TRUE, Static::FALSE] + [Typed::BOOLEAN])
+            end
+
+            # AnyOf[string, 'a string instance', 'another string'] is just string
+            # AnyOf[boolean, true, false] is just boolean
+            # AnyOf[number, 2, 3.1] is just number
+            # AnyOf[integer, 2, 1] is just integer
+            def simplify_typed_and_static
+                choices.each do |typed|
+                    next unless Typed === typed
+                    instances = choices.select { |instance|
+                        Static === instance && typed.classes.any? { |clazz| clazz === instance.value }
+                    }
+                    next if instances.empty?
+                    return AnyOf.canonicalized(choice_set - instances)
+                end
+                nil
             end
 
             # An always empty FixedArray is just a special case of a DynArray
             # We can get rid of the former and only keep the DynArray
             def simplify_empty_array
                 return unless choice_set.include?(FixedArray::EMPTY)
-                others = choice_set - [FixedArray::EMPTY]
-                others.each do |other|
+                choice_set.each do |other|
                     next unless DynArray === other
                     new_other = DynArray.new(other.item)
-                    return AnyOf.canonicalized(others - [other] + [new_other])
+                    return AnyOf.canonicalized(choice_set - [other, FixedArray::EMPTY] + [new_other])
                 end
                 nil
             end
@@ -74,6 +89,7 @@ module Babl
             # removed.
             def simplify_dyn_and_fixed_array
                 fixed_arrays = choices.select { |s| FixedArray === s && s.items.uniq.size == 1 }
+                return if fixed_arrays.empty?
 
                 choices.each do |dyn|
                     next unless DynArray === dyn
@@ -90,11 +106,15 @@ module Babl
             # having a different type, then AnyOf can be pushed down to this property.
             def simplify_many_objects_only_one_difference
                 choices.each_with_index { |obj1, index1|
+                    next unless Object === obj1
+
                     choices.each_with_index { |obj2, index2|
-                        next if index2 <= index1
-                        next unless Object === obj1 && Object === obj2 && obj1.additional == obj2.additional
-                        next unless obj1.properties.map { |p| [p.name, p.required] }.to_set ==
-                                obj2.properties.map { |p| [p.name, p.required] }.to_set
+                        break if index2 >= index1
+
+                        next unless Object === obj2 &&
+                                obj1.additional == obj2.additional &&
+                                obj1.properties.map { |p| [p.name, p.required] }.to_set ==
+                                        obj2.properties.map { |p| [p.name, p.required] }.to_set
 
                         diff1 = obj1.properties - obj2.properties
                         diff2 = obj2.properties - obj1.properties
@@ -123,9 +143,10 @@ module Babl
             # Push down the AnyOf to the item if all outputs are of type DynArray
             def simplify_push_down_dyn_array
                 choices.each_with_index { |arr1, index1|
+                    next unless DynArray === arr1
                     choices.each_with_index { |arr2, index2|
-                        next if index2 <= index1
-                        next unless DynArray === arr1 && DynArray === arr2
+                        break if index2 >= index1
+                        next unless DynArray === arr2
                         new_arr = DynArray.new(AnyOf.canonicalized([arr1.item, arr2.item]))
                         return AnyOf.canonicalized(choice_set - [arr1, arr2] + [new_arr])
                     }

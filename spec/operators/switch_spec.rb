@@ -113,14 +113,9 @@ describe Babl::Operators::Switch do
             it { expect(schema).to eq s_any_of(s_null, s_dyn_array(s_any_of(s_static('a'), s_static('c'), s_static('b')))) }
         end
 
-        context 'switch between true, a boolean and a number' do
-            template { switch(1 => true, 2 => boolean, 3 => number) }
-            it { expect(schema).to eq s_any_of(s_boolean, s_number) }
-        end
-
-        context 'switch between true, false and a string' do
-            template { switch(1 => true, 2 => false, 3 => string) }
-            it { expect(schema).to eq s_any_of(s_boolean, s_string) }
+        context 'switch between true and false' do
+            template { switch(1 => true, 2 => false) }
+            it { expect(schema).to eq s_boolean }
         end
 
         context 'switch between true and a string' do
@@ -128,9 +123,28 @@ describe Babl::Operators::Switch do
             it { expect(schema).to eq s_any_of(s_static(true), s_string) }
         end
 
+        context 'switch between any string and a specific string' do
+            template { switch(1 => string, 3 => 'lol') }
+            it { expect(schema).to eq s_string }
+        end
+
+        context 'switch between any boolean and a specific boolean' do
+            template { switch(1 => boolean, 3 => true) }
+            it { expect(schema).to eq s_boolean }
+        end
+
+        context 'switch between a specific float, specific integer and any number' do
+            template { switch(1 => 1.2, 2 => 2, 3 => number) }
+            it { expect(schema).to eq s_number }
+        end
+
+        context 'switch between a specific float, specific integer and any integer' do
+            template { switch(1 => 1.2, 2 => 2, 3 => integer) }
+            it { expect(schema).to eq s_any_of(s_integer, s_static(1.2)) }
+        end
+
         context 'with dependencies' do
             template { nav(:test).switch(nav(:keke) => parent.nav(:lol)) }
-
             it { expect(dependencies).to eq(test: { keke: {} }, lol: {}) }
         end
     end
