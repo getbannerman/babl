@@ -1,10 +1,10 @@
 require 'oj'
 require 'babl/rendering/context'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Rendering
-        class CompiledTemplate < ::Value.new(:node, :dependencies, :preloader, :pretty, :json_schema)
+        class CompiledTemplate < Utils::Value.new(:node, :dependencies, :preloader, :pretty, :json_schema)
             def json(root)
                 data = render(root)
                 ::Oj.dump(data, indent: pretty ? 4 : 0, mode: :strict)

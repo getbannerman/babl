@@ -1,9 +1,9 @@
 require 'babl/utils/hash'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class Dep < ::Value.new(:node, :path)
+        class Dep < Utils::Value.new(:node, :path)
             def initialize(node, path)
                 super(node, canonicalize(path))
             end

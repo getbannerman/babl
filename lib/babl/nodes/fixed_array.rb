@@ -1,10 +1,10 @@
 require 'babl/utils/hash'
 require 'babl/schema/fixed_array'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class FixedArray < ::Value.new(:nodes)
+        class FixedArray < Utils::Value.new(:nodes)
             def schema
                 Schema::FixedArray.new(nodes.map(&:schema))
             end

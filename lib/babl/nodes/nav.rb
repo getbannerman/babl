@@ -1,8 +1,8 @@
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class Nav < ::Value.new(:through, :node)
+        class Nav < Utils::Value.new(:through, :node)
             def dependencies
                 { through => node.dependencies }
             end

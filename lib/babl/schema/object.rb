@@ -1,9 +1,9 @@
-require 'values'
+require 'babl/utils/value'
 require 'set'
 
 module Babl
     module Schema
-        class Object < ::Value.new(:property_set, :additional)
+        class Object < Utils::Value.new(:property_set, :additional)
             attr_reader :properties
 
             def initialize(properties, additional)
@@ -14,7 +14,7 @@ module Babl
             EMPTY = new([], false)
             EMPTY_WITH_ADDITIONAL = new([], true)
 
-            class Property < ::Value.new(:name, :value, :required)
+            class Property < Utils::Value.new(:name, :value, :required)
                 def initialize(name, value, required)
                     super(name, value, required)
                 end

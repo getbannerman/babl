@@ -1,9 +1,9 @@
 require 'babl/utils/hash'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class GotoPin < ::Value.new(:node, :ref)
+        class GotoPin < Utils::Value.new(:node, :ref)
             def dependencies
                 {}
             end

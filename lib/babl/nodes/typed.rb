@@ -1,9 +1,9 @@
-require 'values'
+require 'babl/utils/value'
 require 'babl/schema/typed'
 
 module Babl
     module Nodes
-        class Typed < ::Value.new(:schema, :node)
+        class Typed < Utils::Value.new(:schema, :node)
             CURRIED = method(:new).curry(2)
 
             BOOLEAN = CURRIED.call(Schema::Typed::BOOLEAN)

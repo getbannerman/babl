@@ -1,10 +1,10 @@
 require 'babl/utils/hash'
 require 'babl/errors'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class Merge < ::Value.new(:nodes)
+        class Merge < Utils::Value.new(:nodes)
             def dependencies
                 nodes.map(&:dependencies).reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end

@@ -1,13 +1,13 @@
 require 'babl/utils/ref'
 require 'babl/errors'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class Parent < ::Value.new(:node)
+        class Parent < Utils::Value.new(:node)
             PARENT_MARKER = Utils::Ref.new
 
-            class Resolver < ::Value.new(:node)
+            class Resolver < Utils::Value.new(:node)
                 def dependencies
                     backpropagate_dependencies(node.dependencies)
                 end

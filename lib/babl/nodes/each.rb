@@ -1,10 +1,10 @@
 require 'babl/schema/dyn_array'
 require 'babl/errors'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class Each < ::Value.new(:node)
+        class Each < Utils::Value.new(:node)
             def dependencies
                 { __each__: node.dependencies }
             end

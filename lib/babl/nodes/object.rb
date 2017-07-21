@@ -1,10 +1,10 @@
 require 'babl/utils/hash'
 require 'babl/schema/object'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class Object < ::Value.new(:nodes)
+        class Object < Utils::Value.new(:nodes)
             def dependencies
                 nodes.values.map(&:dependencies).reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end

@@ -1,11 +1,11 @@
-require 'values'
+require 'babl/utils/value'
 require 'set'
 require 'babl/schema/static'
 require 'babl/schema/object'
 
 module Babl
     module Schema
-        class AnyOf < ::Value.new(:choice_set)
+        class AnyOf < Utils::Value.new(:choice_set)
             attr_reader :choices
 
             def initialize(choices)

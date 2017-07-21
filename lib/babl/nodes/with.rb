@@ -1,9 +1,9 @@
 require 'babl/utils/hash'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class With < ::Value.new(:node, :nodes, :block)
+        class With < Utils::Value.new(:node, :nodes, :block)
             def schema
                 node.schema
             end

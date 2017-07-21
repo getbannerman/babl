@@ -1,10 +1,10 @@
 require 'babl/nodes/terminal_value'
 require 'babl/schema/static'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class Static < ::Value.new(:value)
+        class Static < Utils::Value.new(:value)
             def schema
                 Schema::Static.new(value)
             end

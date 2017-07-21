@@ -1,11 +1,11 @@
 require 'babl/utils/hash'
 require 'babl/schema/any_of'
 require 'babl/errors'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class Switch < ::Value.new(:nodes)
+        class Switch < Utils::Value.new(:nodes)
             def dependencies
                 (nodes.values + nodes.keys).map(&:dependencies)
                     .reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }

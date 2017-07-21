@@ -1,8 +1,8 @@
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Schema
-        class Typed < ::Value.new(:type, :classes)
+        class Typed < Utils::Value.new(:type, :classes)
             INTEGER = new('integer', [::Integer])
             BOOLEAN = new('boolean', [::TrueClass, ::FalseClass])
             NUMBER = new('number', [::Numeric])

@@ -1,8 +1,8 @@
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Schema
-        class Static < ::Value.new(:value)
+        class Static < Utils::Value.new(:value)
             NULL = new(nil)
             TRUE = new(true)
             FALSE = new(false)

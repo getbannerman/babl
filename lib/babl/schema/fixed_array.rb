@@ -1,8 +1,8 @@
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Schema
-        class FixedArray < ::Value.new(:items)
+        class FixedArray < Utils::Value.new(:items)
             EMPTY = new([])
 
             def json

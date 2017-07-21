@@ -1,9 +1,9 @@
 require 'babl/utils/hash'
-require 'values'
+require 'babl/utils/value'
 
 module Babl
     module Nodes
-        class CreatePin < ::Value.new(:node, :ref)
+        class CreatePin < Utils::Value.new(:node, :ref)
             def render(ctx)
                 node.render(ctx.create_pin(ref))
             end
