@@ -74,7 +74,7 @@ The structure of the JSON produced by a BABL template can be documented using [J
 
 This gem implements support of `*.babl` views in [Rails](https://github.com/rails/rails/).
 
-In theory, the template could be compliled once for all and re-used for subsequent requests. In practice, today's implementation will re-compile the template at every request, because Rails templating mechanism doesn't make our life easy.
+In theory, the template could be compiled once for all and re-used for subsequent requests. In practice, today's implementation will re-compile the template at every request, because Rails templating mechanism doesn't make our life easy.
 
 If it turns out to be a performance bottleneck, we will try to work around this issue.
 
