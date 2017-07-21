@@ -1,5 +1,9 @@
 # BABL Changelog
 
+## 0.2.3 (July 21, 2017)
+- Try to simplify JSON-Schema when types are specified.
+- Cut out dependency on [Values](https://github.com/tcrayford/Values).
+
 ## 0.2.2 (July 13, 2017)
 
 - Added four typing operators: `integer`, `number`, `string` and `boolean`.
