@@ -22,9 +22,9 @@ module Babl
             # schema.
             def simplify
                 simplify_single ||
+                    simplify_anything ||
                     simplify_boolean ||
                     simplify_typed_and_static ||
-                    simplify_nullability ||
                     simplify_empty_array ||
                     simplify_push_down_dyn_array ||
                     simplify_dyn_and_fixed_array ||
@@ -43,12 +43,9 @@ module Babl
                 choices.size == 1 ? choices.first : nil
             end
 
-            # Anything is nullable, so AnyOf[null, Anything] can be replaced by Anything
-            # (in general, everything can be merged into Anything but I decided not to do it in order
-            # to retain as much information as possible)
-            def simplify_nullability
-                return unless choice_set.include?(Static::NULL) && choice_set.include?(Anything.instance)
-                AnyOf.canonicalized(choice_set - [Static::NULL])
+            # AnyOf[anything, string, number...] always collapse to anything.
+            def simplify_anything
+                choice_set.include?(Anything.instance) ? Anything.instance : nil
             end
 
             # AnyOf[true, false] is just boolean

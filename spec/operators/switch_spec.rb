@@ -128,6 +128,11 @@ describe Babl::Operators::Switch do
             it { expect(schema).to eq s_string }
         end
 
+        context 'switch between anything and a number' do
+            template { switch(1 => number, 3 => itself) }
+            it { expect(schema).to eq s_anything }
+        end
+
         context 'switch between any boolean and a specific boolean' do
             template { switch(1 => boolean, 3 => true) }
             it { expect(schema).to eq s_boolean }
