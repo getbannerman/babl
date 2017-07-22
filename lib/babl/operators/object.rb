@@ -1,5 +1,4 @@
-require 'babl/nodes/object'
-require 'babl/nodes/terminal_value'
+require 'babl/nodes'
 require 'babl/errors'
 
 module Babl

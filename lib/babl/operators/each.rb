@@ -1,4 +1,4 @@
-require 'babl/nodes/each'
+require 'babl/nodes'
 
 module Babl
     module Operators

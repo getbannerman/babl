@@ -1,6 +1,6 @@
 require 'oj'
-require 'babl/rendering/context'
-require 'babl/utils/value'
+require 'babl/rendering'
+require 'babl/utils'
 
 module Babl
     module Rendering

@@ -1,5 +1,5 @@
-require 'babl/utils/value'
-require 'babl/schema/typed'
+require 'babl/utils'
+require 'babl/schema'
 
 module Babl
     module Nodes

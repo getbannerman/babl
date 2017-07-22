@@ -1,6 +1,6 @@
-require 'babl/schema/dyn_array'
+require 'babl/schema'
 require 'babl/errors'
-require 'babl/utils/value'
+require 'babl/utils'
 
 module Babl
     module Nodes

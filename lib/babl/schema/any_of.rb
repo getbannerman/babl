@@ -1,7 +1,6 @@
-require 'babl/utils/value'
+require 'babl/utils'
+require 'babl/schema'
 require 'set'
-require 'babl/schema/static'
-require 'babl/schema/object'
 
 module Babl
     module Schema

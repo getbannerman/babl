@@ -1,5 +1,4 @@
-require 'babl/nodes/with'
-require 'babl/nodes/internal_value'
+require 'babl/nodes'
 
 module Babl
     module Operators

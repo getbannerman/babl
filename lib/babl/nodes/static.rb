@@ -1,6 +1,5 @@
-require 'babl/nodes/terminal_value'
-require 'babl/schema/static'
-require 'babl/utils/value'
+require 'babl/schema'
+require 'babl/utils'
 
 module Babl
     module Nodes

@@ -1,7 +1,6 @@
-require 'babl/utils/hash'
-require 'babl/schema/any_of'
+require 'babl/schema'
 require 'babl/errors'
-require 'babl/utils/value'
+require 'babl/utils'
 
 module Babl
     module Nodes

@@ -1,6 +1,6 @@
-require 'singleton'
-require 'babl/schema/anything'
+require 'babl/schema'
 require 'babl/errors'
+require 'singleton'
 
 module Babl
     module Nodes
@@ -30,9 +30,9 @@ module Babl
 
             def render_object(obj, stack = [])
                 case obj
-                when String, Numeric, NilClass, TrueClass, FalseClass then obj
-                when Hash then render_hash(obj, stack)
-                when Array then render_array(obj, stack)
+                when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass then obj
+                when ::Hash then render_hash(obj, stack)
+                when ::Array then render_array(obj, stack)
                 else raise TerminalValueError.new("Only primitives can be serialized: #{obj}", stack)
                 end
             end
@@ -60,7 +60,7 @@ module Babl
 
             def render_key(key, stack)
                 case key
-                when Symbol, String, Numeric, NilClass, TrueClass, FalseClass then :"#{key}"
+                when ::Symbol, ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass then :"#{key}"
                 else raise TerminalValueError.new("Invalid key for JSON object: #{key}", stack)
                 end
             end

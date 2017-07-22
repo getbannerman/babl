@@ -1,8 +1,8 @@
 require 'babl/railtie' if defined?(Rails)
 require 'babl/template'
 require 'babl/version'
-require 'babl/rendering/noop_preloader'
-require 'babl/operators/partial'
+require 'babl/rendering'
+require 'babl/operators'
 
 module Babl
     class Config

@@ -1,5 +1,5 @@
-require 'singleton'
 require 'babl/errors'
+require 'singleton'
 
 module Babl
     module Nodes

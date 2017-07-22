@@ -1,4 +1,5 @@
 require 'babl/errors'
+require 'babl/nodes'
 
 module Babl
     module Operators

@@ -1,7 +1,6 @@
-require 'babl/nodes/terminal_value'
-require 'babl/builder/chain_builder'
-require 'babl/rendering/compiled_template'
-require 'babl/rendering/noop_preloader'
+require 'babl/nodes'
+require 'babl/builder'
+require 'babl/rendering'
 
 module Babl
     module Builder

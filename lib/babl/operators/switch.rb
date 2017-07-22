@@ -1,6 +1,4 @@
-require 'babl/nodes/switch'
-require 'babl/nodes/internal_value'
-require 'babl/nodes/terminal_value'
+require 'babl/nodes'
 
 module Babl
     module Operators

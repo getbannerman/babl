@@ -31,7 +31,7 @@ module Babl
 
                 def initialize(search_path)
                     @search_path = search_path
-                    raise 'Invalid search path' unless search_path
+                    raise Errors::InvalidTemplate, 'Invalid search path' unless search_path
                 end
 
                 def find(partial_name)

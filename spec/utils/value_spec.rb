@@ -1,4 +1,4 @@
-require 'babl/utils/value'
+require 'babl/utils'
 
 describe Babl::Utils::Value do
     let(:clazz) { described_class.new(:val1) }

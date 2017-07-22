@@ -1,4 +1,4 @@
-require 'babl/nodes/parent'
+require 'babl/nodes'
 
 module Babl
     module Operators

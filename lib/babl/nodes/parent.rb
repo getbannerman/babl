@@ -1,6 +1,5 @@
-require 'babl/utils/ref'
 require 'babl/errors'
-require 'babl/utils/value'
+require 'babl/utils'
 
 module Babl
     module Nodes

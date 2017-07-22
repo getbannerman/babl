@@ -1,6 +1,5 @@
-require 'babl/nodes/create_pin'
-require 'babl/nodes/goto_pin'
-require 'babl/utils/ref'
+require 'babl/nodes'
+require 'babl/utils'
 require 'babl/errors'
 
 module Babl

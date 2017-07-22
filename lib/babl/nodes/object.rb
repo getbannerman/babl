@@ -1,6 +1,5 @@
-require 'babl/utils/hash'
-require 'babl/schema/object'
-require 'babl/utils/value'
+require 'babl/schema'
+require 'babl/utils'
 
 module Babl
     module Nodes

@@ -1,4 +1,4 @@
-require 'babl/utils/value'
+require 'babl/utils'
 require 'set'
 
 module Babl

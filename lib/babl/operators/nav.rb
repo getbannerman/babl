@@ -1,4 +1,4 @@
-require 'babl/nodes/nav'
+require 'babl/nodes'
 
 module Babl
     module Operators

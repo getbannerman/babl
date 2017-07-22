@@ -1,5 +1,4 @@
-require 'babl/nodes/fixed_array'
-require 'babl/nodes/terminal_value'
+require 'babl/nodes'
 
 module Babl
     module Operators
