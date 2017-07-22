@@ -18,15 +18,18 @@ module Babl
                 nodes.map(&:pinned_dependencies).reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
 
-            def render(ctx)
-                nodes.map { |node| node.render(ctx) }
+            def renderer(ctx)
+                renderers = nodes.map { |node| node.renderer(ctx) }
+                Codegen::Expression.new { |resolver|
+                    '[' + renderers.map { |expr| resolver.resolve(expr) }.join(',') + ']'
+                }
             end
 
             def optimize
                 optimized_nodes = nodes.map(&:optimize)
                 fixed_array = FixedArray.new(optimized_nodes)
                 return fixed_array unless optimized_nodes.all? { |node| Constant === node }
-                Constant.new(fixed_array.render(nil).freeze, fixed_array.schema)
+                Constant.new(fixed_array.nodes.map(&:value).freeze, fixed_array.schema)
             end
         end
     end

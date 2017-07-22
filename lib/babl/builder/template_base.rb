@@ -3,6 +3,7 @@ require 'babl/nodes'
 require 'babl/utils'
 require 'babl/builder'
 require 'babl/rendering'
+require 'benchmark'
 
 module Babl
     module Builder
@@ -30,10 +31,14 @@ module Babl
                     schema = tree.schema
                 end
 
+                data = Codegen::Variable.new
+                uncompiled_renderer = tree.renderer(Codegen::Context.new(data))
+                renderer = Codegen::Generator.new(uncompiled_renderer, data).compile
+
                 Rendering::CompiledTemplate.with(
                     preloader: preloader,
                     pretty: pretty,
-                    node: tree,
+                    renderer: renderer,
                     dependencies: dependencies,
                     json_schema: schema.json
                 )

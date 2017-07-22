@@ -19,12 +19,35 @@ module Babl
                 Utils::Hash::EMPTY
             end
 
-            def render(ctx)
-                value = ctx.object
-                if schema.classes.any? { |clazz| clazz === value }
-                    return ::Numeric === value ? TerminalValue.instance.render_object(value) : value
-                end
-                raise Errors::RenderingError, "Expected type '#{schema.type}': #{value}\n#{ctx.formatted_stack}"
+            def renderer(ctx)
+                stack_var = Codegen::Variable.new
+                value_var = Codegen::Variable.new
+
+                raiser = Codegen::Expression.new { |resolver|
+                    stack = resolver.resolve(stack_var)
+                    value = resolver.resolve(value_var)
+
+                    <<~RUBY
+                        Babl::Nodes::Shared::ErrorHandling.raise_message(
+                            'Expected type #{schema.type}:' + #{value}.inspect, #{stack}
+                        )
+                    RUBY
+                }
+
+                tester = Codegen::Expression.new { |resolver|
+                    value = resolver.resolve(value_var)
+                    test = schema.classes.map { |cl| "::#{cl.name} === #{value}" }.join('||')
+                    # TODO : BigDecimal handling
+                    "#{test} ? #{value} : #{resolver.resolve(raiser)}"
+                }
+
+                stack_res = Codegen::Resource.new(ctx.stack)
+
+                Codegen::Expression.new { |resolver|
+                    resolver.resolve tester,
+                        stack_var => resolver.resolve(stack_res),
+                        value_var => resolver.resolve(ctx.object)
+                }
             end
 
             def optimize

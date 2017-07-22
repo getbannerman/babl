@@ -22,17 +22,18 @@ module Babl
                 Schema::Object.new(properties, false)
             end
 
-            def render(ctx)
-                out = {}
-                nodes.each { |k, v| out[k] = v.render(ctx) }
-                out
+            def renderer(ctx)
+                renderers = nodes.map { |name, node| [name, node.renderer(ctx)] }
+                Codegen::Expression.new { |resolver|
+                    '{' + renderers.map { |name, expr| "#{name.inspect} => #{resolver.resolve(expr)}" }.join(",\n") + '}'
+                }
             end
 
             def optimize
                 optimized_nodes = nodes.map { |k, v| [k, v.optimize] }.to_h
                 optimized_object = Object.new(optimized_nodes)
                 return optimized_object unless optimized_nodes.values.all? { |node| Constant === node }
-                Constant.new(optimized_object.render(nil).freeze, optimized_object.schema)
+                Constant.new(optimized_object.nodes.map { |k, v| [k, v.value] }.to_h.freeze, optimized_object.schema)
             end
         end
     end

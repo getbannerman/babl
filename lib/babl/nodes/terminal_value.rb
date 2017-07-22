@@ -24,12 +24,6 @@ module Babl
                 Utils::Hash::EMPTY
             end
 
-            def render(ctx)
-                render_object(ctx.object)
-            rescue TerminalValueError => e
-                raise Errors::RenderingError, "#{e.message}\n" + ctx.formatted_stack(e.babl_stack), e.backtrace
-            end
-
             def render_object(obj, stack = nil)
                 case obj
                 when ::String, ::Integer, ::NilClass, ::TrueClass, ::FalseClass then obj
@@ -43,6 +37,31 @@ module Babl
 
             def optimize
                 self
+            end
+
+            def renderer(ctx)
+                stack_var = Codegen::Variable.new
+                stack_res = Codegen::Resource.new(ctx.stack)
+                current_var = Codegen::Variable.new
+
+                expr = Codegen::Expression.new { |resolver|
+                    current_obj = resolver.resolve(current_var)
+                    stack = resolver.resolve(stack_var)
+
+                    <<~RUBY
+                        begin
+                            Babl::Nodes::TerminalValue.instance.render_object(#{current_obj})
+                        rescue ::Babl::Nodes::TerminalValue::TerminalValueError => e
+                            Babl::Nodes::Shared::ErrorHandling.raise_enriched(e, #{stack} + e.babl_stack)
+                        end
+                    RUBY
+                }
+
+                Codegen::Expression.new { |resolver|
+                    resolver.resolve expr,
+                        stack_var => resolver.resolve(stack_res),
+                        current_var => resolver.resolve(ctx.object)
+                }
             end
 
             private

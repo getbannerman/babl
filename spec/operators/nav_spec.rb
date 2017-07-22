@@ -30,6 +30,12 @@ describe Babl::Operators::Nav do
             it { expect(schema).to eq s_anything }
         end
 
+        context 'method name containing spaces' do
+            template { nav(:"lol captain") }
+            let(:object) { Struct.new(:"lol captain").new(10) }
+            it { expect(json).to eq 10 }
+        end
+
         context 'navigate to symbol' do
             template { nav(:a) }
 

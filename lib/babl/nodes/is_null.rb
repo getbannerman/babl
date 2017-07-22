@@ -20,8 +20,8 @@ module Babl
                 Utils::Hash::EMPTY
             end
 
-            def render(ctx)
-                ::NilClass === ctx.object
+            def renderer(ctx)
+                Codegen::Expression.new { |resolver| '::NilClass === ' + resolver.resolve(ctx.object) }
             end
 
             def optimize

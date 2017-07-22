@@ -5,16 +5,17 @@ require 'babl/utils'
 module Babl
     module Nodes
         class Constant < Utils::Value.new(:value, :schema)
-            def render(_ctx)
-                value
-            end
-
             def dependencies
                 Utils::Hash::EMPTY
             end
 
             def pinned_dependencies
                 Utils::Hash::EMPTY
+            end
+
+            def renderer(_ctx)
+                res = Codegen::Resource.new(value)
+                Codegen::Expression.new { |resolver| resolver.resolve(res) }
             end
 
             def optimize

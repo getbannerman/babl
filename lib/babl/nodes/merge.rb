@@ -19,10 +19,42 @@ module Babl
                 nodes.map(&:schema).reduce(Schema::Object::EMPTY) { |a, b| merge_doc(a, b) }
             end
 
-            def render(ctx)
-                nodes.map { |node| node.render(ctx) }.compact.reduce({}) { |acc, val|
-                    raise Errors::RenderingError, "Only objects can be merged\n" + ctx.formatted_stack unless ::Hash === val
-                    acc.merge!(val)
+            def renderer(ctx)
+                hash_to_check = Codegen::Variable.new
+                empty_hash = Codegen::Resource.new({})
+                stack_var = Codegen::Variable.new
+
+                ensure_hash = Codegen::Expression.new { |resolver|
+                    input = resolver.resolve(hash_to_check)
+                    resolved_empty_hash = resolver.resolve(empty_hash)
+                    stack = resolver.resolve(stack_var)
+
+                    invalid_hash = 'Babl::Nodes::Shared::ErrorHandling'\
+                        ".raise_message('Only objects can be merged', #{stack})"
+
+                    empty_hash_if_nil = "nil == #{input} ? #{resolved_empty_hash} : #{invalid_hash}"
+
+                    "::Hash === #{input} ? #{input} : #{empty_hash_if_nil}"
+                }
+
+                exprs = nodes.map { |node| node.renderer(ctx) }
+
+                accumulator = Codegen::Local.new
+                stack_res = Codegen::Resource.new(ctx.stack)
+
+                Codegen::Expression.new { |resolver|
+                    merges = exprs.map { |expr| resolver.resolve(expr) }
+                        .map { |value|
+                            ensured_hash = resolver.resolve ensure_hash,
+                                hash_to_check => value,
+                                stack_var => resolver.resolve(stack_res)
+
+                            "#{resolver.resolve(accumulator)}"\
+                                ".merge!(#{ensured_hash})"
+                        }
+                        .join("\n")
+
+                    "#{resolver.resolve(accumulator)} = {}\n#{merges}\n#{resolver.resolve(accumulator)}"
                 }
             end
 

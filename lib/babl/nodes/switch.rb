@@ -27,9 +27,28 @@ module Babl
                 Schema::AnyOf.canonicalized(nodes.map(&:last).map(&:schema))
             end
 
-            def render(ctx)
-                nodes.each { |cond, value| return value.render(ctx) if cond.render(ctx) }
-                raise Errors::RenderingError, 'A least one switch() condition must be taken'
+            def renderer(ctx)
+                message = Codegen::Resource.new('A least one switch() condition must be taken')
+                failure = Codegen::Expression.new { |resolver|
+                    <<~RUBY
+                        raise Errors::RenderingError, #{resolver.resolve(message)}
+                    RUBY
+                }
+
+                exprs = nodes.map { |key, val| [key.renderer(ctx), val.renderer(ctx)] }
+
+                Codegen::Expression.new { |resolver|
+                    code = resolver.resolve(failure)
+
+                    exprs.reverse.each do |cond, val|
+                        resolved_cond = resolver.resolve(cond)
+                        resolved_val = resolver.resolve(val)
+
+                        code = "(#{resolved_cond})?(#{resolved_val}):(#{code})"
+                    end
+
+                    code
+                }
             end
 
             def optimize

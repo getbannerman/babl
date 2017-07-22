@@ -19,14 +19,55 @@ module Babl
                     .reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
 
-            def render(ctx)
-                values = nodes.map { |n| n.render(ctx) }
-                value = begin
-                    block.arity.zero? ? ctx.object.instance_exec(&block) : block.call(*values)
-                rescue StandardError => e
-                    raise Errors::RenderingError, "#{e.message}\n" + ctx.formatted_stack(:__block__), e.backtrace
-                end
-                node.render(ctx.move_forward(value, :__block__))
+            def renderer(ctx)
+                # TODO : understandable naming convention
+                var = Codegen::Variable.new
+                new_ctx = ctx.move_forward(var, :__block__)
+                inner_expression = node.renderer(new_ctx)
+                val_exprs = nodes.map { |n| n.renderer(ctx) }
+
+                stack_var = Codegen::Variable.new
+                current_var = Codegen::Variable.new
+                block_var = Codegen::Variable.new
+
+                navigator = Codegen::Expression.new { |resolver|
+                    stack = resolver.resolve(stack_var)
+                    current = resolver.resolve(current_var)
+                    block_var_name = resolver.resolve(block_var)
+
+                    blk_call =
+                        if block.arity.zero?
+                            current + '.instance_exec(&' + block_var_name + ')'
+                        else
+                            block_var_name + '.call(' + val_exprs.map { |xp| resolver.resolve(xp) }.join(',') + ')'
+                        end
+
+                    <<~RUBY
+                        begin
+                            #{blk_call}
+                        rescue ::StandardError => e
+                            Babl::Nodes::Shared::ErrorHandling.raise_enriched(e, #{stack})
+                        end
+                    RUBY
+                }
+
+                result_var = Codegen::Local.new
+                block_res = Codegen::Resource.new(block)
+                stack_res = Codegen::Resource.new(new_ctx.stack)
+
+                Codegen::Expression.new { |resolver|
+                    result = resolver.resolve(result_var)
+                    value = resolver.resolve navigator,
+                        block_var => resolver.resolve(block_res),
+                        current_var => resolver.resolve(ctx.object),
+                        stack_var => resolver.resolve(stack_res)
+                    call_inner = resolver.resolve(inner_expression, var => result)
+
+                    <<-RUBY
+                        #{result} = #{value}
+                        #{call_inner}
+                    RUBY
+                }
             end
 
             def optimize

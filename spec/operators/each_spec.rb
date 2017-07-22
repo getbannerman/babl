@@ -20,7 +20,7 @@ describe Babl::Operators::Each do
 
             let(:object) { { box: [{ trololol: 2 }, 42] } }
 
-            it { expect { json }.to raise_error(/\__root__\.box\.1\.trololol/) }
+            it { expect { json }.to raise_error(/\__root__\.box\.#\.trololol/) }
         end
 
         context 'not enumerable' do

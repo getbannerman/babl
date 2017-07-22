@@ -4,8 +4,8 @@ require 'babl/utils'
 module Babl
     module Nodes
         class CreatePin < Utils::Value.new(:node, :ref)
-            def render(ctx)
-                node.render(ctx.create_pin(ref))
+            def renderer(ctx)
+                node.renderer(ctx.create_pin(ref))
             end
 
             def schema

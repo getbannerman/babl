@@ -27,8 +27,8 @@ module Babl
                 Utils::Hash::EMPTY
             end
 
-            def render(ctx)
-                ctx.object
+            def renderer(ctx)
+                Codegen::Expression.new { |resolver| resolver.resolve(ctx.object) }
             end
 
             def optimize

@@ -17,15 +17,20 @@ module SpecHelper
             base.let(:compiled) { template.compile }
             base.let(:unoptimized_compiled) { template.compile(optimize: false) }
             base.let(:unchecked_json) { ::MultiJson.load(compiled.json(object)) }
+
             base.let(:unoptimized_unchecked_json) { ::MultiJson.load(unoptimized_compiled.json(object)) }
+
             base.let(:dependencies) {
                 deps = compiled.send(:dependencies)
                 expect(Babl::Utils::Hash.deep_merge(deps, unoptimized_dependencies)).to eq unoptimized_dependencies
                 deps
             }
+
+            base.let(:schema) { template.send(:precompile).schema }
+            base.let(:dependencies) { compiled.send(:dependencies) }
             base.let(:unoptimized_dependencies) { unoptimized_compiled.send(:dependencies) }
-            base.let(:schema) { compiled.send(:node).schema }
-            base.let(:unoptimized_schema) { unoptimized_compiled.send(:node).schema }
+            base.let(:schema) { template.send(:precompile).optimize.send(:node).schema }
+            base.let(:unoptimized_schema) { template.precompile.schema }
             base.let(:json_schema) { compiled.json_schema }
             base.let(:unoptimized_json_schema) { unoptimized_compiled.json_schema }
 
