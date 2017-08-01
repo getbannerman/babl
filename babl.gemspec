@@ -10,9 +10,9 @@ Gem::Specification.new do |gem|
     gem.summary       = gem.description
     gem.homepage      = 'https://github.com/getbannerman/babl'
 
-    gem.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
-    gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
-    gem.test_files    = gem.files.grep(%r{^spec/})
+    gem.files         = `git ls-files lib`.split($INPUT_RECORD_SEPARATOR)
+    gem.executables   = []
+    gem.test_files    = []
     gem.require_paths = ['lib']
 
     gem.add_development_dependency 'pry', '~> 0'
