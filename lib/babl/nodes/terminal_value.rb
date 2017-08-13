@@ -28,12 +28,12 @@ module Babl
                 raise Errors::RenderingError, "#{e.message}\n" + ctx.formatted_stack(e.babl_stack), e.backtrace
             end
 
-            def render_object(obj, stack = [])
+            def render_object(obj, stack = nil)
                 case obj
                 when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass then obj
-                when ::Hash then render_hash(obj, stack)
-                when ::Array then render_array(obj, stack)
-                else raise TerminalValueError.new("Only primitives can be serialized: #{obj}", stack)
+                when ::Hash then render_hash(obj, stack || [])
+                when ::Array then render_array(obj, stack || [])
+                else raise TerminalValueError.new("Only primitives can be serialized: #{obj}", stack || [])
                 end
             end
 
@@ -49,18 +49,23 @@ module Babl
             end
 
             def render_hash(hash, stack)
-                hash.map { |k, v|
+                out = {}
+                hash.each { |k, v|
                     key = render_key(k, stack)
                     stack.push key
-                    out = [key, render_object(v, stack)]
+                    out[key] = render_object(v, stack)
                     stack.pop
-                    out
-                }.to_h
+                }
+                out
             end
 
             def render_key(key, stack)
                 case key
-                when ::Symbol, ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass then :"#{key}"
+                when ::Symbol then key
+                when ::String then key.to_sym
+                when ::TrueClass then :true
+                when ::FalseClass then :false
+                when ::Numeric, ::NilClass then :"#{key}"
                 else raise TerminalValueError.new("Invalid key for JSON object: #{key}", stack)
                 end
             end
