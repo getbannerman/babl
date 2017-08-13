@@ -27,7 +27,7 @@ module Babl
                     simplify_empty_array ||
                     simplify_push_down_dyn_array ||
                     simplify_dyn_and_fixed_array ||
-                    simplify_many_objects_only_one_difference ||
+                    simplify_merge_objects ||
                     self
             end
 
@@ -98,38 +98,47 @@ module Babl
                 nil
             end
 
-            # If two objects have exactly the same structure, with the exception of only one property
-            # having a different type, then AnyOf can be pushed down to this property.
-            def simplify_many_objects_only_one_difference
+            # Merge all objects together. This is the only lossy simplification, but it will greatly reduce the size
+            # of the generated schema. On top of that, when the JSON-Schema is translated into Typescript, it produces
+            # a much more workable type definition (union of anonymous object types is not practical to use)
+            def simplify_merge_objects
                 choices.each_with_index { |obj1, index1|
                     next unless Object === obj1
 
                     choices.each_with_index { |obj2, index2|
                         break if index2 >= index1
+                        next unless Object === obj2
 
-                        next unless Object === obj2 &&
-                                obj1.additional == obj2.additional &&
-                                obj1.properties.map { |p| [p.name, p.required] }.to_set ==
-                                        obj2.properties.map { |p| [p.name, p.required] }.to_set
+                        obj1props = obj1.properties.map { |p| [p.name, p] }.to_h
+                        obj2props = obj2.properties.map { |p| [p.name, p] }.to_h
 
-                        diff1 = obj1.properties - obj2.properties
-                        diff2 = obj2.properties - obj1.properties
+                        # Do not merge properties unless a keyset is almost a subset of the other
+                        next unless (obj1props.keys.to_set - obj2props.keys).size <= 1 ||
+                                (obj2props.keys.to_set - obj1props.keys).size <= 1
 
-                        next unless diff1.size == 1 && diff2.size == 1 && diff1.first.name == diff2.first.name
+                        # Try to detect a discrimitive property (inspired from Typescript's discriminative union),
+                        # We will abort the merging process unless all the other properties are exactly the same.
+                        discriminator = obj1props.find { |name, p1|
+                            p2 = obj2props[name]
+                            next name if p2 && Static === p2.value && Static === p1.value && p1.value.value != p2.value.value
+                        }&.first
 
-                        merged = Object.new(
-                            obj1.properties.map { |property|
-                                next property unless property == diff1.first
-                                Object::Property.new(
-                                    property.name,
-                                    AnyOf.canonicalized([diff1.first.value, diff2.first.value]),
-                                    property.required
-                                )
-                            },
-                            obj1.additional
-                        )
+                        new_properties = (obj1props.keys + obj2props.keys).uniq.map { |name|
+                            p1 = obj1props[name]
+                            p2 = obj2props[name]
 
-                        return AnyOf.canonicalized(choice_set - [obj1, obj2] + [merged])
+                            break if discriminator && discriminator != name && p1 != p2
+
+                            Object::Property.new(
+                                name,
+                                AnyOf.canonicalized([p1&.value, p2&.value].compact),
+                                p1&.required && p2&.required || false
+                            )
+                        }
+
+                        next unless new_properties
+                        new_obj = Object.new(new_properties, obj1.additional || obj2.additional)
+                        return AnyOf.canonicalized(choice_set - [obj1, obj2] + [new_obj])
                     }
                 }
 

@@ -109,13 +109,53 @@ describe Babl::Operators::Merge do
             let(:object) { { b: 1 } }
 
             it { expect(json).to eq('a' => 1, 'b' => 1, 'c' => 7) }
+
             it {
                 expect(schema).to eq(
                     s_object(
-                        s_property(:a, s_any_of(s_anything, s_static(1)), required: false),
-                        s_property(:b, s_any_of(s_anything, s_static(2), s_static(3))),
+                        s_property(:a, s_anything, required: false),
+                        s_property(:b, s_anything),
                         s_property(:c, s_any_of(s_static(7), s_static(5))),
                         additional: true
+                    )
+                )
+            }
+        end
+
+        context 'switch between objects generate a single object doc' do
+            template {
+                switch(
+                    itself => merge(itself, object(a: 1, b: 2, d: 4)),
+                    default => { c: string, d: 4 }
+                )
+            }
+
+            it {
+                expect(schema).to eq(
+                    s_object(
+                        s_property(:a, s_static(1), required: false),
+                        s_property(:b, s_static(2), required: false),
+                        s_property(:c, s_string, required: false),
+                        s_property(:d, s_static(4), required: true),
+                        additional: true
+                    )
+                )
+            }
+        end
+
+        context 'switch between disjoint objects' do
+            template {
+                switch(
+                    1 => { a: 1 },
+                    2 => { b: 3 }
+                )
+            }
+
+            it {
+                expect(schema).to eq(
+                    s_object(
+                        s_property(:a, s_static(1), required: false),
+                        s_property(:b, s_static(3), required: false)
                     )
                 )
             }

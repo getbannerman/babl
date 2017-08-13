@@ -20,7 +20,7 @@ describe Babl::Operators::Switch do
 
             it { expect(json).to eq ['1 is odd', '2 is even', 'WTF', '5 is odd'] }
             it { expect(dependencies).to eq(__each__: { even?: {}, odd?: {} }) }
-            it { expect(schema).to eq s_dyn_array(s_any_of(s_static('WTF'), s_anything)) }
+            it { expect(schema).to eq s_dyn_array(s_anything) }
         end
 
         context 'static condition' do
@@ -80,12 +80,12 @@ describe Babl::Operators::Switch do
         end
 
         context 'switch between similar objects having only one different property' do
-            template { switch(1 => { a: 34, b: 3 }, 2 => { a: 34, b: 1 }, 3 => { b: 2, a: 34 }) }
+            template { switch(1 => { a: 34, b: string }, 2 => { a: 34, b: integer }, 3 => { b: boolean, a: 34 }) }
 
             it {
                 expect(schema).to eq s_object(
                     s_property(:a, s_static(34)),
-                    s_property(:b, s_any_of(s_static(1), s_static(2), s_static(3)))
+                    s_property(:b, s_any_of(s_string, s_integer, s_boolean))
                 )
             }
         end
@@ -146,6 +146,23 @@ describe Babl::Operators::Switch do
         context 'switch between a specific float, specific integer and any integer' do
             template { switch(1 => 1.2, 2 => 2, 3 => integer) }
             it { expect(schema).to eq s_any_of(s_integer, s_static(1.2)) }
+        end
+
+        context 'switch between objects with discriminator' do
+            template { switch(1 => { type: 'a', v: string }, 2 => { type: 'b', v: integer }) }
+
+            it {
+                expect(schema).to eq s_any_of(
+                    s_object(
+                        s_property(:type, s_static('a')),
+                        s_property(:v, s_string)
+                    ),
+                    s_object(
+                        s_property(:type, s_static('b')),
+                        s_property(:v, s_integer)
+                    )
+                )
+            }
         end
 
         context 'with dependencies' do

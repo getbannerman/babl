@@ -3,7 +3,7 @@ require 'babl'
 module SpecHelper
     module SchemaUtils
         def s_any_of(*args)
-            Babl::Schema::AnyOf.canonicalized(args)
+            Babl::Schema::AnyOf.new(args)
         end
 
         def s_anything

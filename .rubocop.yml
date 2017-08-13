@@ -94,7 +94,7 @@ Metrics/LineLength:
     Max: 130
 
 Metrics/PerceivedComplexity:
-    Max: 12
+    Max: 20
 
 Metrics/AbcSize:
     Enabled: False

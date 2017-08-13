@@ -28,12 +28,19 @@ module Babl
 
             # Merge two documentations together
             def merge_doc(doc1, doc2)
-                doc1 = Schema::Object::EMPTY if Schema::Static::NULL == doc1
-                doc2 = Schema::Object::EMPTY if Schema::Static::NULL == doc2
-
                 case
-                when Schema::AnyOf === doc1 || Schema::AnyOf === doc2
-                    merge_extended(doc1, doc2)
+                when Schema::Static::NULL == doc1
+                    merge_doc(Schema::Object::EMPTY, doc2)
+                when Schema::Static::NULL == doc2
+                    merge_doc(doc1, Schema::Object::EMPTY)
+                when Schema::AnyOf === doc1
+                    Schema::AnyOf.canonicalized(doc1.choices.map { |c|
+                        merge_doc(c, doc2)
+                    })
+                when Schema::AnyOf === doc2
+                    Schema::AnyOf.canonicalized(doc2.choices.map { |c|
+                        merge_doc(doc1, c)
+                    })
                 when Schema::Object === doc1 && Schema::Object === doc2
                     merge_object(doc1, doc2)
                 when Schema::Object === doc1 && Schema::Anything === doc2
@@ -43,34 +50,6 @@ module Babl
                 else
                     raise Errors::InvalidTemplate, 'Only objects can be merged'
                 end
-            end
-
-            # Merge two documention when Schema::AnyOf is involved either
-            # on left, right or both sides.
-            def merge_extended(doc1, doc2)
-                # Ensure doc1 & doc2 are both Schema::AnyOf
-                choices1 = Schema::AnyOf === doc1 ? doc1.choices : [doc1]
-                choices2 = Schema::AnyOf === doc2 ? doc2.choices : [doc2]
-
-                # Generate all possible combinations
-                all_docs = choices1.product(choices2)
-                    .map { |choice1, choice2| merge_doc(choice1, choice2) }
-
-                # Analyze each property accross all combination to
-                # generate a Schema::Object::Property filled with
-                # accurate information.
-                final_properties = all_docs.flat_map(&:properties)
-                    .group_by(&:name)
-                    .map do |name, properties|
-                    Schema::Object::Property.new(
-                        name,
-                        Schema::AnyOf.canonicalized(properties.map(&:value)),
-                        properties.size == all_docs.size && properties.all?(&:required)
-                    )
-                end
-
-                # Generate the final Schema::Object
-                Schema::Object.new(final_properties, all_docs.any?(&:additional))
             end
 
             # Merge two Schema::Object
