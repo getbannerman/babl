@@ -1,5 +1,10 @@
 # BABL Changelog
 
+## 0.2.4 (August 17, 2017)
+- Improved JSON-Schema generation, especially when `switch` is used inside `merge`.
+- Added a benchmark for evaluating performance improvements.
+- Performance improvements.
+
 ## 0.2.3 (July 21, 2017)
 - Try to simplify JSON-Schema when types are specified.
 - Cut out dependency on [Values](https://github.com/tcrayford/Values).
