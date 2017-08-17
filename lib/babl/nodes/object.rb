@@ -18,7 +18,9 @@ module Babl
             end
 
             def render(ctx)
-                nodes.map { |k, v| [k, v.render(ctx)] }.to_h
+                out = {}
+                nodes.each { |k, v| out[k] = v.render(ctx) }
+                out
             end
         end
     end
