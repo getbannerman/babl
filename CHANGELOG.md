@@ -4,6 +4,7 @@
 - Improved JSON-Schema generation, especially when `switch` is used inside `merge`.
 - Added a benchmark for evaluating performance improvements.
 - Performance improvements.
+- Removed unneeded files to reduce gem size.
 
 ## 0.2.3 (July 21, 2017)
 - Try to simplify JSON-Schema when types are specified.
