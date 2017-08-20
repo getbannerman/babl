@@ -12,7 +12,7 @@ module Babl
             end
 
             def dependencies
-                Babl::Utils::Hash.deep_merge(node.dependencies, node.pinned_dependencies[ref] || {})
+                Babl::Utils::Hash.deep_merge(node.dependencies, node.pinned_dependencies[ref] || Utils::Hash::EMPTY)
             end
 
             def pinned_dependencies

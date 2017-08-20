@@ -1,5 +1,6 @@
 require 'babl/schema'
 require 'babl/errors'
+require 'babl/utils'
 require 'singleton'
 
 module Babl
@@ -15,11 +16,11 @@ module Babl
             end
 
             def dependencies
-                {}
+                Utils::Hash::EMPTY
             end
 
             def pinned_dependencies
-                {}
+                Utils::Hash::EMPTY
             end
 
             def render(ctx)

@@ -5,11 +5,12 @@ module Babl
     module Nodes
         class Object < Utils::Value.new(:nodes)
             def dependencies
-                nodes.values.map(&:dependencies).reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                nodes.values.map(&:dependencies).reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
 
             def pinned_dependencies
-                nodes.values.map(&:pinned_dependencies).reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                nodes.values.map(&:pinned_dependencies)
+                    .reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
 
             def schema

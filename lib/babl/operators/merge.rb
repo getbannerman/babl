@@ -1,4 +1,5 @@
 require 'babl/nodes'
+require 'babl/utils'
 
 module Babl
     module Operators
@@ -6,7 +7,7 @@ module Babl
             module DSL
                 # Merge multiple JSON objects (non-deep)
                 def merge(*templates)
-                    return call({}) if templates.empty?
+                    return call(Utils::Hash::EMPTY) if templates.empty?
 
                     construct_terminal { |context|
                         Nodes::Merge.build(

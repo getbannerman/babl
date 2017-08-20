@@ -9,11 +9,12 @@ module Babl
 
             def dependencies
                 # Dependencies of 'node' are explicitely ignored
-                nodes.map(&:dependencies).reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                nodes.map(&:dependencies).reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
 
             def pinned_dependencies
-                (nodes + [node]).map(&:pinned_dependencies).reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                (nodes + [node]).map(&:pinned_dependencies)
+                    .reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
 
             def render(ctx)

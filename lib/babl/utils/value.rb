@@ -1,3 +1,5 @@
+require 'babl/utils'
+
 module Babl
     module Utils
         # Construct deeply immutable value objects
@@ -25,7 +27,7 @@ module Babl
                             eql?(other)
                         end
 
-                        def self.with(hash = {})
+                        def self.with(hash = Utils::Hash::EMPTY)
                             raise ::ArgumentError unless ::Hash === hash && (hash.keys - FIELDS).empty?
                             new(*FIELDS.map { |f| hash.fetch(f) })
                         end

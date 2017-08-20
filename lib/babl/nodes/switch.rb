@@ -7,12 +7,12 @@ module Babl
         class Switch < Utils::Value.new(:nodes)
             def dependencies
                 (nodes.values + nodes.keys).map(&:dependencies)
-                    .reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                    .reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
 
             def pinned_dependencies
                 (nodes.values + nodes.keys).map(&:pinned_dependencies)
-                    .reduce({}) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                    .reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
 
             def schema

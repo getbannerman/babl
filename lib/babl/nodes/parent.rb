@@ -32,12 +32,12 @@ module Babl
                 end
 
                 def backpropagate_dependencies_one_level(deps)
-                    deps.reduce({}) do |out, (k, v)|
+                    deps.reduce(Utils::Hash::EMPTY) do |out, (k, v)|
                         next out if k == PARENT_MARKER
 
                         Babl::Utils::Hash.deep_merge(
                             Babl::Utils::Hash.deep_merge(out, k => backpropagate_dependencies_one_level(v)),
-                            v[PARENT_MARKER] || {}
+                            v[PARENT_MARKER] || Utils::Hash::EMPTY
                         )
                     end
                 end

@@ -1,11 +1,12 @@
 require 'babl/nodes'
+require 'babl/utils'
 
 module Babl
     module Operators
         module Switch
             module DSL
                 # Conditional switching between different templates
-                def switch(conds = {})
+                def switch(conds = Utils::Hash::EMPTY)
                     construct_node(continue: nil) { |node, context|
                         nodes = conds.map { |cond, value|
                             cond_node = unscoped.call(cond).builder

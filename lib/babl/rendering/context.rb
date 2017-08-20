@@ -1,4 +1,5 @@
 require 'babl/errors'
+require 'babl/utils'
 
 module Babl
     module Rendering
@@ -34,12 +35,12 @@ module Babl
             def goto_pin(ref)
                 pin = pins&.[](ref)
                 raise Errors::RenderingError, 'Pin reference cannot be used here' unless pin
-                Context.new(pin.object, pin.key, pin.parent, (pin.pins || {}).merge(pins))
+                Context.new(pin.object, pin.key, pin.parent, (pin.pins || Utils::Hash::EMPTY).merge(pins))
             end
 
             # Associate a pin to current context
             def create_pin(ref)
-                Context.new(object, key, parent, (pins || {}).merge(ref => self))
+                Context.new(object, key, parent, (pins || Utils::Hash::EMPTY).merge(ref => self))
             end
 
             # Wrapper around #move_forward navigating into the return value of

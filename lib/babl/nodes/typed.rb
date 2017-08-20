@@ -10,11 +10,11 @@ module Babl
             STRING = new(Schema::Typed::STRING)
 
             def dependencies
-                {}
+                Utils::Hash::EMPTY
             end
 
             def pinned_dependencies
-                {}
+                Utils::Hash::EMPTY
             end
 
             def render(ctx)

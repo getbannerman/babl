@@ -4,7 +4,7 @@ module Babl
     module Nodes
         class GotoPin < Utils::Value.new(:node, :ref)
             def dependencies
-                {}
+                Utils::Hash::EMPTY
             end
 
             def pinned_dependencies

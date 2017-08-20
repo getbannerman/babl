@@ -27,9 +27,9 @@ module Babl
 
             def canonicalize(path)
                 case path
-                when ::Array then path.reduce({}) { |a, p| a.merge(canonicalize(p)) }
+                when ::Array then path.reduce(Utils::Hash::EMPTY) { |a, p| a.merge(canonicalize(p)) }
                 when ::Hash then path.map { |k, v| [k.to_sym, canonicalize(v)] }.to_h
-                else { path.to_sym => {} }
+                else { path.to_sym => Utils::Hash::EMPTY }
                 end
             end
         end
