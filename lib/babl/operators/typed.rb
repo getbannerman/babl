@@ -5,19 +5,19 @@ module Babl
         module Typed
             module DSL
                 def integer
-                    construct_node(continue: nil) { |node| Nodes::Typed::INTEGER.call(node) }
+                    construct_terminal { Nodes::Typed::INTEGER }
                 end
 
                 def number
-                    construct_node(continue: nil) { |node| Nodes::Typed::NUMBER.call(node) }
+                    construct_terminal { Nodes::Typed::NUMBER }
                 end
 
                 def string
-                    construct_node(continue: nil) { |node| Nodes::Typed::STRING.call(node) }
+                    construct_terminal { Nodes::Typed::STRING }
                 end
 
                 def boolean
-                    construct_node(continue: nil) { |node| Nodes::Typed::BOOLEAN.call(node) }
+                    construct_terminal { Nodes::Typed::BOOLEAN }
                 end
             end
         end
