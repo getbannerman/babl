@@ -24,6 +24,27 @@ module Babl
                 }
             end
 
+            def self.build(nodes)
+                return new(nodes) if nodes.empty?
+                return nodes.first if nodes.size == 1 && Object === nodes.first
+
+                expanded = nodes.flat_map { |node| Merge === node ? node.nodes : [node] }
+                out = []
+                op1 = nil
+                op2 = expanded[0]
+                expanded.drop(1).each do |elm|
+                    op1 = op2
+                    op2 = elm
+                    if Object === op1 && Object === op2
+                        op2 = Object.new(op1.nodes.merge(op2.nodes))
+                        op1 = nil
+                    end
+                    out << op1 if op1
+                end
+                out << op2 if op2
+                new(out)
+            end
+
             private
 
             AS_OBJECT_MAPPING = {

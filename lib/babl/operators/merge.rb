@@ -9,7 +9,7 @@ module Babl
                     return call({}) if templates.empty?
 
                     construct_terminal { |context|
-                        Nodes::Merge.new(
+                        Nodes::Merge.build(
                             templates.map { |t|
                                 unscoped.call(t).builder.precompile(
                                     Nodes::TerminalValue.instance,

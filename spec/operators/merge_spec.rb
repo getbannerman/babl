@@ -122,6 +122,31 @@ describe Babl::Operators::Merge do
             }
         end
 
+        context 'overriding properties while merging objects' do
+            template {
+                merge(
+                    merge(
+                        object(a: _, b: _, c: _),
+                        merge(merge(object(a: 1))),
+                        object(c: 2)
+                    )
+                )
+            }
+
+            let(:object) { { b: 5 } }
+
+            it { expect(dependencies).to eq(b: {}) }
+            it { expect(json).to eq('a' => 1, 'b' => 5, 'c' => 2) }
+
+            it {
+                expect(schema).to eq s_object(
+                    s_property(:a, s_static(1)),
+                    s_property(:b, s_anything),
+                    s_property(:c, s_static(2))
+                )
+            }
+        end
+
         context 'switch between objects generate a single object doc' do
             template {
                 switch(
