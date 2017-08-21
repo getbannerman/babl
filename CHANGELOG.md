@@ -1,5 +1,10 @@
 # BABL Changelog
 
+## 0.2.5 (August 21, 2017)
+- Made `string`, `boolean`, `number` and `integer` terminal operators.
+- Avoid evaluating overidden properties in simple cases (`merge(object(...), object(...)))`).
+- Minor performance improvements.
+
 ## 0.2.4 (August 17, 2017)
 - Improved JSON-Schema generation, especially when `switch` is used inside `merge`.
 - Added a benchmark for evaluating performance improvements.
