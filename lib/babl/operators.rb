@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'babl/operators/array'
 require 'babl/operators/call'
 require 'babl/operators/continue'

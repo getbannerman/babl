@@ -161,6 +161,9 @@ Style/MultilineBlockChain:
 Style/MultilineMemoization:
     Enabled: False
 
+Style/FrozenStringLiteralComment:
+    Enabled: True
+
 Style/MutableConstant:
     Enabled: False
 

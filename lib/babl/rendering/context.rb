@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'babl/errors'
 require 'babl/utils'
 

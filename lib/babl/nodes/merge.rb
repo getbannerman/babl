@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'babl/errors'
 require 'babl/utils'
 require 'babl/schema'
@@ -59,9 +60,9 @@ module Babl
 
                 case
                 when Schema::AnyOf === doc1
-                    Schema::AnyOf.canonicalized(doc1.choices.map { |c| merge_doc(c, doc2) })
+                    Schema::AnyOf.canonicalized(doc1.choice_set.map { |c| merge_doc(c, doc2) })
                 when Schema::AnyOf === doc2
-                    Schema::AnyOf.canonicalized(doc2.choices.map { |c| merge_doc(doc1, c) })
+                    Schema::AnyOf.canonicalized(doc2.choice_set.map { |c| merge_doc(doc1, c) })
                 when Schema::Object === doc1 && Schema::Object === doc2
                     merge_object(doc1, doc2)
                 else raise Errors::InvalidTemplate, 'Only objects can be merged'
@@ -73,8 +74,8 @@ module Babl
                 additional = doc1.additional || doc2.additional
 
                 properties = (
-                    doc1.properties.map { |property| doc2.additional ? anything_property(property) : property } +
-                    doc2.properties
+                    doc1.property_set.map { |property| doc2.additional ? anything_property(property) : property } +
+                    doc2.property_set.to_a
                 ).each_with_object({}) { |property, acc| acc[property.name] = property }.values
 
                 Schema::Object.new(properties, additional)

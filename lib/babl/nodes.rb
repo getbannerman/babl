@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'babl/nodes/create_pin'
 require 'babl/nodes/dep'
 require 'babl/nodes/each'

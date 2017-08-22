@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'babl/railtie' if defined?(Rails)
 require 'babl/template'
 require 'babl/version'

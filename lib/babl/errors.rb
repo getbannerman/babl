@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Babl
     module Errors
         class Base < StandardError; end

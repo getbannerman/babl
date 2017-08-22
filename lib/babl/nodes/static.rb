@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'babl/schema'
 require 'babl/utils'
 
@@ -5,7 +6,12 @@ module Babl
     module Nodes
         class Static < Utils::Value.new(:value)
             def schema
-                Schema::Static.new(value)
+                case value
+                when ::NilClass then Schema::Static::NULL
+                when ::TrueClass then Schema::Static::TRUE
+                when ::FalseClass then Schema::Static::FALSE
+                else Schema::Static.new(value)
+                end
             end
 
             def render(_ctx)

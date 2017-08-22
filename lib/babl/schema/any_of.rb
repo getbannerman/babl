@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'babl/utils'
 require 'babl/schema'
 require 'set'
@@ -5,16 +6,13 @@ require 'set'
 module Babl
     module Schema
         class AnyOf < Utils::Value.new(:choice_set)
-            attr_reader :choices
-
             def initialize(choices)
-                flattened_choices = choices.flat_map { |doc| AnyOf === doc ? doc.choices : [doc] }.uniq
-                @choices = flattened_choices
-                super(flattened_choices.to_set)
+                flattened_choices = choices.flat_map { |doc| AnyOf === doc ? doc.choice_set.to_a : [doc] }.uniq
+                super(flattened_choices.to_set.freeze)
             end
 
             def json
-                { anyOf: choices.map(&:json) }
+                { anyOf: choice_set.map(&:json) }
             end
 
             # Perform simple transformations in order to reduce the size of the generated
@@ -39,7 +37,7 @@ module Babl
 
             # We can completely get rid of the AnyOf element of there is only one possible schema.
             def simplify_single
-                choices.size == 1 ? choices.first : nil
+                choice_set.size == 1 ? choice_set.first : nil
             end
 
             # AnyOf[anything, string, number...] always collapse to anything.
@@ -58,9 +56,9 @@ module Babl
             # AnyOf[number, 2, 3.1] is just number
             # AnyOf[integer, 2, 1] is just integer
             def simplify_typed_and_static
-                choices.each do |typed|
+                choice_set.each do |typed|
                     next unless Typed === typed
-                    instances = choices.select { |instance|
+                    instances = choice_set.select { |instance|
                         Static === instance && typed.classes.any? { |clazz| clazz === instance.value }
                     }
                     next if instances.empty?
@@ -84,10 +82,10 @@ module Babl
             # If the static array is an instance of another dyn array, then the fixed array can be
             # removed.
             def simplify_dyn_and_fixed_array
-                fixed_arrays = choices.select { |s| FixedArray === s && s.items.uniq.size == 1 }
+                fixed_arrays = choice_set.select { |s| FixedArray === s && s.items.uniq.size == 1 }
                 return if fixed_arrays.empty?
 
-                choices.each do |dyn|
+                choice_set.each do |dyn|
                     next unless DynArray === dyn
                     fixed_arrays.each do |fixed|
                         new_dyn = DynArray.new(dyn.item)
@@ -102,15 +100,15 @@ module Babl
             # of the generated schema. On top of that, when the JSON-Schema is translated into Typescript, it produces
             # a much more workable type definition (union of anonymous object types is not practical to use)
             def simplify_merge_objects
-                choices.each_with_index { |obj1, index1|
+                choice_set.each_with_index { |obj1, index1|
                     next unless Object === obj1
 
-                    choices.each_with_index { |obj2, index2|
+                    choice_set.each_with_index { |obj2, index2|
                         break if index2 >= index1
                         next unless Object === obj2
 
-                        obj1props = obj1.properties.map { |p| [p.name, p] }.to_h
-                        obj2props = obj2.properties.map { |p| [p.name, p] }.to_h
+                        obj1props = obj1.property_set.map { |p| [p.name, p] }.to_h
+                        obj2props = obj2.property_set.map { |p| [p.name, p] }.to_h
 
                         # Do not merge properties unless a keyset is almost a subset of the other
                         next unless (obj1props.keys.to_set - obj2props.keys).size <= 1 ||
@@ -147,9 +145,9 @@ module Babl
 
             # Push down the AnyOf to the item if all outputs are of type DynArray
             def simplify_push_down_dyn_array
-                choices.each_with_index { |arr1, index1|
+                choice_set.each_with_index { |arr1, index1|
                     next unless DynArray === arr1
-                    choices.each_with_index { |arr2, index2|
+                    choice_set.each_with_index { |arr2, index2|
                         break if index2 >= index1
                         next unless DynArray === arr2
                         new_arr = DynArray.new(AnyOf.canonicalized([arr1.item, arr2.item]))

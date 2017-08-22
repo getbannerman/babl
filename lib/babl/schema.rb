@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'babl/schema/any_of'
 require 'babl/schema/anything'
 require 'babl/schema/dyn_array'
