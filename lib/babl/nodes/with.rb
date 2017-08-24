@@ -20,9 +20,12 @@ module Babl
 
             def render(ctx)
                 values = nodes.map { |n| n.render(ctx) }
-                node.render(ctx.move_forward_block(:__block__) do
+                value = begin
                     block.arity.zero? ? ctx.object.instance_exec(&block) : block.call(*values)
-                end)
+                rescue StandardError => e
+                    raise Errors::RenderingError, "#{e.message}\n" + ctx.formatted_stack(:__block__), e.backtrace
+                end
+                node.render(ctx.move_forward(value, :__block__))
             end
         end
     end

@@ -17,17 +17,17 @@ module Babl
             end
 
             def render(ctx)
-                node.render(ctx.move_forward_block(through) { navigate(ctx.object) })
+                value = begin
+                    ::Hash === ctx.object ? ctx.object.fetch(through) : ctx.object.send(through)
+                rescue StandardError => e
+                    raise Errors::RenderingError, "#{e.message}\n" + ctx.formatted_stack(through), e.backtrace
+                end
+                node.render(ctx.move_forward(value, through))
             end
 
             private
 
             def navigate(object)
-                if ::Hash === object
-                    object.fetch(through)
-                else
-                    object.send(through)
-                end
             end
         end
     end
