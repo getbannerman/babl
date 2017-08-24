@@ -44,16 +44,6 @@ module Babl
                 Context.new(object, key, parent, (pins || Utils::Hash::EMPTY).merge(ref => self))
             end
 
-            # Wrapper around #move_forward navigating into the return value of
-            # the block. However, if an error occurs, it is wrapped in a
-            # RenderingError and the navigation stack trace is added
-            # to the error message.
-            def move_forward_block(key)
-                move_forward(yield, key)
-            rescue StandardError => e
-                raise Errors::RenderingError, "#{e.message}\n" + formatted_stack(key), e.backtrace
-            end
-
             def formatted_stack(*additional_stack_items)
                 stack_trace = ([:__root__] + stack + additional_stack_items).join('.')
                 "BABL @ #{stack_trace}"
