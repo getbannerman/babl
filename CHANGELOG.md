@@ -1,5 +1,9 @@
 # BABL Changelog
 
+## 0.2.6 (August 28, 2017)
+- Enable `frozen_string_literal` everywhere (should be enabled by default in Ruby 3)
+- Minor performance improvements.
+
 ## 0.2.5 (August 21, 2017)
 - Made `string`, `boolean`, `number` and `integer` terminal operators.
 - Avoid evaluating overidden properties in simple cases (`merge(object(...), object(...)))`).
