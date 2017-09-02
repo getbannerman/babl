@@ -35,6 +35,7 @@ module Babl
                 when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass then obj
                 when ::Hash then render_hash(obj, stack || [])
                 when ::Array then render_array(obj, stack || [])
+                when ::Symbol then obj.to_s
                 else raise TerminalValueError.new("Only primitives can be serialized: #{obj}", stack || [])
                 end
             end

@@ -19,10 +19,10 @@ describe Babl::Operators::Nav do
             end
         end
 
-        context 'navigate to non serializable' do
+        context 'navigate to symbol' do
             template { nav(:a) }
             let(:object) { { a: :test } }
-            it { expect { json }.to raise_error Babl::Errors::RenderingError }
+            it { expect(json).to eq 'test' }
         end
 
         context 'navigate to non serializable in nested object' do

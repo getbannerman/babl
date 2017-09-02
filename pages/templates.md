@@ -33,16 +33,15 @@ json = compiled_template.json(document)
 # json = "{ "author_names": [\"Fred\", \"Vivien\"] }"
 ```
 
-BABL always performs checks to ensure that the data are serializable in JSON. The only serializable classes are:
+BABL always performs checks to ensure that the data are serializable. The only serializable classes are:
 - `NilClass`
 - `TrueClass`
 - `FalseClass`
 - `String`
+- `Symbol`
 - `Numeric`
 - `Hash`
 - `Array`
-
-Note: a `Symbol` is **not** serializable.
 
 ## <a name="json_schema"></a>JSON-Schema
 
