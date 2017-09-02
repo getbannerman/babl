@@ -31,6 +31,28 @@ describe Babl::Operators::Nav do
             it { expect { json }.to raise_error Babl::Errors::RenderingError, /\__root__\.a\.b\.2\.d/ }
         end
 
+        context 'navigate to serialize object having boolean, numeric & string keys' do
+            template { nav(:exotic) }
+
+            let(:object) {
+                {
+                    exotic: {
+                        'str' => 1,
+                        12.4 => 2,
+                        true => 3,
+                        false => 4,
+                        :sym => 5
+                    }
+                }
+            }
+
+            it {
+                expect(json).to eq(
+                    'str' => 1, '12.4' => 2, 'true' => 3, 'false' => 4, 'sym' => 5
+                )
+            }
+        end
+
         context 'navigate to non serializable in nested object with invalid key' do
             template { nav(:a) }
             let(:object) { { a: { b: [1, 2, { c: 1, Object.new => 1 }] } } }

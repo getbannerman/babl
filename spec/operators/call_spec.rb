@@ -27,6 +27,20 @@ describe Babl::Operators::Call do
             it { expect(json).to eq 4 }
         end
 
+        context 'proc' do
+            template { call -> { self * 2 } }
+
+            let(:object) { 2 }
+
+            it { expect(json).to eq 4 }
+        end
+
+        context 'not interpretable as a template' do
+            template { call Object.new }
+
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
+        end
+
         context 'hash' do
             template { call('a' => 1, b: 2) }
 
