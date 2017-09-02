@@ -1,6 +1,7 @@
 ![BABL Logo](https://github.com/getbannerman/babl/raw/master/logo-babl.png)
 
 [![Build Status](https://travis-ci.org/getbannerman/babl.svg?branch=master)](https://travis-ci.org/getbannerman/babl)
+[![Coverage Status](https://coveralls.io/repos/github/getbannerman/babl/badge.svg)](https://coveralls.io/github/getbannerman/babl)
 [![Gem](https://img.shields.io/gem/v/babl-json.svg)](https://rubygems.org/gems/babl-json)
 [![Downloads](https://img.shields.io/gem/dt/babl-json.svg)](https://rubygems.org/gems/babl-json)
 

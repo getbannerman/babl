@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
     gem.add_development_dependency 'rspec', '~> 3'
     gem.add_development_dependency 'rubocop', '~> 0.48'
     gem.add_development_dependency 'json-schema', '~> 2.8'
+    gem.add_development_dependency 'coveralls', '~> 0.8'
 
     gem.add_dependency 'oj', '~> 3.0'
 end
