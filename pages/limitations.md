@@ -27,9 +27,3 @@ object(
 ```
 
 I don't plan to work on that feature in the near future.
-
-## MRI Only
-
-BABL depends on [Oj](https://github.com/ohler55/oj) to emit JSON. This gem depends on MRI's native extensions, which is why BABL only works on MRI.
-
-I already planned to replace [Oj](https://github.com/ohler55/oj) by [multi_json](https://github.com/intridea/multi_json) soon.

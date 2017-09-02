@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'babl'
-require 'oj'
+require 'multi_json'
 require 'json-schema'
 require 'spec_helper/schema_utils'
 
@@ -15,7 +15,7 @@ module SpecHelper
 
             base.let(:dsl) { Babl::Template.new }
             base.let(:compiled) { template.compile }
-            base.let(:unchecked_json) { ::Oj.load(compiled.json(object)) }
+            base.let(:unchecked_json) { ::MultiJson.load(compiled.json(object)) }
             base.let(:dependencies) { compiled.send(:dependencies) }
             base.let(:schema) { compiled.send(:node).schema }
             base.let(:json_schema) { compiled.json_schema }

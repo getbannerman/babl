@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'oj'
+require 'multi_json'
 require 'babl/rendering'
 require 'babl/utils'
 
@@ -8,7 +8,7 @@ module Babl
         class CompiledTemplate < Utils::Value.new(:node, :dependencies, :preloader, :pretty, :json_schema)
             def json(root)
                 data = render(root)
-                ::Oj.dump(data, indent: pretty ? 4 : 0, mode: :strict)
+                ::MultiJson.dump(data, pretty: pretty)
             end
 
             def render(root)
