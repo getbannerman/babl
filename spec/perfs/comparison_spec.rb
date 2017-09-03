@@ -28,24 +28,26 @@ describe 'JBuilder comparison' do
 
     let(:jbuilder_test) {
         -> {
-            Jbuilder.encode do |json|
-                json.array! data do |article|
-                    json.author(article.author, :name, :birthyear, :job)
-                    json.title article.title
-                    json.body article.body
-                    json.date article.date.iso8601
-                    json.references article.references do |reference|
-                        json.name reference.name
-                        json.url reference.url
-                    end
-                    json.comments article.comments do |comment|
-                        json.author(comment.author, :name, :birthyear, :job)
-                        json.email comment.email
-                        json.body comment.body
-                        json.date comment.date.iso8601
+            Jbuilder.new do |json|
+                json.articles do
+                    json.array! data do |article|
+                        json.author(article.author, :name, :birthyear, :job)
+                        json.title article.title
+                        json.body article.body
+                        json.date article.date.iso8601
+                        json.references article.references do |reference|
+                            json.name reference.name
+                            json.url reference.url
+                        end
+                        json.comments article.comments do |comment|
+                            json.author(comment.author, :name, :birthyear, :job)
+                            json.email comment.email
+                            json.body comment.body
+                            json.date comment.date.iso8601
+                        end
                     end
                 end
-            end
+            end.attributes!
         }
     }
 
@@ -53,29 +55,31 @@ describe 'JBuilder comparison' do
         Babl::Template.new.source {
             author = object(:name, :birthyear, :job)
 
-            each.object(
-                title: _,
-                body: _,
-                author: _.(author),
-                date: _.nav(&:iso8601),
-                references: _.each.object(:name, :url),
-                comments: _.each.object(
-                    author: _.(author),
-                    email: _,
+            {
+                articles: each.object(
+                    title: _,
                     body: _,
-                    date: _.nav(:iso8601)
+                    author: _.(author),
+                    date: _.nav(&:iso8601),
+                    references: _.each.object(:name, :url),
+                    comments: _.each.object(
+                        author: _.(author),
+                        email: _,
+                        body: _,
+                        date: _.nav(:iso8601)
+                    )
                 )
-            )
+            }
         }
     }
 
     let(:babl_test) {
-        -> { babl_template.compile(pretty: false).json(data) }
+        -> { babl_template.compile(pretty: false).render(data) }
     }
 
     let(:precompiled_babl_test) {
         compiled = babl_template.compile(pretty: false)
-        -> { compiled.json(data) }
+        -> { compiled.render(data) }
     }
 
     let(:n) { 50 }
@@ -84,10 +88,10 @@ describe 'JBuilder comparison' do
 
     it {
         expect([
-            MultiJson.load(jbuilder_test.call),
-            MultiJson.load(babl_test.call),
-            MultiJson.load(precompiled_babl_test.call)
-        ].uniq.size).to eq 1
+            jbuilder_test.call,
+            babl_test.call,
+            precompiled_babl_test.call
+        ].map { |x| MultiJson.load(MultiJson.dump(x)) }.uniq.size).to eq 1
     }
 
     it {
