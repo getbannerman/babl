@@ -24,7 +24,7 @@ module Babl
                 raise Errors::RenderingError, "Expected type '#{schema.type}': #{value}\n#{ctx.formatted_stack}"
             end
 
-            def simplify
+            def optimize
                 self
             end
         end

@@ -28,22 +28,11 @@ module Babl
                 out
             end
 
-            def simplify
-                simplify_values ||
-                    simplify_constant ||
-                    self
-            end
-
-            private
-
-            def simplify_values
-                simplified_nodes = nodes.map { |k, v| [k, v.simplify] }.to_h
-                simplified_nodes == nodes ? nil : Object.new(simplified_nodes).simplify
-            end
-
-            def simplify_constant
-                return unless nodes.values.all? { |node| Constant === node }
-                Constant.new(render(nil), schema)
+            def optimize
+                optimized_nodes = nodes.map { |k, v| [k, v.optimize] }.to_h
+                optimized_object = Object.new(optimized_nodes)
+                return optimized_object unless optimized_nodes.values.all? { |node| Constant === node }
+                Constant.new(optimized_object.render(nil), optimized_object.schema)
             end
         end
     end

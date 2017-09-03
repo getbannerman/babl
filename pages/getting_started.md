@@ -1,5 +1,7 @@
 # Rails setup guide
 
+BABL comes with its own ActionView's template handler supporting `*.babl` files.
+
 ## Installation
 
 Add this line to your `Gemfile`:
@@ -35,17 +37,19 @@ end
 
 ## Hello world
 
-Create a new template `app/views/hello_world.babl` containing:
+Create a new template `app/views/my_resources/hello_world.babl` containing:
 ```ruby
 object(
     answer_to_life: _
 )
 ```
 
-Create a new action/route:
+Create a new action/route in a controller:
 ```ruby
-def hello_world
-    render 'hello_world', locals: { answer_to_life: 42 }
+class MyResourcesController < ActionController::Base
+    def hello_world
+        render 'hello_world', locals: { answer_to_life: 42 }
+    end
 end
 ```
 

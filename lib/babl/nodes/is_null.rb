@@ -24,7 +24,7 @@ module Babl
                 ::NilClass === ctx.object
             end
 
-            def simplify
+            def optimize
                 self
             end
         end

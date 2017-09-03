@@ -29,10 +29,10 @@ module Babl
                 node.render(ctx.move_forward(value, :__block__))
             end
 
-            def simplify
-                simplified = node.simplify
-                return simplified if Constant === simplified
-                With.new(simplified, nodes.map(&:simplify), block)
+            def optimize
+                optimized = node.optimize
+                return optimized if Constant === optimized
+                With.new(optimized, nodes.map(&:optimize), block)
             end
         end
     end

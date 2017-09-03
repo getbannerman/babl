@@ -24,8 +24,8 @@ module Babl
                     node.render(ctx)
                 end
 
-                def simplify
-                    Resolver.new(node.simplify)
+                def optimize
+                    Resolver.new(node.optimize)
                 end
 
                 private
@@ -64,9 +64,9 @@ module Babl
                 node.render(ctx.move_backward)
             end
 
-            def simplify
-                simplified = node.simplify
-                Constant === simplified ? simplified : Parent.new(simplified)
+            def optimize
+                optimized = node.optimize
+                Constant === optimized ? optimized : Parent.new(optimized)
             end
         end
     end

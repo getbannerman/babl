@@ -15,14 +15,31 @@ module SpecHelper
 
             base.let(:dsl) { Babl::Template.new }
             base.let(:compiled) { template.compile }
+            base.let(:unoptimized_compiled) { template.compile(optimize: false) }
             base.let(:unchecked_json) { ::MultiJson.load(compiled.json(object)) }
-            base.let(:dependencies) { compiled.send(:dependencies) }
+            base.let(:unoptimized_unchecked_json) { ::MultiJson.load(unoptimized_compiled.json(object)) }
+            base.let(:dependencies) {
+                deps = compiled.send(:dependencies)
+                expect(Babl::Utils::Hash.deep_merge(deps, unoptimized_dependencies)).to eq unoptimized_dependencies
+                deps
+            }
+            base.let(:unoptimized_dependencies) { unoptimized_compiled.send(:dependencies) }
             base.let(:schema) { compiled.send(:node).schema }
+            base.let(:unoptimized_schema) { unoptimized_compiled.send(:node).schema }
             base.let(:json_schema) { compiled.json_schema }
+            base.let(:unoptimized_json_schema) { unoptimized_compiled.json_schema }
+
             base.let(:object) { nil }
 
             base.let(:json) {
                 JSON::Validator.validate!(json_schema, unchecked_json, validate_schema: true)
+                JSON::Validator.validate!(unoptimized_json_schema, unchecked_json, validate_schema: true)
+                begin
+                    expect(unchecked_json).to eq unoptimized_unchecked_json
+                rescue Babl::Errors::RenderingError
+                    # It happens if the optimization removes navigation that would have failed given input data
+                    nil
+                end
                 unchecked_json
             }
 

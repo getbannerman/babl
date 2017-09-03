@@ -25,6 +25,8 @@ BABL can automatically document a template by generating a JSON-Schema. Combined
 
 For instance, it is possible to generate TypeScript interfaces by feeding the exported JSON-Schema to https://github.com/bcherny/json-schema-to-typescript.
 
+See [how to generate a JSON-Schema](pages/templates.md#json_schema).
+
 ## Dependency analysis (automatic preloading)
 
 Due to the static nature of BABL templates, it is possible to determine in advance which methods will be called on models objects during rendering. This is called dependency analysis. In practice, the extracted dependencies can be passed to a preloader, in order to avoid all N+1 issues.
@@ -42,7 +44,7 @@ object(
 
         owner: _.nullable.object(:id, :name),
         authors: _.each.object(:id, :name),
-        category: 'Not implemented'
+        category: 'Awesome Stuff'
     )
 )
 ```
@@ -59,7 +61,7 @@ JSON output:
             { "id": 4, "name": "Fred" },
             { "id": 5, "name": "Vivien" }
         ],
-        "category": "not implemented"
+        "category": "Awesome Stuff"
     }
 }
 ```
@@ -69,8 +71,8 @@ Interestingly, this JSON output is also a valid BABL template. In fact, BABL is 
 ## Documentation
 
 - [Getting started (with Rails)](pages/getting_started.md)
-- [Fundamental concepts](pages/concepts.md)
-- [BABL Templates](pages/templates.md)
+- [Understanding BABL: fundamental concepts](pages/concepts.md)
+- [Playing with `BABL::Template`](pages/templates.md)
 - [List of all operators](pages/operators.md)
 - [Limitations / known issues](pages/limitations.md)
 - [Changelog](CHANGELOG.md)

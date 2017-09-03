@@ -19,7 +19,7 @@ describe Babl::Operators::With do
             let(:object) { { result: 42, msg: 'Hello C' } }
 
             it { expect(json).to eq('result' => 'Hello C Hello C Hello C') }
-            it { expect(dependencies).to eq(result: {}, msg: { lol: {} }) }
+            it { expect(dependencies).to eq(msg: { lol: {} }) }
             it { expect(schema).to eq s_object(s_property(:result, s_anything)) }
         end
 

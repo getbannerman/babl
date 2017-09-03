@@ -31,37 +31,37 @@ module Babl
                 raise Errors::RenderingError, 'A least one switch() condition must be taken'
             end
 
-            def simplify
-                simplify_condition_and_values ||
-                    simplify_falsy_conditions ||
-                    simplify_truthy_conditions ||
-                    simplify_always_same_outputs ||
+            def optimize
+                optimize_condition_and_values ||
+                    optimize_falsy_conditions ||
+                    optimize_truthy_conditions ||
+                    optimize_always_same_outputs ||
                     self
             end
 
             private
 
-            def simplify_always_same_outputs
+            def optimize_always_same_outputs
                 return unless nodes.map(&:first).any? { |node| Constant === node && node.value }
                 return unless nodes.map(&:last).uniq.size == 1
-                nodes.first.last.simplify
+                nodes.first.last.optimize
             end
 
-            def simplify_truthy_conditions
+            def optimize_truthy_conditions
                 nodes[0...-1].each_with_index do |(cond, _value), index|
-                    return Switch.new(nodes[0..index]).simplify if Constant === cond && cond.value
+                    return Switch.new(nodes[0..index]).optimize if Constant === cond && cond.value
                 end
                 nil
             end
 
-            def simplify_condition_and_values
-                simplified = nodes.map { |k, v| [k.simplify, v.simplify] }
-                simplified == nodes ? nil : Switch.new(simplified).simplify
+            def optimize_condition_and_values
+                optimized = nodes.map { |k, v| [k.optimize, v.optimize] }
+                optimized == nodes ? nil : Switch.new(optimized).optimize
             end
 
-            def simplify_falsy_conditions
-                simplified = nodes.reject { |(cond, _value)| Constant === cond && !cond.value }
-                simplified.size == nodes.size ? nil : Switch.new(simplified).simplify
+            def optimize_falsy_conditions
+                optimized = nodes.reject { |(cond, _value)| Constant === cond && !cond.value }
+                optimized.size == nodes.size ? nil : Switch.new(optimized).optimize
             end
         end
     end

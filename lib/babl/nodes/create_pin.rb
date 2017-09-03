@@ -20,8 +20,9 @@ module Babl
                 node.pinned_dependencies.reject { |k, _v| k == ref }
             end
 
-            def simplify
-                CreatePin.new(node.simplify, ref)
+            def optimize
+                optimized = node.optimize
+                optimized.pinned_dependencies[ref] ? CreatePin.new(optimized, ref) : optimized
             end
         end
     end

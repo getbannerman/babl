@@ -26,41 +26,41 @@ module Babl
                 }
             end
 
-            def simplify
-                simplify_empty ||
-                    simplify_single ||
-                    simplify_merged_objects ||
-                    simplify_nested_merges ||
-                    simplify_premergeable_objects ||
+            def optimize
+                optimize_empty ||
+                    optimize_single ||
+                    optimize_merged_objects ||
+                    optimize_nested_merges ||
+                    optimize_premergeable_objects ||
                     self
             end
 
             private
 
-            def simplify_empty
+            def optimize_empty
                 Constant.new({}, Schema::Object::EMPTY) if nodes.empty?
             end
 
-            def simplify_single
+            def optimize_single
                 return unless nodes.size == 1
-                simplified = nodes.first.simplify
+                optimized = nodes.first.optimize
                 case
-                when Object === simplified then simplified
-                when Constant === simplified && simplified.value.nil? then Object::EMPTY
+                when Object === optimized then optimized
+                when Constant === optimized && optimized.value.nil? then Object::EMPTY
                 end
             end
 
-            def simplify_merged_objects
-                simplified_nodes = nodes.map(&:simplify)
-                simplified_nodes == nodes ? nil : Merge.new(simplified_nodes).simplify
+            def optimize_merged_objects
+                optimized_nodes = nodes.map(&:optimize)
+                optimized_nodes == nodes ? nil : Merge.new(optimized_nodes).optimize
             end
 
-            def simplify_nested_merges
+            def optimize_nested_merges
                 return unless nodes.any? { |node| Merge === node }
-                Merge.new(nodes.flat_map { |node| Merge === node ? node.nodes : [node] }).simplify
+                Merge.new(nodes.flat_map { |node| Merge === node ? node.nodes : [node] }).optimize
             end
 
-            def simplify_premergeable_objects
+            def optimize_premergeable_objects
                 nodes.each_cons(2).each_with_index do |(obj1, obj2), idx|
                     obj1 = constant_to_object(obj1) if Constant === obj1
                     obj2 = constant_to_object(obj2) if Constant === obj2
@@ -69,7 +69,7 @@ module Babl
                         new_nodes = nodes.dup
                         new_nodes[idx] = Object.new(obj1.nodes.merge(obj2.nodes))
                         new_nodes[idx + 1] = nil
-                        return Merge.new(new_nodes.compact).simplify
+                        return Merge.new(new_nodes.compact).optimize
                     end
                 end
                 nil

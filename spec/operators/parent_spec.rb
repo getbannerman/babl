@@ -34,7 +34,8 @@ describe Babl::Operators::Parent do
                 nav(:a, :b, :c, :d, :e).parent.parent.parent.nav(:f, :g, :h).parent.parent.parent.parent.nav(:i)
             }
 
-            it { expect(dependencies).to eq(a: { b: { f: { g: { h: {} } }, c: { d: { e: {} } } }, i: {} }) }
+            it { expect(unoptimized_dependencies).to eq(a: { b: { f: { g: { h: {} } }, c: { d: { e: {} } } }, i: {} }) }
+            it { expect(dependencies).to eq(a: { i: {} }) }
         end
 
         context 'parent followed by constant' do
@@ -51,7 +52,8 @@ describe Babl::Operators::Parent do
                 )
             }
 
-            it { expect(dependencies).to eq(a: { b: { c: {} }, h: {} }, b: { a: {} }) }
+            it { expect(unoptimized_dependencies).to eq(a: { b: { c: {} }, h: {} }, b: { a: {} }) }
+            it { expect(dependencies).to eq(a: { h: {} }, b: { a: {} }) }
         end
     end
 end

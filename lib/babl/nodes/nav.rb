@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'babl/utils'
 require 'babl/nodes/constant'
+require 'babl/nodes/parent'
 
 module Babl
     module Nodes
@@ -26,9 +27,11 @@ module Babl
                 node.render(ctx.move_forward(value, through))
             end
 
-            def simplify
-                simplified = node.simplify
-                Constant === simplified ? simplified : Nav.new(through, simplified)
+            def optimize
+                optimized = node.optimize
+                return optimized if Constant === optimized
+                return optimized.node if Parent === optimized
+                Nav.new(through, optimized)
             end
         end
     end

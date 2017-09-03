@@ -19,7 +19,7 @@ This template will produce the following JSON data:
 
 ## Implicit form
 
-A native Ruby array can also be passed whenever a BABL template is expected. In this case, the operator `#array` is implicitly called. Using all implicit forms, The previous template can be rewritten:
+A native Ruby array can also be passed wherever a BABL template is expected. In this case, the operator `#array` is implicitly called. Using all implicit forms, The previous template can be rewritten:
 
 ```ruby
 [ 42, { test: 'bar' } ]
@@ -218,7 +218,7 @@ This is semantically equivalent to this Ruby code:
 
 ## Implicit form
 
-A `Symbol` is always converted into a navigation operator whenever a BABL template is expected. For instance,
+A `Symbol` is always converted into a navigation operator wherever a BABL template is expected. For instance,
 ```ruby
 object(
     value: :my_value
@@ -233,7 +233,7 @@ object(
 
 # <a name="null"></a>`null`
 
-Produce a JSON `null`. It is a shortcut for `static(nil)`. BABL also accepts `nil` whenever a BABL template is expected.
+Produce a JSON `null`. It is a shortcut for `static(nil)`. BABL also accepts `nil` wherever a BABL template is expected.
 
 This operator has been added in order to make JSON a subset of BABL.
 

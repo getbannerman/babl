@@ -22,19 +22,11 @@ module Babl
                 nodes.map { |node| node.render(ctx) }
             end
 
-            def simplify
-                simplify_constant || simplify_items || self
-            end
-
-            private
-
-            def simplify_constant
-                Constant.new(render(nil), schema) if nodes.all? { |node| Constant === node }
-            end
-
-            def simplify_items
-                simplified_nodes = nodes.map(&:simplify)
-                FixedArray.new(simplified_nodes).simplify unless simplified_nodes == nodes
+            def optimize
+                optimized_nodes = nodes.map(&:optimize)
+                fixed_array = FixedArray.new(optimized_nodes)
+                return fixed_array unless optimized_nodes.all? { |node| Constant === node }
+                Constant.new(fixed_array.render(nil), fixed_array.schema)
             end
         end
     end

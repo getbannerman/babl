@@ -24,7 +24,7 @@ module Babl
                 # Recompute dependencies & schema on the simplified tree before
                 # exposing them to the user.
                 if optimize
-                    tree = tree.simplify
+                    tree = tree.optimize
                     dependencies = tree.dependencies
                     schema = tree.schema
                 end

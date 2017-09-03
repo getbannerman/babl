@@ -40,7 +40,7 @@ module Babl
                 end
             end
 
-            def simplify
+            def optimize
                 self
             end
 

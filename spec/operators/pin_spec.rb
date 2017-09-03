@@ -31,6 +31,22 @@ describe Babl::Operators::Pin do
             }
         end
 
+        context 'un-used pin' do
+            template {
+                pin(:oki) { |ref|
+                    switch(
+                        false => ref,
+                        default => 34
+                    )
+                }
+            }
+
+            it { expect(json).to eq 34 }
+            it { expect(dependencies).to eq({}) }
+            it { expect(unoptimized_dependencies).to eq(oki: {}) }
+            it { expect(schema).to eq s_primitive(34) }
+        end
+
         context 'when visiting parent from pin' do
             template {
                 nav(:a).pin { |p1|
@@ -133,7 +149,7 @@ describe Babl::Operators::Pin do
             let(:object) { { a: { h: 42, x: 13, lol: 11, mdr: 34 } } }
 
             it { expect(json).to eq('h' => 42, 'a' => { 'x' => 13, 'y' => 34 }) }
-            it { expect(dependencies).to eq(a: { h: {}, x: {}, lol: {}, mdr: {} }) }
+            it { expect(dependencies).to eq(a: { h: {}, x: {}, mdr: {} }) }
 
             it {
                 expect(schema).to eq(

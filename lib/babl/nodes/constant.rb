@@ -17,7 +17,7 @@ module Babl
                 Utils::Hash::EMPTY
             end
 
-            def simplify
+            def optimize
                 self
             end
         end

@@ -21,9 +21,9 @@ module Babl
                 node.render(ctx.goto_pin(ref))
             end
 
-            def simplify
-                simplified = node.simplify
-                Constant === simplified ? simplified : GotoPin.new(simplified, ref)
+            def optimize
+                optimized = node.optimize
+                Constant === optimized ? optimized : GotoPin.new(optimized, ref)
             end
         end
     end
