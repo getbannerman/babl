@@ -5,12 +5,12 @@ module Babl
     module Operators
         module Nullable
             module DSL
-                # Nullify the current construction if
-                # the current element is Nil.
-                def nullable
+                # Nullify the current construction if the condition is truthy.
+                # By default, it produces null when the current element is Nil.
+                def nullable(nullcond = unscoped.is_null)
                     source {
                         switch(
-                            construct_terminal { Nodes::IsNull.instance } => nil,
+                            nullcond => nil,
                             default => continue
                         )
                     }

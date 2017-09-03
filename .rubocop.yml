@@ -176,6 +176,9 @@ Style/Next:
 Style/NumericPredicate:
     Enabled: False
 
+Style/PredicateName:
+    Enabled: False
+
 Style/ParallelAssignment:
     Enabled: False
 

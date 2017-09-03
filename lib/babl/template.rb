@@ -12,6 +12,7 @@ module Babl
         include Operators::Each::DSL
         include Operators::Enter::DSL
         include Operators::Extends::DSL
+        include Operators::IsNull::DSL
         include Operators::Merge::DSL
         include Operators::Nav::DSL
         include Operators::Null::DSL

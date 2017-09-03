@@ -68,7 +68,7 @@ JSON output:
 
 Interestingly, this JSON output is also a valid BABL template. In fact, BABL is almost a perfect JSON superset, thanks to [implicit forms](pages/operators.md).
 
-## Documentation
+# Resources
 
 - [Getting started (with Rails)](pages/getting_started.md)
 - [Understanding BABL: fundamental concepts](pages/concepts.md)
