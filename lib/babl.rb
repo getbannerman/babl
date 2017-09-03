@@ -7,12 +7,13 @@ require 'babl/operators'
 
 module Babl
     class Config
-        attr_accessor :search_path, :preloader, :pretty
+        attr_accessor :search_path, :preloader, :pretty, :cache_templates
 
         def initialize
             @search_path = nil
             @preloader = Babl::Rendering::NoopPreloader
             @pretty = true
+            @cache_templates = false
         end
     end
 
