@@ -19,6 +19,10 @@ module Babl
             def pinned_dependencies
                 node.pinned_dependencies.reject { |k, _v| k == ref }
             end
+
+            def simplify
+                CreatePin.new(node.simplify, ref)
+            end
         end
     end
 end

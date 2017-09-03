@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'babl/schema'
 require 'babl/utils'
+require 'babl/nodes/constant'
 
 module Babl
     module Nodes
@@ -19,6 +20,21 @@ module Babl
 
             def render(ctx)
                 nodes.map { |node| node.render(ctx) }
+            end
+
+            def simplify
+                simplify_constant || simplify_items || self
+            end
+
+            private
+
+            def simplify_constant
+                Constant.new(render(nil), schema) if nodes.all? { |node| Constant === node }
+            end
+
+            def simplify_items
+                simplified_nodes = nodes.map(&:simplify)
+                FixedArray.new(simplified_nodes).simplify unless simplified_nodes == nodes
             end
         end
     end

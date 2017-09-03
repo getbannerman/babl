@@ -10,7 +10,7 @@ describe Babl::Operators::Call do
 
             it { expect(json).to eq false }
             it { expect(dependencies).to eq({}) }
-            it { expect(schema).to eq s_static(false) }
+            it { expect(schema).to eq s_primitive(false) }
 
             context 'call primitive after a conditional' do
                 template { nullable.call(34) }

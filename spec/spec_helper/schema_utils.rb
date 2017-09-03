@@ -16,7 +16,7 @@ module SpecHelper
         end
 
         def s_null
-            Babl::Schema::Static::NULL
+            Babl::Schema::Primitive::NULL
         end
 
         def s_integer
@@ -43,8 +43,8 @@ module SpecHelper
             Babl::Schema::Object.new(properties, additional)
         end
 
-        def s_static(value)
-            Babl::Schema::Static.new(value)
+        def s_primitive(value)
+            Babl::Schema::Primitive.new(value)
         end
 
         def s_property(name, value, required: true)

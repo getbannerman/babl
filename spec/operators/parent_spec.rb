@@ -37,6 +37,12 @@ describe Babl::Operators::Parent do
             it { expect(dependencies).to eq(a: { b: { f: { g: { h: {} } }, c: { d: { e: {} } } }, i: {} }) }
         end
 
+        context 'parent followed by constant' do
+            template { nav(:a).call([parent.static(1)]) }
+
+            it { expect(json).to eq([1]) }
+        end
+
         context 'same-level key + nested parent chain' do
             template {
                 object(

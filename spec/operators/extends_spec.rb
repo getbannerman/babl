@@ -21,7 +21,7 @@ describe Babl::Operators::Extends do
     context 'extend a non-object' do
         template { extends('string_partial') }
         it { expect(json).to eq('lol') }
-        it { expect(schema).to eq s_static('lol') }
+        it { expect(schema).to eq s_primitive('lol') }
     end
 
     context 'extend a non-object and try to add properties' do

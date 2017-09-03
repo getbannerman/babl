@@ -10,7 +10,7 @@ module Babl
                 def static(val)
                     case val
                     when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass
-                        construct_terminal { Nodes::Static.new(val) }
+                        construct_terminal { Nodes::Constant.new(val, Schema::Primitive.new(val)) }
                     else call(Nodes::TerminalValue.instance.render_object(val))
                     end
                 rescue Errors::RenderingError => exception

@@ -3,7 +3,7 @@ require 'babl/utils'
 
 module Babl
     module Schema
-        class Static < Utils::Value.new(:value, :json)
+        class Primitive < Utils::Value.new(:value, :json)
             def initialize(value)
                 super(value, ::NilClass === value ? { type: 'null' } : { enum: [value] })
             end

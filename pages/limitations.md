@@ -4,9 +4,9 @@
 
 This gem implements support of `*.babl` views in [Rails](https://github.com/rails/rails/).
 
-In theory, the template could be compiled once for all and re-used for subsequent requests. In practice, today's implementation will re-compile the template at every request, because Rails templating mechanism doesn't make our life easy.
+Ideally, the template should be compiled once for all and re-used for all subsequent requests. In practice, today's implementation will re-compile the template at every request, because Rails templating mechanism doesn't make our life easy. Template compilation time is non negligible, and it could become a real problem with [code generation](https://github.com/getbannerman/babl/pull/21).
 
-If it turns out to be a performance bottleneck, I will probably hack something to work around this issue.
+I will probably hack something soon in order to work around this issue.
 
 ## No recursion
 
@@ -26,4 +26,4 @@ object(
 }
 ```
 
-I don't plan to work on that feature in the near future.
+I do not plan to work on that feature in the near future.

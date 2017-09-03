@@ -47,8 +47,8 @@ module Babl
 
             # AnyOf[true, false] is just boolean
             def simplify_boolean
-                return unless choice_set.include?(Static::TRUE) && choice_set.include?(Static::FALSE)
-                AnyOf.canonicalized(choice_set - [Static::TRUE, Static::FALSE] + [Typed::BOOLEAN])
+                return unless choice_set.include?(Primitive::TRUE) && choice_set.include?(Primitive::FALSE)
+                AnyOf.canonicalized(choice_set - [Primitive::TRUE, Primitive::FALSE] + [Typed::BOOLEAN])
             end
 
             # AnyOf[string, 'a string instance', 'another string'] is just string
@@ -59,7 +59,7 @@ module Babl
                 choice_set.each do |typed|
                     next unless Typed === typed
                     instances = choice_set.select { |instance|
-                        Static === instance && typed.classes.any? { |clazz| clazz === instance.value }
+                        Primitive === instance && typed.classes.any? { |clazz| clazz === instance.value }
                     }
                     next if instances.empty?
                     return AnyOf.canonicalized(choice_set - instances)
@@ -118,7 +118,9 @@ module Babl
                         # We will abort the merging process unless all the other properties are exactly the same.
                         discriminator = obj1props.find { |name, p1|
                             p2 = obj2props[name]
-                            next name if p2 && Static === p2.value && Static === p1.value && p1.value.value != p2.value.value
+                            next name if p2 && Primitive === p2.value &&
+                                    Primitive === p1.value &&
+                                    p1.value.value != p2.value.value
                         }&.first
 
                         new_properties = (obj1props.keys + obj2props.keys).uniq.map { |name|

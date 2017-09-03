@@ -25,6 +25,10 @@ module Babl
                 end
                 collection.each_with_index.map { |value, idx| node.render(ctx.move_forward(value, idx)) }
             end
+
+            def simplify
+                Each.new(node.simplify)
+            end
         end
     end
 end

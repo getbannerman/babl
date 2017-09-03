@@ -13,9 +13,11 @@ module Babl
         class InternalValue
             include Singleton
 
+            # :nocov:
             def schema
                 raise Errors::InvalidTemplate, 'Internal nodes cannot be documented'
             end
+            # :nocov:
 
             def dependencies
                 Utils::Hash::EMPTY
@@ -27,6 +29,10 @@ module Babl
 
             def render(ctx)
                 ctx.object
+            end
+
+            def simplify
+                self
             end
         end
     end

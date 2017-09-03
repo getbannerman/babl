@@ -2,6 +2,7 @@
 require 'babl/errors'
 require 'babl/utils'
 require 'babl/schema'
+require 'babl/nodes/constant'
 
 module Babl
     module Nodes
@@ -25,32 +26,67 @@ module Babl
                 }
             end
 
-            def self.build(nodes)
-                return new(nodes) if nodes.empty?
-                return nodes.first if nodes.size == 1 && Object === nodes.first
-
-                expanded = nodes.flat_map { |node| Merge === node ? node.nodes : [node] }
-                out = []
-                op1 = nil
-                op2 = expanded[0]
-                expanded.drop(1).each do |elm|
-                    op1 = op2
-                    op2 = elm
-                    if Object === op1 && Object === op2
-                        op2 = Object.new(op1.nodes.merge(op2.nodes))
-                        op1 = nil
-                    end
-                    out << op1 if op1
-                end
-                out << op2 if op2
-                new(out)
+            def simplify
+                simplify_empty ||
+                    simplify_single ||
+                    simplify_merged_objects ||
+                    simplify_nested_merges ||
+                    simplify_premergeable_objects ||
+                    self
             end
 
             private
 
+            def simplify_empty
+                Constant.new({}, Schema::Object::EMPTY) if nodes.empty?
+            end
+
+            def simplify_single
+                return unless nodes.size == 1
+                simplified = nodes.first.simplify
+                case
+                when Object === simplified then simplified
+                when Constant === simplified && simplified.value.nil? then Object::EMPTY
+                end
+            end
+
+            def simplify_merged_objects
+                simplified_nodes = nodes.map(&:simplify)
+                simplified_nodes == nodes ? nil : Merge.new(simplified_nodes).simplify
+            end
+
+            def simplify_nested_merges
+                return unless nodes.any? { |node| Merge === node }
+                Merge.new(nodes.flat_map { |node| Merge === node ? node.nodes : [node] }).simplify
+            end
+
+            def simplify_premergeable_objects
+                nodes.each_cons(2).each_with_index do |(obj1, obj2), idx|
+                    obj1 = constant_to_object(obj1) if Constant === obj1
+                    obj2 = constant_to_object(obj2) if Constant === obj2
+
+                    if Object === obj1 && Object === obj2
+                        new_nodes = nodes.dup
+                        new_nodes[idx] = Object.new(obj1.nodes.merge(obj2.nodes))
+                        new_nodes[idx + 1] = nil
+                        return Merge.new(new_nodes.compact).simplify
+                    end
+                end
+                nil
+            end
+
+            def constant_to_object(constant)
+                case constant.schema
+                when Schema::Object
+                    Object.new(constant.schema.property_set.map { |property|
+                        [property.name, Constant.new(constant.value[property.name], property.value)]
+                    }.to_h)
+                end
+            end
+
             AS_OBJECT_MAPPING = {
                 Schema::Anything.instance => Schema::Object::EMPTY_WITH_ADDITIONAL,
-                Schema::Static::NULL => Schema::Object::EMPTY
+                Schema::Primitive::NULL => Schema::Object::EMPTY
             }
 
             # Merge two documentations together

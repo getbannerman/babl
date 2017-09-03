@@ -40,6 +40,10 @@ module Babl
                 end
             end
 
+            def simplify
+                self
+            end
+
             private
 
             def render_array(array, stack)

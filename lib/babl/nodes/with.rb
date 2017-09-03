@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'babl/utils'
+require 'babl/nodes/constant'
 
 module Babl
     module Nodes
@@ -26,6 +27,12 @@ module Babl
                     raise Errors::RenderingError, "#{e.message}\n" + ctx.formatted_stack(:__block__), e.backtrace
                 end
                 node.render(ctx.move_forward(value, :__block__))
+            end
+
+            def simplify
+                simplified = node.simplify
+                return simplified if Constant === simplified
+                With.new(simplified, nodes.map(&:simplify), block)
             end
         end
     end

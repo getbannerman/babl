@@ -23,6 +23,10 @@ module Babl
                 return value if schema.classes.any? { |clazz| clazz === value }
                 raise Errors::RenderingError, "Expected type '#{schema.type}': #{value}\n#{ctx.formatted_stack}"
             end
+
+            def simplify
+                self
+            end
         end
     end
 end

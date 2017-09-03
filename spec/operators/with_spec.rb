@@ -23,6 +23,13 @@ describe Babl::Operators::With do
             it { expect(schema).to eq s_object(s_property(:result, s_anything)) }
         end
 
+        context 'with followed by constant' do
+            template { with(:a, :b) { |a, b| a + b }.static(2) }
+
+            it { expect(json).to eq 2 }
+            it { expect(dependencies).to eq({}) }
+        end
+
         context 'when the block raise an exception' do
             template { with { raise 'lol' } }
 

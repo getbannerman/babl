@@ -20,7 +20,7 @@ describe Babl::Operators::Merge do
             it {
                 expect(schema).to eq(
                     s_object(
-                        s_property(:a, s_static('A')),
+                        s_property(:a, s_primitive('A')),
                         s_property(:b, s_anything)
                     )
                 )
@@ -38,7 +38,7 @@ describe Babl::Operators::Merge do
                     s_object(
                         s_property(:toto,
                             s_object(
-                                s_property(:lol, s_static(42)),
+                                s_property(:lol, s_primitive(42)),
                                 additional: true
                             ))
                     )
@@ -57,8 +57,8 @@ describe Babl::Operators::Merge do
             template {
                 merge(
                     switch(
-                        false => switch(
-                            true => {},
+                        -> { false } => switch(
+                            -> { true } => {},
                             default => 'not an object'
                         ),
                         default => {}
@@ -76,6 +76,12 @@ describe Babl::Operators::Merge do
             it { expect { schema }.to raise_error Babl::Errors::InvalidTemplate }
         end
 
+        context 'merge only nil' do
+            template { merge(nil) }
+
+            it { expect(schema).to eq s_object }
+        end
+
         context 'merge only one dynamic value' do
             template { merge(itself) }
 
@@ -89,7 +95,7 @@ describe Babl::Operators::Merge do
             template { merge(object(a: 1), static(b: 2)) }
 
             it { expect(json).to eq('a' => 1, 'b' => 2) }
-            it { expect(schema).to eq s_object(s_property(:a, s_static(1)), s_property(:b, s_static(2))) }
+            it { expect(schema).to eq s_object(s_property(:a, s_primitive(1)), s_property(:b, s_primitive(2))) }
         end
 
         context 'merge object with conditionally present properties' do
@@ -116,7 +122,7 @@ describe Babl::Operators::Merge do
                     s_object(
                         s_property(:a, s_anything, required: false),
                         s_property(:b, s_anything),
-                        s_property(:c, s_any_of(s_static(7), s_static(5))),
+                        s_property(:c, s_any_of(s_primitive(7), s_primitive(5))),
                         additional: true
                     )
                 )
@@ -141,9 +147,9 @@ describe Babl::Operators::Merge do
 
             it {
                 expect(schema).to eq s_object(
-                    s_property(:a, s_static(1)),
+                    s_property(:a, s_primitive(1)),
                     s_property(:b, s_anything),
-                    s_property(:c, s_static(2))
+                    s_property(:c, s_primitive(2))
                 )
             }
         end
@@ -159,10 +165,10 @@ describe Babl::Operators::Merge do
             it {
                 expect(schema).to eq(
                     s_object(
-                        s_property(:a, s_static(1), required: false),
-                        s_property(:b, s_static(2), required: false),
+                        s_property(:a, s_primitive(1), required: false),
+                        s_property(:b, s_primitive(2), required: false),
                         s_property(:c, s_string, required: false),
-                        s_property(:d, s_static(4), required: true),
+                        s_property(:d, s_primitive(4), required: true),
                         additional: true
                     )
                 )
@@ -172,16 +178,16 @@ describe Babl::Operators::Merge do
         context 'switch between disjoint objects' do
             template {
                 switch(
-                    1 => { a: 1 },
-                    2 => { b: 3 }
+                    -> {} => { a: 1 },
+                    -> {} => { b: 3 }
                 )
             }
 
             it {
                 expect(schema).to eq(
                     s_object(
-                        s_property(:a, s_static(1), required: false),
-                        s_property(:b, s_static(3), required: false)
+                        s_property(:a, s_primitive(1), required: false),
+                        s_property(:b, s_primitive(3), required: false)
                     )
                 )
             }

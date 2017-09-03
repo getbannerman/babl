@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'babl/utils'
+require 'babl/nodes/constant'
 
 module Babl
     module Nodes
@@ -25,9 +26,9 @@ module Babl
                 node.render(ctx.move_forward(value, through))
             end
 
-            private
-
-            def navigate(object)
+            def simplify
+                simplified = node.simplify
+                Constant === simplified ? simplified : Nav.new(through, simplified)
             end
         end
     end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'babl/utils'
+require 'babl/nodes/constant'
 
 module Babl
     module Nodes
@@ -18,6 +19,11 @@ module Babl
 
             def render(ctx)
                 node.render(ctx.goto_pin(ref))
+            end
+
+            def simplify
+                simplified = node.simplify
+                Constant === simplified ? simplified : GotoPin.new(simplified, ref)
             end
         end
     end

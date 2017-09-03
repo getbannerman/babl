@@ -10,13 +10,13 @@ describe Babl::Operators::Static do
 
             it { expect(json).to eq('1' => 'cava') }
             it { expect(dependencies).to eq({}) }
-            it { expect(schema).to eq s_object(s_property(:'1', s_static('cava'))) }
+            it { expect(schema).to eq s_object(s_property(:'1', s_primitive('cava'))) }
         end
 
         context 'static primitive' do
             template { static('ok') }
 
-            it { expect(schema).to eq s_static('ok') }
+            it { expect(schema).to eq s_primitive('ok') }
         end
 
         context 'invalid' do

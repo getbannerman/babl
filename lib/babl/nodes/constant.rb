@@ -1,15 +1,12 @@
 # frozen_string_literal: true
-require 'babl/utils'
 require 'babl/schema'
-require 'singleton'
+require 'babl/utils'
 
 module Babl
     module Nodes
-        class IsNull
-            include Singleton
-
-            def schema
-                Schema::Typed::BOOLEAN
+        class Constant < Utils::Value.new(:value, :schema)
+            def render(_ctx)
+                value
             end
 
             def dependencies
@@ -18,10 +15,6 @@ module Babl
 
             def pinned_dependencies
                 Utils::Hash::EMPTY
-            end
-
-            def render(ctx)
-                ::NilClass === ctx.object
             end
 
             def simplify

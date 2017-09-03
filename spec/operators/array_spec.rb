@@ -15,10 +15,10 @@ describe Babl::Operators::Array do
             it {
                 expect(schema).to eq(
                     s_fixed_array(
-                        s_static('coucou'),
-                        s_static(45),
+                        s_primitive('coucou'),
+                        s_primitive(45),
                         s_object(
-                            s_property(:a, s_static(1)),
+                            s_property(:a, s_primitive(1)),
                             s_property(:b, s_fixed_array(s_anything))
                         )
                     )

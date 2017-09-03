@@ -24,6 +24,10 @@ module Babl
                 Babl::Utils::Hash.deep_merge(node.dependencies, path)
             end
 
+            def simplify
+                Dep.new(node.simplify, path)
+            end
+
             private
 
             def canonicalize(path)

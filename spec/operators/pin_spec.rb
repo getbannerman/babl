@@ -52,6 +52,13 @@ describe Babl::Operators::Pin do
             }
         end
 
+        context 'goto pin followed by constant' do
+            template { pin(:lol) { |lol| lol.nav(:x).static(1) } }
+
+            it { expect(dependencies).to eq({}) }
+            it { expect(json).to eq 1 }
+        end
+
         context 'when pinning is misused (out of context)' do
             template {
                 pinref = nil

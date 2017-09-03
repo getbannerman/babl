@@ -14,15 +14,27 @@ module Babl
                 @builder = builder
             end
 
-            def compile(preloader: Rendering::NoopPreloader, pretty: true)
-                node = precompile
+            def compile(preloader: Rendering::NoopPreloader, pretty: true, optimize: true)
+                # Compute dependencies & schema on the non-simplified node tree in order
+                # to catch all errors.
+                tree = precompile
+                dependencies = tree.dependencies
+                schema = tree.schema
+
+                # Recompute dependencies & schema on the simplified tree before
+                # exposing them to the user.
+                if optimize
+                    tree = tree.simplify
+                    dependencies = tree.dependencies
+                    schema = tree.schema
+                end
 
                 Rendering::CompiledTemplate.with(
                     preloader: preloader,
                     pretty: pretty,
-                    node: node,
-                    dependencies: node.dependencies,
-                    json_schema: node.schema.json
+                    node: tree,
+                    dependencies: dependencies,
+                    json_schema: schema.json
                 )
             end
 

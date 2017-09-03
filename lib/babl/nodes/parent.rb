@@ -24,6 +24,10 @@ module Babl
                     node.render(ctx)
                 end
 
+                def simplify
+                    Resolver.new(node.simplify)
+                end
+
                 private
 
                 def backpropagate_dependencies(deps)
@@ -58,6 +62,11 @@ module Babl
 
             def render(ctx)
                 node.render(ctx.move_backward)
+            end
+
+            def simplify
+                simplified = node.simplify
+                Constant === simplified ? simplified : Parent.new(simplified)
             end
         end
     end

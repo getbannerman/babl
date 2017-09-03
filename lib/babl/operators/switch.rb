@@ -17,7 +17,7 @@ module Babl
                                 .precompile(Nodes::TerminalValue.instance, context.merge(continue: node))
 
                             [cond_node, value_node]
-                        }.to_h
+                        }
 
                         Nodes::Switch.new(nodes)
                     }

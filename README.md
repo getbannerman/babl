@@ -15,12 +15,13 @@ It plays a role similar to [RABL](https://github.com/nesquena/rabl), [JBuilder](
 
 A BABL template has to be compiled before it can be used. This approach carries several advantages:
 - Many errors can be detected earlier during the development process.
-- Partials are resolved only once, during compilation: zero overhead at runtime.
+- Partials are resolved only once, during compilation: zero overhead at render time.
+- Template fragments which are provably constant are pre-rendered at compilation time.
 - [Code generation [WIP]](https://github.com/getbannerman/babl/pull/21) should bring performances close to handcrafted Ruby code.
 
 ## Automatic documentation (JSON schema)
 
-BABL can automatically document its template by exporting a JSON-Schema description. Combined with optional type-checking assertions, it becomes possible to do some exciting things.
+BABL can automatically document a template by generating a JSON-Schema. Combined with optional [type-checking assertions](pages/operators.md#typed), it becomes possible to do some exciting things.
 
 For instance, it is possible to generate TypeScript interfaces by feeding the exported JSON-Schema to https://github.com/bcherny/json-schema-to-typescript.
 
@@ -63,7 +64,7 @@ JSON output:
 }
 ```
 
-Interestingly, this JSON output is also a valid BABL template. In general, when a JSON file is also a valid Ruby file, then it is also a valid BABL template. This property makes it very easy to mix static and dynamic content during developpement.
+Interestingly, this JSON output is also a valid BABL template. In fact, BABL is almost a perfect JSON superset, thanks to [implicit forms](pages/operators.md).
 
 ## Documentation
 
@@ -71,7 +72,7 @@ Interestingly, this JSON output is also a valid BABL template. In general, when 
 - [Fundamental concepts](pages/concepts.md)
 - [BABL Templates](pages/templates.md)
 - [List of all operators](pages/operators.md)
-- [Limitations / Known issues](pages/limitations.md)
+- [Limitations / known issues](pages/limitations.md)
 
 # License
 
