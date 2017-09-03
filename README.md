@@ -5,7 +5,7 @@
 [![Gem](https://img.shields.io/gem/v/babl-json.svg)](https://rubygems.org/gems/babl-json)
 [![Downloads](https://img.shields.io/gem/dt/babl-json.svg)](https://rubygems.org/gems/babl-json)
 
-BABL (Bannerman API Builder Language) is a templating langage for generating JSON in APIs.
+BABL (Bannerman API Builder Language) is a functional Ruby DSL for generating JSON in APIs.
 
 It plays a role similar to [RABL](https://github.com/nesquena/rabl), [JBuilder](https://github.com/rails/jbuilder), [Grape Entity](https://github.com/ruby-grape/grape-entity), [AMS](https://github.com/rails-api/active_model_serializers), and many others.
 
@@ -70,9 +70,9 @@ Interestingly, this JSON output is also a valid BABL template. In fact, BABL is 
 
 # Resources
 
-- [Getting started (with Rails)](pages/getting_started.md)
 - [Understanding BABL: fundamental concepts](pages/concepts.md)
-- [Playing with `BABL::Template`](pages/templates.md)
+- [Getting started (with Rails)](pages/getting_started.md)
+- [Playing with templates (without Rails)](pages/templates.md)
 - [List of all operators](pages/operators.md)
 - [Limitations / known issues](pages/limitations.md)
 - [Changelog](CHANGELOG.md)

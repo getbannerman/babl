@@ -1,4 +1,16 @@
-# The Babl::Template
+# Playing with templates
+
+## Setup
+
+```ruby
+gem install babl-json
+```
+and
+```ruby
+require 'babl'
+```
+
+## Creating a template
 
 A BABL template needs to be compiled before it can be used. This is done automatically if BABL is configured with Rails, but it can also be done manually.
 
@@ -68,6 +80,23 @@ schema = compiled_template.json_schema
     "required":[
         "author_names"
     ]
+}
+```
+
+## Composition
+
+A template can be referenced directly from inside another template. In fact, this is exactly what happens when [partials](operators.md#partial) are used.
+
+```ruby
+user = Babl::Template.new.source {
+    object(name: _)
+}
+
+article = Babl::Template.new.source {
+    object(
+        author: _.(user),
+        reviewers: _.each.(user)
+    )
 }
 ```
 

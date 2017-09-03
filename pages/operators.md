@@ -166,6 +166,10 @@ It is equivalent to this expanded template:
     )
 ```
 
+# <a name="merge"></a>`is_null``
+
+Construct a boolean, indicating wether the **current object is `Nil` or not.
+
 # <a name="merge"></a>`merge`
 
 Construct a JSON object by merging multiple templates together, assuming they were producing JSON objects (`nil` is accepted and ignored).
@@ -237,9 +241,11 @@ Produce a JSON `null`. It is a shortcut for `static(nil)`. BABL also accepts `ni
 
 This operator has been added in order to make JSON a subset of BABL.
 
-# <a name="nullable"></a>`nullable`
+# <a name="nullable"></a>`nullable(condition = is_null)`
 
-If the **current object** is `nil`, stop evaluating the chain and emit `null`. Otherwise, continue chain evaluation.
+If the condition is truthy, stop evaluating the chain and emit `null`. Otherwise, continue chain evaluation.
+
+Using the default condition, the chain is stopped if the **current object** is `Nil`.
 
 ## Usage
 
