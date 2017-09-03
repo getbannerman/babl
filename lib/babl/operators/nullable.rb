@@ -7,7 +7,7 @@ module Babl
             module DSL
                 # Nullify the current construction if the condition is truthy.
                 # By default, it produces null when the current element is Nil.
-                def nullable(nullcond = unscoped.is_null)
+                def nullable(nullcond = unscoped.null?)
                     source {
                         switch(
                             nullcond => nil,

@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Babl::Operators::IsNull do
     extend SpecHelper::OperatorTesting
 
-    template { is_null }
+    template { null? }
 
     it { expect(schema).to eq s_boolean }
 
