@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'benchmark'
 
-describe Babl::Operators::Nav do
+describe 'Reference benchmark' do
     extend SpecHelper::OperatorTesting
 
     context 'perf test' do
@@ -32,7 +32,7 @@ describe Babl::Operators::Nav do
         let(:object) {
             nested_struct = Struct.new(:prop1, :prop2, :prop3, :prop4, :prop5, :prop6)
 
-            Array.new(1000) { |i|
+            Array.new(100) { |i|
                 {
                     id: i,
                     prop4: 1,
@@ -53,7 +53,9 @@ describe Babl::Operators::Nav do
             GC.start
             GC.disable
             nb_before = GC.stat[:total_allocated_objects]
-            puts Benchmark.measure { 10.times { compiled.render(object) } }
+            Benchmark.bm { |x|
+                x.report('Reference BABL benchmark') { 10.times { compiled.render(object) } }
+            }
             nb_after = GC.stat[:total_allocated_objects]
             GC.enable
             puts "Allocations: #{nb_after - nb_before}"

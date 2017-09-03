@@ -39,6 +39,9 @@ Style/NumericLiterals:
 Style/SignalException:
     EnforcedStyle: only_raise
 
+Style/LambdaCall:
+    Enabled: False
+
 Layout/AlignParameters:
     EnforcedStyle: with_fixed_indentation
 
