@@ -73,6 +73,7 @@ Interestingly, this JSON output is also a valid BABL template. In fact, BABL is 
 - [BABL Templates](pages/templates.md)
 - [List of all operators](pages/operators.md)
 - [Limitations / known issues](pages/limitations.md)
+- [Changelog](CHANGELOG.md)
 
 # License
 
