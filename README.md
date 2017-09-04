@@ -75,6 +75,7 @@ Interestingly, this JSON output is also a valid BABL template. In fact, BABL is 
 - [Playing with templates (without Rails)](pages/templates.md)
 - [List of all operators](pages/operators.md)
 - [Limitations](pages/limitations.md)
+- [Design rationale](pages/rationale.md)
 - [Changelog](CHANGELOG.md)
 
 # License
