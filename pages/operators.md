@@ -166,7 +166,7 @@ It is equivalent to this expanded template:
     )
 ```
 
-# <a name="merge"></a>`null?`
+# <a name="is_null"></a>`null?`
 
 Construct a boolean, indicating wether the **current object** is `Nil` or not.
 
