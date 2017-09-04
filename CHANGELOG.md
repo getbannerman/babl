@@ -1,5 +1,8 @@
 # BABL Changelog
 
+## 0.3.1 (September 4, 2017)
+- Ensure `BigDecimal` is serialized into JSON float, regardless of the JSON backend chosen.
+
 ## 0.3.0 (September 4, 2017)
 - Added documentation pages.
 - Integrate Coveralls with CI.
