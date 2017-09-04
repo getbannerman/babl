@@ -8,10 +8,12 @@ module Babl
             module DSL
                 # Create a static JSON value
                 def static(val)
-                    case val
+                    sanitized_val = Nodes::TerminalValue.instance.render_object(val)
+
+                    case sanitized_val
                     when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass
-                        construct_terminal { Nodes::Constant.new(val, Schema::Primitive.new(val)) }
-                    else call(Nodes::TerminalValue.instance.render_object(val))
+                        construct_terminal { Nodes::Constant.new(sanitized_val, Schema::Primitive.new(sanitized_val)) }
+                    else call(sanitized_val)
                     end
                 rescue Errors::RenderingError => exception
                     raise Errors::InvalidTemplate, exception.message

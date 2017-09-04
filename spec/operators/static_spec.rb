@@ -19,6 +19,13 @@ describe Babl::Operators::Static do
             it { expect(schema).to eq s_primitive('ok') }
         end
 
+        context 'static BigDecimal' do
+            template { static(BigDecimal.new('1.1')) }
+
+            it { expect(schema).to eq s_primitive(1.1) }
+            it { expect(json).to eq 1.1 }
+        end
+
         context 'invalid' do
             template { static(test: Object.new) }
 

@@ -31,6 +31,11 @@ describe Babl::Operators::Typed do
         end
 
         context do
+            let(:object) { BigDecimal.new('1.8') }
+            it { expect(json).to eq [1.8] }
+        end
+
+        context do
             let(:object) { 12.5 }
             it { expect(json).to eq [12.5] }
         end

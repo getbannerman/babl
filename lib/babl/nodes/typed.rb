@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'babl/utils'
 require 'babl/schema'
+require 'babl/nodes/terminal_value'
 
 module Babl
     module Nodes
@@ -20,7 +21,9 @@ module Babl
 
             def render(ctx)
                 value = ctx.object
-                return value if schema.classes.any? { |clazz| clazz === value }
+                if schema.classes.any? { |clazz| clazz === value }
+                    return ::Numeric === value ? TerminalValue.instance.render_object(value) : value
+                end
                 raise Errors::RenderingError, "Expected type '#{schema.type}': #{value}\n#{ctx.formatted_stack}"
             end
 

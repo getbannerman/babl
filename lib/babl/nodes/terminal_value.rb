@@ -32,10 +32,11 @@ module Babl
 
             def render_object(obj, stack = nil)
                 case obj
-                when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass then obj
+                when ::String, ::Integer, ::NilClass, ::TrueClass, ::FalseClass then obj
+                when ::Numeric then obj.to_f
+                when ::Symbol then obj.to_s
                 when ::Hash then render_hash(obj, stack || [])
                 when ::Array then render_array(obj, stack || [])
-                when ::Symbol then obj.to_s
                 else raise TerminalValueError.new("Only primitives can be serialized: #{obj}", stack || [])
                 end
             end
