@@ -10,7 +10,7 @@ At template's root, the **current object** is set to the model you want to seria
 
 In BABL world, *navigating* is almost always a synonym for *calling a method*.
 
-Example template (`self` is written explicitely for demonstration purpose):
+Example template (`self` is written explicitly for demonstration purpose):
 ```ruby
     self.nav(:document).nav(:author)
 ```
@@ -29,7 +29,7 @@ model.document.author
 
 Construction operators are necessary to produce JSON. They do not affect the **current object**, but they always terminate the chaining.
 
-Additionally, when a chain is not terminated by a construction operator, the **current object** is implicitely dumped into the JSON output at the current position. For instance, the (minimal) template `self` will dump the input model without any transformation, assuming it is serializable.
+Additionally, when a chain is not terminated by a construction operator, the **current object** is implicitly dumped into the JSON output at the current position. For instance, the (minimal) template `self` will dump the input model without any transformation, assuming it is serializable.
 
 The most useful construction operator is [`#object`](operators.md#object): it constructs a JSON object.
 

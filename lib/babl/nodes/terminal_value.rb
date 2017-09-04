@@ -6,7 +6,7 @@ require 'singleton'
 
 module Babl
     module Nodes
-        # A TerminalValue node is always implicitely added to the end of the
+        # A TerminalValue node is always implicitly added to the end of the
         # chain during compilation. It basically ensures that the output contains only
         # primitives, arrays and hashes.
         class TerminalValue

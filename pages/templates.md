@@ -57,7 +57,7 @@ BABL always performs checks to ensure that the data are serializable. The only s
 
 ## <a name="json_schema"></a>JSON-Schema
 
-BABL internally maintains a representation of the output schema and exports it as a JSON-Schema. It can well serve documentation purposes, but it can also be useful if JSON-Schema is used as an intermediary to produce type definitions in another langage.
+BABL internally maintains a representation of the output schema and exports it as a JSON-Schema. It can well serve documentation purposes, but it can also be useful if JSON-Schema is used as an intermediary to produce type definitions in another language.
 
 For instance, at Bannerman, we are generating TypeScript interfaces from BABL templates using this NPM package [json-schema-to-typescript](https://github.com/bcherny/json-schema-to-typescript).
 

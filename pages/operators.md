@@ -27,7 +27,7 @@ A native Ruby array can also be passed wherever a BABL template is expected. In 
 
 # <a name="call"></a>`call(template)`
 
-Append another BABL template to the current chain. `template` may be an instance of `Babl::Template` or any object which is implicitely interpretable as a template (implicit forms).
+Append another BABL template to the current chain. `template` may be an instance of `Babl::Template` or any object which is implicitly interpretable as a template (implicit forms).
 
 ## Usage
 
@@ -360,11 +360,11 @@ Keep a reference to the **current object** that can be re-used later.
 
 # <a name="source"></a>`source(code, &block)`
 
-Evaluate the provided `code` (or `block`) as if it was a BABL template, and append this template to the current chain. This operator is particularily useful to create [user-defined operators](templates#user_defined).
+Evaluate the provided `code` (or `block`) as if it was a BABL template, and append this template to the current chain. This operator is particularly useful to create [user-defined operators](templates#user_defined).
 
 # <a name="static"></a>`static(value)`
 
-Statically construct a chunck of JSON. It only accepts serializable objects [serializable objects](templates.md#rendering).
+Statically construct a chunk of JSON. It only accepts serializable objects [serializable objects](templates.md#rendering).
 - JSON primitives
 - Hashes
 - Arrays

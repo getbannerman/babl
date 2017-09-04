@@ -20,7 +20,7 @@
 
 ## 0.2.5 (August 21, 2017)
 - Made `string`, `boolean`, `number` and `integer` terminal operators.
-- Avoid evaluating overidden properties in simple cases (`merge(object(...), object(...)))`).
+- Avoid evaluating overridden properties in simple cases (`merge(object(...), object(...)))`).
 - Minor performance improvements.
 
 ## 0.2.4 (August 17, 2017)

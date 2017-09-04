@@ -19,7 +19,7 @@ Flexibility of BABL templates is limited on purpose.
 
 - There is no built-in way to create a JSON object having dynamic keys.
     - It is harder to document to API consumers, because the structure can change.
-    - Slightly harder to parse on client side, especially if they are deserialized into classes in a statically typed language.
+    - Slightly harder to parse on client side, especially if they are de-serialized into classes in a statically typed language.
 
 - BABL doesn't let the user manipulate its models directly. Instead, he has to to tell BABL what to do with them using a limited vocabulary.
     - Being limited to do simple logic in views is an acceptable compromise. It is a permanent incentive to push business logic back to your code.
