@@ -91,6 +91,6 @@ There already are some gems to cope with this problem:
 
 In order to alleviate this issue, a BABL template statically exposes all the properties it will need to access during rendering. It makes it possible to write a preloader not only for Rails, but for anything you would like.
 
-At Bannerman, we developed **Preeloo**. It natively supports ActiveRecord associations, computed columns, and custom preloadable properties. Unfortunately, it hasn't been released publicly yet because it still has severe bugs and limitations.
+At Bannerman, we developed **Preeloo**. It natively supports ActiveRecord associations, computed columns, and custom preloadable properties. Unfortunately, it hasn't been released publicly yet because it still has bugs and limitations.
 
 [1]: Functional / imperative DSL definitions are taken from [docile](https://github.com/ms-ati/docile/blob/master/lib/docile.rb).

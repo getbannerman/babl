@@ -31,7 +31,7 @@ See [how to generate a JSON-Schema](pages/templates.md#json_schema).
 
 Due to the static nature of BABL templates, it is possible to determine in advance which methods will be called on models objects during rendering. This is called dependency analysis. In practice, the extracted dependencies can be passed to a preloader, in order to avoid all N+1 issues.
 
-Please note that this requires a compatible preloader implementation. At Bannerman, we are using **Preeloo**. It natively supports ActiveRecord associations, computed columns, and custom preloadable properties. Unfortunately, it hasn't been released publicly (yet), because it still has severe bugs and limitations.
+Please note that this requires a compatible preloader implementation. At Bannerman, we are using **Preeloo**. It natively supports ActiveRecord associations, computed columns, and custom preloadable properties. Unfortunately, it hasn't been released publicly (yet), because it still has bugs and limitations.
 
 ## Example
 
@@ -72,10 +72,11 @@ Interestingly, this JSON output is also a valid BABL template. In fact, BABL is 
 
 ```
                                      user     system      total        real
-RABL                             1.950000   0.010000   1.960000 (  1.957143)
-JBuilder                         0.450000   0.000000   0.450000 (  0.451105)
-BABL                             0.330000   0.010000   0.340000 (  0.331367)
-BABL (compiled once)             0.260000   0.000000   0.260000 (  0.268199)
+RABL                             3.180000   0.010000   3.190000 (  3.189780)
+JBuilder                         0.700000   0.000000   0.700000 (  0.708928)
+BABL                             0.540000   0.000000   0.540000 (  0.540724)
+BABL (compiled once)             0.410000   0.010000   0.420000 (  0.412431)
+Handwritten Ruby                 0.080000   0.000000   0.080000 (  0.081407)
 ```
 
 See [source code](spec/perfs/comparison_spec.rb).

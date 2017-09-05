@@ -85,6 +85,43 @@ describe 'JBuilder comparison' do
         -> { template.apply(data, {}).to_dumpable }
     }
 
+    let(:handwritten_test) {
+        -> {
+            {
+                articles: data.map { |article|
+                    {
+                        title: article.title,
+                        date: article.date.iso8601,
+                        body: article.body,
+                        author: {
+                            name: article.author.name,
+                            birthyear: article.author.birthyear,
+                            job: article.author.job
+                        },
+                        references: article.references.map { |reference|
+                            {
+                                name: reference.name,
+                                url: reference.url
+                            }
+                        },
+                        comments: article.comments.map { |comment|
+                            {
+                                email: comment.email,
+                                body: comment.body,
+                                date: comment.date.iso8601,
+                                author: {
+                                    name: comment.author.name,
+                                    birthyear: comment.author.birthyear,
+                                    job: comment.author.job
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     let(:babl_template) {
         Babl::Template.new.source {
             author = object(:name, :birthyear, :job)
@@ -121,11 +158,12 @@ describe 'JBuilder comparison' do
             'RABL' => rabl_test,
             'JBuilder' => jbuilder_test,
             'BABL' => babl_test,
-            'BABL (compiled once)' => precompiled_babl_test
+            'BABL (compiled once)' => precompiled_babl_test,
+            'Handwritten Ruby' => handwritten_test
         }
     }
 
-    let(:n) { 50 }
+    let(:n) { 80 }
 
     # Ensure all benchmarks are producing the same JSON
     before { expect(benchmarks.values.map(&:call).map { |x| MultiJson.load(MultiJson.dump(x)) }.uniq.size).to eq 1 }
