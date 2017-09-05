@@ -81,7 +81,7 @@ describe 'JBuilder comparison' do
             end
         '
 
-        template = Rabl::Engine.new(code).apply(nil, {})
+        template = Rabl::Engine.new(code)
         -> { template.apply(data, {}).to_dumpable }
     }
 
