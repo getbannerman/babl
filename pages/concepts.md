@@ -8,7 +8,7 @@ In a real world project, model objects are typically related to many others. Thi
 
 At template's root, the **current object** is set to the model you want to serialize. It changes after a navigation operator is used (such as `#nav`, `#with`, ...). Multiple navigation operators can be chained.
 
-In BABL world, *navigating* is almost always a synonym for *calling a method*.
+In BABL world, *navigating* is almost always a synonym for *calling a method* ([except for `Hash`](operators.md#nav)).
 
 Example template (`self` is written explicitly for demonstration purpose):
 ```ruby
@@ -88,8 +88,6 @@ It is important to know that an instance of `Babl::Template`:
 - Doesn't depend on the context it is defined in.
 - Can be re-used in different contexts.
 
-Learn more about [Babl::Template](templates.md).
-
 ```ruby
 # This inline template is defined at top-level, but properties will
 # be fetched starting from 'checkin' and 'checkout', depending on
@@ -111,3 +109,7 @@ object(
     )
 )
 ```
+
+----
+
+Learn more about [Babl::Template](templates.md).
