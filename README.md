@@ -68,6 +68,18 @@ JSON output:
 
 Interestingly, this JSON output is also a valid BABL template. In fact, BABL is almost a perfect JSON superset, thanks to [implicit forms](pages/operators.md).
 
+# Benchmark
+
+```
+                                     user     system      total        real
+RABL                             1.950000   0.010000   1.960000 (  1.957143)
+JBuilder                         0.450000   0.000000   0.450000 (  0.451105)
+BABL                             0.330000   0.010000   0.340000 (  0.331367)
+BABL (compiled once)             0.260000   0.000000   0.260000 (  0.268199)
+```
+
+See [source code](spec/perfs/comparison_spec.rb).
+
 # Resources
 
 - [Understanding BABL: fundamental concepts](pages/concepts.md)
