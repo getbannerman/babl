@@ -79,6 +79,11 @@ BABL (compiled once)             0.410000   0.010000   0.420000 (  0.412431)
 Handwritten Ruby                 0.080000   0.000000   0.080000 (  0.081407)
 ```
 
+Results using [code generation [WIP]](https://github.com/getbannerman/babl/pull/21):
+```
+                                     user     system      total        real
+BABL (compiled once + codegen)   0.170000   0.000000   0.170000 (  0.168479)
+```
 See [source code](spec/perfs/comparison_spec.rb).
 
 # Resources
