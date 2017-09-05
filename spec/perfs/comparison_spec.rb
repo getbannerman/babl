@@ -3,26 +3,29 @@ require 'spec_helper'
 require 'benchmark'
 require 'jbuilder'
 require 'multi_json'
+require 'rabl'
 
 describe 'JBuilder comparison' do
     extend SpecHelper::OperatorTesting
 
-    let(:person_class) { Babl::Utils::Value.new(:name, :birthyear, :job, :url) }
-    let(:article_class) { Babl::Utils::Value.new(:author, :title, :body, :date, :references, :comments) }
-    let(:comment_class) { Babl::Utils::Value.new(:author, :date, :email, :body) }
-    let(:reference_class) { Babl::Utils::Value.new(:name, :url) }
+    before {
+        stub_const('Author', Babl::Utils::Value.new(:name, :birthyear, :job, :url))
+        stub_const('Article', Babl::Utils::Value.new(:author, :title, :body, :date, :references, :comments))
+        stub_const('Comment', Babl::Utils::Value.new(:author, :date, :email, :body))
+        stub_const('Reference', Babl::Utils::Value.new(:name, :url))
+    }
 
     let(:data) {
         Array.new(100) {
-            author = person_class.new("Fred", 1990, "Software developer", "https://github.com/fterrazzoni")
+            author = Author.new("Fred", 1990, "Software developer", "https://github.com/fterrazzoni")
             references = [
-                reference_class.new('BABL repo', 'https://github.com/getbannerman/babl/'),
-                reference_class.new('JBuilder repo', 'https://github.com/rails/jbuilder')
+                Reference.new('BABL repo', 'https://github.com/getbannerman/babl/'),
+                Reference.new('JBuilder repo', 'https://github.com/rails/jbuilder')
             ]
             comments = [
-                comment_class.new(author, Time.now, 'frederic.terrazzoni@gmail.com', 'I like it')
+                Comment.new(author, Time.now, 'frederic.terrazzoni@gmail.com', 'I like it')
             ]
-            article_class.new(author, 'Profiling Jbuilder', 'This is a very short explanation', Time.now, references, comments)
+            Article.new(author, 'Profiling Jbuilder', 'This is a very short explanation', Time.now, references, comments)
         }
     }
 
@@ -49,6 +52,37 @@ describe 'JBuilder comparison' do
                 end
             end.attributes!
         }
+    }
+
+    let(:rabl_test) {
+        Rabl.configuration.include_child_root = false
+
+        code = '
+            collection self, root: :articles, object_root: false
+
+            attributes :title, :body
+            node(:date) { |article| article.date.iso8601 }
+
+            child :author do
+                attributes :name, :birthyear, :job
+            end
+
+            child :references do
+                attributes :name, :url
+            end
+
+            child :comments do
+                attributes :email, :body
+                node(:date) { |article| article.date.iso8601 }
+
+                child :author do
+                    attributes :name, :birthyear, :job
+                end
+            end
+        '
+
+        template = Rabl::Engine.new(code).apply(nil, {})
+        -> { template.apply(data, {}).to_dumpable }
     }
 
     let(:babl_template) {
@@ -82,23 +116,26 @@ describe 'JBuilder comparison' do
         -> { compiled.render(data) }
     }
 
-    let(:n) { 50 }
-
-    before { data }
-
-    it {
-        expect([
-            jbuilder_test.call,
-            babl_test.call,
-            precompiled_babl_test.call
-        ].map { |x| MultiJson.load(MultiJson.dump(x)) }.uniq.size).to eq 1
+    let(:benchmarks) {
+        {
+            'RABL' => rabl_test,
+            'JBuilder' => jbuilder_test,
+            'BABL' => babl_test,
+            'BABL (compiled once)' => precompiled_babl_test
+        }
     }
 
+    let(:n) { 50 }
+
+    # Ensure all benchmarks are producing the same JSON
+    before { expect(benchmarks.values.map(&:call).map { |x| MultiJson.load(MultiJson.dump(x)) }.uniq.size).to eq 1 }
+
+    # Run benchmarks
     it {
-        Benchmark.bm do |x|
-            x.report("Jbuilder") { n.times { jbuilder_test.call } }
-            x.report("BABL") { n.times { babl_test.call } }
-            x.report("Precompiled BABL") { n.times { precompiled_babl_test.call } }
+        Benchmark.bm(30) do |x|
+            benchmarks.each do |description, benchmark|
+                x.report(description) { n.times { benchmark.call } }
+            end
         end
     }
 end

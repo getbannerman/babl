@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
     gem.add_development_dependency 'json-schema', '~> 2.8'
     gem.add_development_dependency 'coveralls', '~> 0.8'
     gem.add_development_dependency 'jbuilder', '~> 2'
+    gem.add_development_dependency 'rabl', '~> 0.13'
 
     gem.add_dependency 'multi_json', '~> 1'
 end
