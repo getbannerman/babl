@@ -3,6 +3,7 @@ require 'babl/schema'
 require 'babl/errors'
 require 'babl/utils'
 require 'babl/nodes/constant'
+require 'set'
 
 module Babl
     module Nodes
@@ -36,10 +37,21 @@ module Babl
                     optimize_falsy_conditions ||
                     optimize_truthy_conditions ||
                     optimize_always_same_outputs ||
+                    optimize_same_conditions ||
                     self
             end
 
             private
+
+            def optimize_same_conditions
+                conds = Set.new
+                new_nodes = nodes.map { |cond, val|
+                    next if conds.include?(cond)
+                    conds << cond
+                    [cond, val]
+                }.compact
+                new_nodes.size == nodes.size ? nil : Switch.new(new_nodes).optimize
+            end
 
             def optimize_always_same_outputs
                 return unless nodes.map(&:first).any? { |node| Constant === node && node.value }

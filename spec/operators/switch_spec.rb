@@ -142,6 +142,24 @@ describe Babl::Operators::Switch do
             it { expect(schema).to eq s_boolean }
         end
 
+        context 'switch with a duplicated condition' do
+            template {
+                switch(
+                    nav(:abc) => 1,
+                    nav(:def) => 2,
+                    nav(:abc) => 3,
+                    default => 4
+                )
+            }
+            it {
+                expect(schema).to eq s_any_of(
+                    s_primitive(1),
+                    s_primitive(2),
+                    s_primitive(4)
+                )
+            }
+        end
+
         context 'switch between true and a string' do
             template { switch(-> {} => true, -> {} => string) }
             it { expect(schema).to eq s_any_of(s_primitive(true), s_string) }
