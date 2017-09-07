@@ -9,6 +9,134 @@ BABL (Bannerman API Builder Language) is a functional Ruby DSL for generating JS
 
 It plays a role similar to [RABL](https://github.com/nesquena/rabl), [JBuilder](https://github.com/rails/jbuilder), [Grape Entity](https://github.com/ruby-grape/grape-entity), [AMS](https://github.com/rails-api/active_model_serializers), and many others.
 
+# Example
+
+```
+gem install babl-json
+```
+
+```ruby
+
+# frozen_string_literal: true
+require 'babl'
+require 'date'
+
+Author = Struct.new(:name, :birthyear)
+Article = Struct.new(:author, :title, :body, :date, :comments)
+Comment = Struct.new(:author, :date, :body)
+
+# Let's define some data
+data = [
+    Article.new(
+        Author.new("Fred", 1990),
+        'Introducing BABL',
+        'Blablabla',
+        DateTime.now,
+        [
+            Comment.new(
+                Author.new("Luke", 1991),
+                DateTime.now,
+                'Great gem'
+            )
+        ]
+    )
+]
+
+# Define a template
+template = Babl::Template.new.source {
+    # A template is a first class object, it can be stored in a variable ("inline partial")
+    # and re-used later.
+    #
+    # This template can serialize an Author for instance into an object.
+    author = object(
+        name: _,
+        birthyear: _
+    )
+
+    # Produce a JSON object
+    object(
+        # Visit each article of from collection and produce a JSON object for each elements
+        articles: each.object(
+            # nav(:iso8601) can be seen as method
+            date: _.nav(:iso8601),
+
+            # '_' is a synonym of 'nav(:title)'
+            title: _,
+            body: _,
+
+            # You can chain another template using call()
+            author: _.(author),
+
+            # Visit each comment, and produce a JSON object for each of them.
+            comments: _.each.object(
+                author: _.(author),
+
+                # Type assertions can be (optionally) specified.
+                # - They add runtime type checks
+                # - They are added to JSON-Schema
+                body: _.string,
+                date: _.nav(:iso8601).string
+            )
+        )
+    )
+}
+
+# All the magic happens here: the template is transformed into a fast serializer.
+compiled_template = template.compile
+
+# Serialize some data into JSON
+compiled_template.json(data)
+
+# =>
+# {
+#     "articles":[
+#       {
+#         "date":"2017-09-07T08:42:42+02:00",
+#         "title":"Introducing BABL",
+#         "body":"Blablabla",
+#         "author":{
+#           "name":"Fred",
+#           "birthyear":1990
+#         },
+#         "comments":[
+#           {
+#             "author":{
+#               "name":"Luke",
+#               "birthyear":1991
+#             },
+#             "body":"Great gem",
+#             "date":"2017-09-07T08:42:42+02:00"
+#           }
+#         ]
+#       }
+#     ]
+#   }
+
+# render() is like json(), but produces a Hash instead of a JSON
+compiled_template.render(data)
+
+# Output a JSON-Schema description of the template
+compiled_template.json_schema
+```
+
+# Benchmark
+
+```
+                                     user     system      total        real
+RABL                             3.180000   0.010000   3.190000 (  3.189780)
+JBuilder                         0.700000   0.000000   0.700000 (  0.708928)
+BABL                             0.540000   0.000000   0.540000 (  0.540724)
+BABL (compiled once)             0.410000   0.010000   0.420000 (  0.412431)
+Handwritten Ruby                 0.080000   0.000000   0.080000 (  0.081407)
+```
+
+Results using [code generation [WIP]](https://github.com/getbannerman/babl/pull/21):
+```
+                                     user     system      total        real
+BABL (compiled once + codegen)   0.170000   0.000000   0.170000 (  0.168479)
+```
+See [source code](spec/perfs/comparison_spec.rb).
+
 # Features
 
 ## Template compilation
@@ -32,59 +160,6 @@ See [how to generate a JSON-Schema](pages/templates.md#json_schema).
 Due to the static nature of BABL templates, it is possible to determine in advance which methods will be called on models objects during rendering. This is called dependency analysis. In practice, the extracted dependencies can be passed to a preloader, in order to avoid all N+1 issues.
 
 Please note that this requires a compatible preloader implementation. At Bannerman, we are using **Preeloo**. It natively supports ActiveRecord associations, computed columns, and custom preloadable properties. Unfortunately, it hasn't been released publicly (yet), because it still has bugs and limitations.
-
-## Example
-
-BABL template:
-
-```ruby
-object(
-    document: object(
-        :id, :title,
-
-        owner: _.nullable.object(:id, :name),
-        authors: _.each.object(:id, :name),
-        category: 'Awesome Stuff'
-    )
-)
-```
-
-JSON output:
-
-```json
-{
-    "document": {
-        "id": 1,
-        "title": "Hello BABL",
-        "owner": null,
-        "authors": [
-            { "id": 4, "name": "Fred" },
-            { "id": 5, "name": "Vivien" }
-        ],
-        "category": "Awesome Stuff"
-    }
-}
-```
-
-Interestingly, this JSON output is also a valid BABL template. In fact, BABL is almost a perfect JSON superset, thanks to [implicit forms](pages/operators.md).
-
-# Benchmark
-
-```
-                                     user     system      total        real
-RABL                             3.180000   0.010000   3.190000 (  3.189780)
-JBuilder                         0.700000   0.000000   0.700000 (  0.708928)
-BABL                             0.540000   0.000000   0.540000 (  0.540724)
-BABL (compiled once)             0.410000   0.010000   0.420000 (  0.412431)
-Handwritten Ruby                 0.080000   0.000000   0.080000 (  0.081407)
-```
-
-Results using [code generation [WIP]](https://github.com/getbannerman/babl/pull/21):
-```
-                                     user     system      total        real
-BABL (compiled once + codegen)   0.170000   0.000000   0.170000 (  0.168479)
-```
-See [source code](spec/perfs/comparison_spec.rb).
 
 # Resources
 
