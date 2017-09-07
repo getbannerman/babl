@@ -16,8 +16,6 @@ gem install babl-json
 ```
 
 ```ruby
-
-# frozen_string_literal: true
 require 'babl'
 require 'date'
 
@@ -44,9 +42,10 @@ data = [
 
 # Define a template
 template = Babl::Template.new.source {
+
     # A template is a first class object, it can be stored in a variable ("inline partial")
     # and re-used later.
-    #
+
     # This template can serialize an Author for instance into an object.
     author = object(
         name: _,
@@ -55,8 +54,10 @@ template = Babl::Template.new.source {
 
     # Produce a JSON object
     object(
+
         # Visit each article of from collection and produce a JSON object for each elements
         articles: each.object(
+
             # nav(:iso8601) can be seen as method
             date: _.nav(:iso8601),
 
@@ -69,6 +70,7 @@ template = Babl::Template.new.source {
 
             # Visit each comment, and produce a JSON object for each of them.
             comments: _.each.object(
+
                 author: _.(author),
 
                 # Type assertions can be (optionally) specified.
