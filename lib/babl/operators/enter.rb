@@ -11,7 +11,7 @@ module Babl
                 def enter
                     construct_node(key: nil, continue: nil) { |node, context|
                         key = context[:key]
-                        raise Errors::InvalidTemplate, "No key to enter into" unless key
+                        raise Errors::InvalidTemplate, 'No key to enter into' unless key
                         Nodes::Nav.new(key, node)
                     }
                 end

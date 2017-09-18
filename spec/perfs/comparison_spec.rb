@@ -17,7 +17,7 @@ describe 'JBuilder comparison' do
 
     let(:data) {
         Array.new(100) {
-            author = Author.new("Fred", 1990, "Software developer", "https://github.com/fterrazzoni")
+            author = Author.new('Fred', 1990, 'Software developer', 'https://github.com/fterrazzoni')
             references = [
                 Reference.new('BABL repo', 'https://github.com/getbannerman/babl/'),
                 Reference.new('JBuilder repo', 'https://github.com/rails/jbuilder')

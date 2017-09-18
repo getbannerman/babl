@@ -65,12 +65,11 @@ module Babl
                     obj1 = constant_to_object(obj1) if Constant === obj1
                     obj2 = constant_to_object(obj2) if Constant === obj2
 
-                    if Object === obj1 && Object === obj2
-                        new_nodes = nodes.dup
-                        new_nodes[idx] = Object.new(obj1.nodes.merge(obj2.nodes))
-                        new_nodes[idx + 1] = nil
-                        return Merge.new(new_nodes.compact).optimize
-                    end
+                    next unless Object === obj1 && Object === obj2
+                    new_nodes = nodes.dup
+                    new_nodes[idx] = Object.new(obj1.nodes.merge(obj2.nodes))
+                    new_nodes[idx + 1] = nil
+                    return Merge.new(new_nodes.compact).optimize
                 end
                 nil
             end
@@ -87,7 +86,7 @@ module Babl
             AS_OBJECT_MAPPING = {
                 Schema::Anything.instance => Schema::Object::EMPTY_WITH_ADDITIONAL,
                 Schema::Primitive::NULL => Schema::Object::EMPTY
-            }
+            }.freeze
 
             # Merge two documentations together
             def merge_doc(doc1, doc2)

@@ -70,13 +70,13 @@ Layout/MultilineMethodCallIndentation:
     Enabled: False
 
 Lint/AmbiguousBlockAssociation:
-    Enabled: False
+    Enabled: True
 
 Lint/EmptyWhen:
-    Enabled: False
+    Enabled: True
 
 Lint/EndAlignment:
-    Enabled: False
+    Enabled: True
 
 Lint/InheritException:
     Enabled: False
@@ -123,13 +123,13 @@ Metrics/ModuleLength:
     Enabled: False
 
 Performance/Casecmp:
-    Enabled: False
+    Enabled: True
 
 Rails/TimeZone:
     Enabled: False
 
 Security/YAMLLoad:
-    Enabled: False
+    Enabled: True
 
 Style/Alias:
     Enabled: False
@@ -138,25 +138,19 @@ Style/ConditionalAssignment:
     Enabled: False
 
 Style/ClassVars:
-    Enabled: False
+    Enabled: True
 
 Style/EmptyCaseCondition:
     Enabled: False
 
 Style/EmptyMethod:
-    Enabled: False
-
-Style/FileName:
-    Enabled: False
-
-Style/FrozenStringLiteralComment:
-    Enabled: False
+    Enabled: True
 
 Style/GuardClause:
     Enabled: False
 
 Style/MixinGrouping:
-    Enabled: False
+    Enabled: True
 
 Style/MultilineBlockChain:
     Enabled: False
@@ -168,13 +162,13 @@ Style/FrozenStringLiteralComment:
     Enabled: True
 
 Style/MutableConstant:
-    Enabled: False
+    Enabled: True
 
 Style/NestedParenthesizedCalls:
     Enabled: False
 
 Style/Next:
-    Enabled: False
+    Enabled: True
 
 Style/NumericPredicate:
     Enabled: False
@@ -183,10 +177,10 @@ Style/ParallelAssignment:
     Enabled: False
 
 Style/RedundantParentheses:
-    Enabled: False
+    Enabled: True
 
 Style/RedundantSelf:
-    Enabled: False
+    Enabled: True
 
 Style/SafeNavigation:
     Enabled: False
@@ -198,10 +192,13 @@ Style/CaseEquality:
     Enabled: False
 
 Style/StringLiterals:
-    Enabled: False
+    Enabled: True
 
 Style/SymbolArray:
     Enabled: False
 
-Style/VariableNumber:
-    Enabled: False
+Naming/VariableNumber:
+    Enabled: True
+
+Naming/FileName:
+    Enabled: True

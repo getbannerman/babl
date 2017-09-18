@@ -42,7 +42,7 @@ module Babl
     end
 
     class Railtie < Rails::Railtie
-        initializer "babl.initialize" do
+        initializer 'babl.initialize' do
             ActiveSupport.on_load(:action_view) do
                 ::ActionView::Template.register_template_handler(:babl, Babl::ActionView::TemplateHandler)
             end

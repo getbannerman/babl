@@ -71,8 +71,10 @@ module Babl
                 case key
                 when ::Symbol then key
                 when ::String then key.to_sym
+                # rubocop:disable Lint/BooleanSymbol
                 when ::TrueClass then :true
                 when ::FalseClass then :false
+                # rubocop:enable Lint/BooleanSymbol
                 when ::Numeric, ::NilClass then :"#{key}"
                 else raise TerminalValueError.new("Invalid key for JSON object: #{key}", stack)
                 end
