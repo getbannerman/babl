@@ -98,6 +98,28 @@ describe Babl::Operators::Merge do
             it { expect(schema).to eq s_object(s_property(:a, s_primitive(1)), s_property(:b, s_primitive(2))) }
         end
 
+        context 'merge object with switch' do
+            template {
+                merge(
+                    object(a: 1),
+                    switch(
+                        -> { false } => { a: 42 },
+                        default => {}
+                    )
+                )
+            }
+
+            it { expect(json).to eq('a' => 1) }
+
+            it {
+                expect(schema).to eq(
+                    s_object(
+                        s_property(:a, s_any_of(s_primitive(1), s_primitive(42)))
+                    )
+                )
+            }
+        end
+
         context 'merge object with conditionally present properties' do
             template {
                 merge(

@@ -111,7 +111,17 @@ module Babl
                 properties = (
                     doc1.property_set.map { |property| doc2.additional ? anything_property(property) : property } +
                     doc2.property_set.to_a
-                ).each_with_object({}) { |property, acc| acc[property.name] = property }.values
+                ).each_with_object({}) { |property, acc|
+                    if property.required
+                        acc[property.name] = property
+                    else
+                        acc[property.name] = Schema::Object::Property.new(
+                            property.name,
+                            Schema::AnyOf.canonicalized([property.value, acc[property.name]&.value].compact),
+                            acc[property.name]&.required || false
+                        )
+                    end
+                }.values
 
                 Schema::Object.new(properties, additional)
             end
