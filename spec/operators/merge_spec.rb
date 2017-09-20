@@ -124,27 +124,27 @@ describe Babl::Operators::Merge do
             template {
                 merge(
                     switch(
-                        itself => object(a: 1, b: 2),
-                        default => object(b: 3, c: 4)
+                        itself => object(a: _.integer, b: _.integer),
+                        default => object(b: _.boolean, c: _.boolean)
                     ),
                     itself,
                     switch(
-                        itself => object(c: 7),
-                        default => object(c: 5)
+                        itself => object(c: _.integer),
+                        default => object(c: _.string)
                     )
                 )
             }
 
-            let(:object) { { b: 1 } }
+            let(:object) { { a: 1, b: 2, c: 3, d: 4 } }
 
-            it { expect(json).to eq('a' => 1, 'b' => 1, 'c' => 7) }
+            it { expect(json).to eq('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4) }
 
             it {
                 expect(schema).to eq(
                     s_object(
                         s_property(:a, s_anything, required: false),
                         s_property(:b, s_anything),
-                        s_property(:c, s_any_of(s_primitive(7), s_primitive(5))),
+                        s_property(:c, s_any_of(s_integer, s_string)),
                         additional: true
                     )
                 )

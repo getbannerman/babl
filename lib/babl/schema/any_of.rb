@@ -110,24 +110,18 @@ module Babl
                         obj1props = obj1.property_set.map { |p| [p.name, p] }.to_h
                         obj2props = obj2.property_set.map { |p| [p.name, p] }.to_h
 
-                        # Do not merge properties unless a keyset is almost a subset of the other
-                        next unless (obj1props.keys.to_set - obj2props.keys).size <= 1 ||
-                                (obj2props.keys.to_set - obj1props.keys).size <= 1
-
                         # Try to detect a discrimitive property (inspired from Typescript's discriminative union),
-                        # We will abort the merging process unless all the other properties are exactly the same.
-                        discriminator = obj1props.find { |name, p1|
+                        # We will abort the merging process if there is one
+                        next if obj1props.any? { |name, p1|
                             p2 = obj2props[name]
                             next name if p2 && Primitive === p2.value &&
                                     Primitive === p1.value &&
                                     p1.value.value != p2.value.value
-                        }&.first
+                        }
 
                         new_properties = (obj1props.keys + obj2props.keys).uniq.map { |name|
                             p1 = obj1props[name]
                             p2 = obj2props[name]
-
-                            break if discriminator && discriminator != name && p1 != p2
 
                             Object::Property.new(
                                 name,
@@ -136,7 +130,6 @@ module Babl
                             )
                         }
 
-                        next unless new_properties
                         new_obj = Object.new(new_properties, obj1.additional || obj2.additional)
                         return AnyOf.canonicalized(choice_set - [obj1, obj2] + [new_obj])
                     }
