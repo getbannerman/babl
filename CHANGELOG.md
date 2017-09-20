@@ -1,5 +1,9 @@
 # BABL Changelog
 
+## 0.3.2 (September 20, 2017)
+- Fix a schema merging bug (`{ a?: 1 } | { a: 2 }` produces `{ a?: 1 | 2 }`  instead of `{ a: 2 }`)
+- Merge schemas more aggressively.
+
 ## 0.3.1 (September 4, 2017)
 - Ensure `BigDecimal` is serialized into JSON float, regardless of the JSON backend chosen.
 
