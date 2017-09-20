@@ -1,11 +1,14 @@
 # BABL Changelog
 
+## 0.3.3 (September 20, 2017)
+- Forward method calls to the original receiver of the block passed to `source`. [#60](https://github.com/getbannerman/babl/pull/60)
+
 ## 0.3.2 (September 20, 2017)
-- Fix a schema merging bug (`{ a?: 1 } | { a: 2 }` produces `{ a?: 1 | 2 }`  instead of `{ a: 2 }`)
-- Merge schemas more aggressively.
+- Fix a schema merging bug (`{ a?: 1 } | { a: 2 }` produces `{ a?: 1 | 2 }`  instead of `{ a: 2 }`). [#57](https://github.com/getbannerman/babl/pull/57)
+- Merge schemas more aggressively. [#58](https://github.com/getbannerman/babl/pull/58)
 
 ## 0.3.1 (September 4, 2017)
-- Ensure `BigDecimal` is serialized into JSON float, regardless of the JSON backend chosen.
+- Ensure `BigDecimal` is serialized into JSON float, regardless of the JSON backend chosen. [#50](https://github.com/getbannerman/babl/pull/50)
 
 ## 0.3.0 (September 4, 2017)
 - Added documentation pages.
