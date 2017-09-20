@@ -6,8 +6,8 @@ require 'spec_helper/schema_utils'
 
 module SpecHelper
     module OperatorTesting
-        def template(*args, &block)
-            let(:template) { dsl.source(*args, &block) }
+        def template(&block)
+            let(:template) { dsl.source { instance_eval(&block) } }
         end
 
         def self.extended(base)

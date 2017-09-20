@@ -11,23 +11,27 @@ module Babl
 
         def initialize
             @search_path = nil
-            @preloader = Babl::Rendering::NoopPreloader
+            @preloader = Rendering::NoopPreloader
             @pretty = true
             @cache_templates = false
         end
     end
 
     class << self
-        def compile(template: Babl::Template.new, &source)
-            if config.search_path
-                ctx = Babl::Operators::Partial::AbsoluteLookupContext.new(config.search_path)
-                template = template.with_lookup_context(ctx)
-            end
-
-            template.source(&source).compile(
+        def compile(&block)
+            source(&block).compile(
                 pretty: config.pretty,
                 preloader: config.preloader
             )
+        end
+
+        def source(&block)
+            template = Template.new
+            if config.search_path
+                ctx = Operators::Partial::AbsoluteLookupContext.new(config.search_path)
+                template = template.with_lookup_context(ctx)
+            end
+            template.source(&block)
         end
 
         def configure

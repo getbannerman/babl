@@ -123,7 +123,7 @@ describe 'JBuilder comparison' do
     }
 
     let(:babl_template) {
-        Babl::Template.new.source {
+        Babl.source {
             author = object(:name, :birthyear, :job)
 
             {

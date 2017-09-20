@@ -26,9 +26,22 @@ describe Babl::Operators::Source do
         end
 
         context 'string template' do
-            template { source('object(a: static(true))') }
+            template { source('object(a: static(true))', 'file.rb', 3) }
 
             it { expect(json).to eq('a' => true) }
+        end
+
+        context "access to block's context" do
+            let(:value) { 42 }
+            template { source { object(value: value) } }
+
+            it { expect(json).to eq('value' => 42) }
+        end
+
+        context 'dsl proxy as template' do
+            template { source { self } }
+
+            it { expect(json).to eq('abc' => { 'def' => 12 }) }
         end
     end
 end

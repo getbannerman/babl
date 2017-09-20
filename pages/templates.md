@@ -16,7 +16,7 @@ A BABL template needs to be compiled before it can be used. This is done automat
 
 ```ruby
 # Create a template which is displaying a document's authors
-template = Babl::Template.new.source {
+template = Babl.source {
     object(
         author_names: nav(:authors).each.nav(:name).string
     )
@@ -88,11 +88,11 @@ schema = compiled_template.json_schema
 A template can be referenced directly from inside another template. In fact, this is exactly what happens when [partials](operators.md#partial) are used.
 
 ```ruby
-user = Babl::Template.new.source {
+user = Babl.source {
     object(name: _)
 }
 
-article = Babl::Template.new.source {
+article = Babl.source {
     object(
         author: _.(user),
         reviewers: _.each.(user)

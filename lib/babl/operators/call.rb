@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'babl/utils'
 require 'babl/errors'
 
 module Babl
@@ -13,7 +14,8 @@ module Babl
                     arg = args.first
 
                     case arg
-                    when self.class then self.class.new(builder.wrap { |bound| arg.builder.bind(bound) })
+                    when Template then self.class.new(builder.wrap { |bound| arg.builder.bind(bound) })
+                    when Utils::DslProxy then call(arg.itself)
                     when ::Symbol then nav(arg)
                     when ::Proc then call(&arg)
                     when ::Hash then object(**arg.map { |k, v| [:"#{k}", v] }.to_h)

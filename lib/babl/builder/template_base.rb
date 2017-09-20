@@ -38,11 +38,11 @@ module Babl
                 )
             end
 
-            protected
-
             def unscoped
                 self.class.new builder.rescope(&:itself)
             end
+
+            protected
 
             def precompile
                 builder.precompile(Nodes::TerminalValue.instance)

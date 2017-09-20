@@ -41,7 +41,7 @@ data = [
 ]
 
 # Define a template
-template = Babl::Template.new.source {
+template = Babl.source {
 
     # A template is a first class object, it can be stored in a variable ("inline partial")
     # and re-used later.
