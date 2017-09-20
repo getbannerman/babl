@@ -43,10 +43,8 @@ data = [
 # Define a template
 template = Babl.source {
 
-    # A template is a first class object, it can be stored in a variable ("inline partial")
-    # and re-used later.
-
-    # This template can serialize an Author for instance into an object.
+    # A template can be stored in a variable ("inline partial") and re-used later.
+    # For instance, this one serializes an Author.
     author = object(
         name: _,
         birthyear: _
@@ -58,19 +56,21 @@ template = Babl.source {
         # Visit each article of from collection and produce a JSON object for each elements
         articles: each.object(
 
-            # nav(:iso8601) can be seen as method
+            # nav(:iso8601) can also be seen as a method call.
+            # The method #iso8601 will be called on the date during rendering.
             date: _.nav(:iso8601),
 
-            # '_' is a synonym of 'nav(:title)'
+            # '_' is a shortcut for 'nav(:title)' and 'nav(:body)'
             title: _,
             body: _,
 
             # You can chain another template using call()
-            author: _.(author),
+            author: _.call(author),
 
             # Visit each comment, and produce a JSON object for each of them.
             comments: _.each.object(
 
+                # In Ruby, .() is just a syntax sugar for .call()
                 author: _.(author),
 
                 # Type assertions can be (optionally) specified.
