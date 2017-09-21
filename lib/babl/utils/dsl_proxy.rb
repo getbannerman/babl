@@ -31,7 +31,7 @@ module Babl
                     @__fallback__.respond_to?(method, include_private)
             end
 
-            def self.eval(dsl, *args, &block)
+            def self.eval(dsl, &block)
                 new(dsl, block.binding.receiver).instance_eval(&block)
             end
 

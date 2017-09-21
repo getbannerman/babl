@@ -31,6 +31,18 @@ describe Babl::Operators::Source do
             it { expect(json).to eq('a' => true) }
         end
 
+        context 'both string & block template' do
+            template { source('object(a: static(true))', 'file.rb', 3) { 1 } }
+
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
+        end
+
+        context 'source used without argument' do
+            template { source }
+
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
+        end
+
         context "access to block's context" do
             let(:value) { 42 }
             template { source { object(value: value) } }
