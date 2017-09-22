@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'babl/nodes'
+require 'babl/utils'
 require 'babl/builder'
 require 'babl/rendering'
 
@@ -9,9 +10,9 @@ module Babl
         #
         # Since the BABL code is run via #instance_eval within an instance of this class, we want to
         # define as few methods as possible here.
-        class TemplateBase
+        class TemplateBase < Utils::Value.new(:builder)
             def initialize(builder = ChainBuilder.new(&:itself))
-                @builder = builder
+                super(builder)
             end
 
             def compile(preloader: Rendering::NoopPreloader, pretty: true, optimize: true)
@@ -56,7 +57,7 @@ module Babl
                 self.class.new builder.construct_terminal(&block)
             end
 
-            attr_reader :builder
+            protected :builder
         end
     end
 end

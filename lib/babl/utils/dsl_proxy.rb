@@ -9,7 +9,8 @@ module Babl
         # correctly.
         class DslProxy
             NON_PROXIED_METHODS = Set[
-                :__send__, :send, :object_id, :__id__, :equal?, :instance_eval
+                :__send__, :send, :object_id, :__id__, :equal?, :instance_eval, :instance_exec,
+                :respond_to?, :method
             ]
 
             instance_methods.each do |method|

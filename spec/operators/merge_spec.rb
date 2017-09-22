@@ -197,6 +197,28 @@ describe Babl::Operators::Merge do
             }
         end
 
+        context 'merge two switches' do
+            template {
+                merge(
+                    switch(a1: { a: 1 }, a2: { a: 2 }),
+                    b: 1
+                )
+            }
+
+            it {
+                expect(schema).to eq s_any_of(
+                    s_object(
+                        s_property(:a, s_primitive(1)),
+                        s_property(:b, s_primitive(1))
+                    ),
+                    s_object(
+                        s_property(:a, s_primitive(2)),
+                        s_property(:b, s_primitive(1))
+                    )
+                )
+            }
+        end
+
         context 'switch between disjoint objects' do
             template {
                 switch(

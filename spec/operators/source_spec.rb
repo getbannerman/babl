@@ -50,6 +50,29 @@ describe Babl::Operators::Source do
             it { expect(json).to eq('value' => 42) }
         end
 
+        context "check existence of methods in block's context" do
+            template {
+                tpl = self
+                666.instance_eval {
+                    tpl.source {
+                        {
+                            non_existing_method: respond_to?(:non_existing_method),
+                            rationalize: respond_to?(:rationalize),
+                            method_rationalize_nil: method(:rationalize).nil?
+                        }
+                    }
+                }
+            }
+
+            it {
+                expect(json).to eq(
+                    'rationalize' => true,
+                    'non_existing_method' => false,
+                    'method_rationalize_nil' => false
+                )
+            }
+        end
+
         context 'dsl proxy as template' do
             template { source { self } }
 
