@@ -28,6 +28,34 @@ describe Babl::Operators::Object do
             it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
         end
 
+        context 'duplicate property 1' do
+            template { { 'a' => 1, a: 2 } }
+
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
+        end
+
+        context 'duplicate property with short syntax' do
+            template { object(:a, a: 1) }
+
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
+        end
+
+        context 'string key' do
+            template { object(:a, 'b' => _) }
+
+            let(:object) { { a: 1, 'b' => 2 } }
+
+            it { expect(json).to eq('a' => 1, 'b' => 2) }
+        end
+
+        context 'string key with short syntax' do
+            template { object('a') }
+
+            let(:object) { { 'a' => 12 } }
+
+            it { expect(json).to eq('a' => 12) }
+        end
+
         context 'template containing a constant object' do
             template {
                 object(

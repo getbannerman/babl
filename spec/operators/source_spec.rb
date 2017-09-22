@@ -44,8 +44,8 @@ describe Babl::Operators::Source do
         end
 
         context "access to block's context" do
-            let(:value) { 42 }
             template { source { object(value: value) } }
+            let(:value) { 42 }
 
             it { expect(json).to eq('value' => 42) }
         end

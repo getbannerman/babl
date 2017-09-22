@@ -44,6 +44,12 @@ describe Babl::Operators::Nav do
             it { expect { json }.to raise_error Babl::Errors::RenderingError, /\__root__\.a\.b\.2\.d/ }
         end
 
+        context 'navigate to string' do
+            template { nav('prop') }
+            let(:object) { { 'prop' => 1 } }
+            it { expect(json).to eq 1 }
+        end
+
         context 'navigate to serialize object having boolean, numeric & string keys' do
             template { nav(:exotic) }
 
