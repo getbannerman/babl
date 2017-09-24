@@ -32,7 +32,7 @@ module Babl
                 optimized_nodes = nodes.map { |k, v| [k, v.optimize] }.to_h
                 optimized_object = Object.new(optimized_nodes)
                 return optimized_object unless optimized_nodes.values.all? { |node| Constant === node }
-                Constant.new(optimized_object.render(nil), optimized_object.schema)
+                Constant.new(optimized_object.render(nil).freeze, optimized_object.schema)
             end
         end
     end

@@ -7,13 +7,15 @@ module Babl
             module DSL
                 # Produce a value by calling the block, passing it the output value of the templates passed as argument.
                 def with(*templates, &block)
+                    templates = templates.map { |t| unscoped.call(t) }
+
                     construct_node(key: nil, continue: nil) do |node, context|
-                        Nodes::With.new(node, templates.map do |t|
-                            unscoped.call(t).builder.precompile(
+                        Nodes::With.new(node, templates.map { |t|
+                            t.builder.precompile(
                                 Nodes::InternalValue.instance,
                                 context.merge(continue: nil)
                             )
-                        end, block)
+                        }, block)
                     end
                 end
             end

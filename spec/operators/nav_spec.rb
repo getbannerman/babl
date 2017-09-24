@@ -50,6 +50,17 @@ describe Babl::Operators::Nav do
             it { expect(json).to eq 1 }
         end
 
+        context 'muted method name' do
+            let(:method_name) { +'test' }
+            template { nav(method_name) }
+
+            before { template }
+            before { method_name << '2' }
+
+            let(:object) { { 'test' => 1, 'test2' => 2 } }
+            it { expect(json).to eq 1 }
+        end
+
         context 'navigate to serialize object having boolean, numeric & string keys' do
             template { nav(:exotic) }
 

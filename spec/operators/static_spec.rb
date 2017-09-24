@@ -13,6 +13,24 @@ describe Babl::Operators::Static do
             it { expect(schema).to eq s_object(s_property(:'1', s_primitive('cava'))) }
         end
 
+        context 'static data muted after template definition' do
+            let(:mutable_data) { [mutable_str: +'foo'] }
+            template { static(mutable_data) }
+
+            before { template }
+
+            before {
+                mutable_data << 'new val'
+                mutable_data.first[:new_key] = 12
+                mutable_data.first[:mutable_str] << 'bar'
+            }
+
+            before { compiled }
+
+            it { expect(mutable_data).to eq [{ mutable_str: 'foobar', new_key: 12 }, 'new val'] }
+            it { expect(json).to eq(['mutable_str' => 'foo']) }
+        end
+
         context 'static primitive' do
             template { static('ok') }
 

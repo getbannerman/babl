@@ -10,7 +10,7 @@ module Babl
         class DslProxy
             NON_PROXIED_METHODS = Set[
                 :__send__, :send, :object_id, :__id__, :equal?, :instance_eval, :instance_exec,
-                :respond_to?, :method
+                :respond_to?, :method, :freeze
             ]
 
             instance_methods.each do |method|
@@ -39,6 +39,7 @@ module Babl
             def initialize(receiver, fallback)
                 @__receiver__ = receiver
                 @__fallback__ = fallback
+                freeze
             end
         end
     end

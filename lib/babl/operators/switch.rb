@@ -8,13 +8,19 @@ module Babl
             module DSL
                 # Conditional switching between different templates
                 def switch(conds = Utils::Hash::EMPTY)
+                    conds = conds.map { |cond, value| [unscoped.call(cond), unscoped.call(value)] }
+
                     construct_node(continue: nil) { |node, context|
                         nodes = conds.map { |cond, value|
-                            cond_node = unscoped.call(cond).builder
-                                .precompile(Nodes::InternalValue.instance, context.merge(continue: nil))
+                            cond_node = cond.builder.precompile(
+                                Nodes::InternalValue.instance,
+                                context.merge(continue: nil)
+                            )
 
-                            value_node = unscoped.call(value).builder
-                                .precompile(Nodes::TerminalValue.instance, context.merge(continue: node))
+                            value_node = value.builder.precompile(
+                                Nodes::TerminalValue.instance,
+                                context.merge(continue: node)
+                            )
 
                             [cond_node, value_node]
                         }

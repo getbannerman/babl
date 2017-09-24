@@ -5,9 +5,9 @@ require 'babl/nodes/parent'
 
 module Babl
     module Nodes
-        class Nav < Utils::Value.new(:through, :node)
+        class Nav < Utils::Value.new(:property, :node)
             def dependencies
-                { through => node.dependencies }
+                { property => node.dependencies }
             end
 
             def schema
@@ -20,18 +20,18 @@ module Babl
 
             def render(ctx)
                 value = begin
-                    ::Hash === ctx.object ? ctx.object.fetch(through) : ctx.object.send(through)
+                    ::Hash === ctx.object ? ctx.object.fetch(property) : ctx.object.send(property)
                 rescue StandardError => e
-                    raise Errors::RenderingError, "#{e.message}\n" + ctx.formatted_stack(through), e.backtrace
+                    raise Errors::RenderingError, "#{e.message}\n" + ctx.formatted_stack(property), e.backtrace
                 end
-                node.render(ctx.move_forward(value, through))
+                node.render(ctx.move_forward(value, property))
             end
 
             def optimize
                 optimized = node.optimize
                 return optimized if Constant === optimized
                 return optimized.node if Parent === optimized
-                Nav.new(through, optimized)
+                Nav.new(property, optimized)
             end
         end
     end

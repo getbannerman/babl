@@ -14,8 +14,8 @@ module Babl
                     if path.empty?
                         return (block ? with(unscoped, &block) : construct_node(key: nil, continue: nil) { |node| node })
                     end
-
-                    construct_node(key: nil, continue: nil) { |node| Nodes::Nav.new(path.first, node) }
+                    property = path.first.dup.freeze
+                    construct_node(key: nil, continue: nil) { |node| Nodes::Nav.new(property, node) }
                         .nav(*path[1..-1], &block)
                 end
             end

@@ -9,11 +9,12 @@ module Babl
                 # Merge multiple JSON objects (non-deep)
                 def merge(*templates)
                     return call(Utils::Hash::EMPTY) if templates.empty?
+                    templates = templates.map { |t| unscoped.call(t) }
 
                     construct_terminal { |context|
                         Nodes::Merge.new(
                             templates.map { |t|
-                                unscoped.call(t).builder.precompile(
+                                t.builder.precompile(
                                     Nodes::TerminalValue.instance,
                                     context.merge(continue: nil)
                                 )

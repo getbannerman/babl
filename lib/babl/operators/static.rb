@@ -12,7 +12,10 @@ module Babl
 
                     case sanitized_val
                     when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass
-                        construct_terminal { Nodes::Constant.new(sanitized_val, Schema::Primitive.new(sanitized_val)) }
+                        frozen_val = sanitized_val.dup.freeze
+                        construct_terminal {
+                            Nodes::Constant.new(frozen_val, Schema::Primitive.new(frozen_val))
+                        }
                     else call(sanitized_val)
                     end
                 rescue Errors::RenderingError => exception

@@ -14,19 +14,21 @@ module Babl
                         raise Errors::InvalidTemplate, "Duplicate key in object(): #{keys.first}" if keys.size > 1
                     end
 
-                    construct_terminal { |ctx|
-                        nodes = args
-                            .map { |name| [name.to_sym, unscoped.nav(name)] }.to_h
-                            .merge(kwargs)
-                            .map { |k, v|
-                                [k.to_sym, unscoped.call(v).builder.precompile(
-                                    Nodes::TerminalValue.instance,
-                                    ctx.merge(key: k, continue: nil)
-                                )]
-                            }
-                            .to_h
+                    templates = args
+                        .map { |name| [name.to_sym, unscoped.nav(name)] }.to_h
+                        .merge(kwargs)
+                        .map { |k, v| [k, unscoped.call(v)] }
 
-                        Nodes::Object.new(nodes)
+                    construct_terminal { |ctx|
+                        Nodes::Object.new(templates.map { |key, template|
+                            [
+                                key.to_sym,
+                                template.builder.precompile(
+                                    Nodes::TerminalValue.instance,
+                                    ctx.merge(key: key, continue: nil)
+                                )
+                            ]
+                        }.to_h)
                     }
                 end
             end
