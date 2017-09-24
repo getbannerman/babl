@@ -6,7 +6,7 @@ require 'babl/nodes/constant'
 module Babl
     module Nodes
         class Object < Utils::Value.new(:nodes)
-            EMPTY = new({})
+            EMPTY = new(Utils::Hash::EMPTY)
 
             def dependencies
                 nodes.values.map(&:dependencies).reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }

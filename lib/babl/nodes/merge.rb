@@ -38,7 +38,7 @@ module Babl
             private
 
             def optimize_empty
-                Constant.new({}, Schema::Object::EMPTY) if nodes.empty?
+                Constant.new(Utils::Hash::EMPTY, Schema::Object::EMPTY) if nodes.empty?
             end
 
             def optimize_single

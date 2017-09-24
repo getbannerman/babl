@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'babl/nodes'
+require 'babl/utils'
 require 'babl/errors'
 
 module Babl
@@ -8,7 +9,7 @@ module Babl
             module DSL
                 # Create a JSON object node with static structure
                 def object(*args)
-                    kwargs = ::Hash === args.last ? args.pop : {}
+                    kwargs = ::Hash === args.last ? args.pop : Utils::Hash::EMPTY
 
                     (args.map(&:to_sym) + kwargs.keys.map(&:to_sym)).group_by(&:itself).each_value do |keys|
                         raise Errors::InvalidTemplate, "Duplicate key in object(): #{keys.first}" if keys.size > 1
