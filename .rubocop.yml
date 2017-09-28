@@ -33,6 +33,12 @@ Style/Lambda:
 Style/MultilineIfModifier:
     Enabled: False
 
+Style/MultipleComparison:
+    Enabled: False
+
+Style/YodaCondition:
+    Enabled: False
+
 Style/NumericLiterals:
     Enabled: False
 

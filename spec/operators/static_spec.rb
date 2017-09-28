@@ -37,6 +37,12 @@ describe Babl::Operators::Static do
             it { expect(schema).to eq s_primitive('ok') }
         end
 
+        context 'static symbol' do
+            template { static(:ok) }
+
+            it { expect(schema).to eq s_primitive('ok') }
+        end
+
         context 'static BigDecimal' do
             template { static(BigDecimal.new('1.1')) }
 

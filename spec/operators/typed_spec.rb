@@ -60,6 +60,11 @@ describe Babl::Operators::Typed do
             let(:object) { '12' }
             it { expect(json).to eq ['12'] }
         end
+
+        context do
+            let(:object) { :test }
+            it { expect(json).to eq ['test'] }
+        end
     end
 
     describe '#boolean' do
