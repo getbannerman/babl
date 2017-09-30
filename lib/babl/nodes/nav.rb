@@ -7,7 +7,13 @@ module Babl
     module Nodes
         class Nav < Utils::Value.new(:property, :node)
             def dependencies
-                { property => node.dependencies }
+                node_deps = node.dependencies
+                child_deps = node.dependencies.reject { |key, _| key == Parent::PARENT_MARKER }
+
+                Babl::Utils::Hash.deep_merge(
+                    node_deps[Parent::PARENT_MARKER] || Utils::Hash::EMPTY,
+                    property => child_deps
+                )
             end
 
             def schema

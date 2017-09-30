@@ -14,7 +14,7 @@ module Babl
 
                 # Override TemplateBase#precompile to add parent dependencies verification
                 def precompile
-                    Nodes::Parent::Resolver.new(super)
+                    Nodes::Parent::Verifier.new(super)
                 end
             end
         end

@@ -23,6 +23,15 @@ describe Babl::Operators::Each do
             it { expect { json }.to raise_error(/\__root__\.box\.1\.trololol/) }
         end
 
+        context 'each + parent' do
+            template { each.parent.nav(:size) }
+
+            let(:object) { [1, 2, 3] }
+
+            it { expect(json).to eq([3, 3, 3]) }
+            it { expect(dependencies).to eq(size: {}, __each__: {}) }
+        end
+
         context 'not enumerable' do
             template { nav(:lol).each }
 

@@ -30,6 +30,16 @@ describe Babl::Operators::With do
             it { expect(dependencies).to eq({}) }
         end
 
+        context 'with + parent + nav' do
+            template { with { 3 }.dep(:ignored_dep).parent.nav(:a) }
+
+            let(:object) { { a: 1 } }
+
+            it { expect(json).to eq 1 }
+            it { expect(dependencies).to eq(a: {}) }
+            it { expect(unoptimized_dependencies).to eq(a: {}) }
+        end
+
         context 'when the block raise an exception' do
             template { with { raise 'lol' } }
 

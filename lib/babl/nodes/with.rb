@@ -10,8 +10,12 @@ module Babl
             end
 
             def dependencies
-                # Dependencies of 'node' are explicitely ignored
-                nodes.map(&:dependencies).reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                Babl::Utils::Hash.deep_merge(
+                    node.dependencies[Parent::PARENT_MARKER] || Utils::Hash::EMPTY,
+                    nodes.map(&:dependencies).reduce(Utils::Hash::EMPTY) { |a, b|
+                        Babl::Utils::Hash.deep_merge(a, b)
+                    }
+                )
             end
 
             def pinned_dependencies
@@ -32,6 +36,7 @@ module Babl
             def optimize
                 optimized = node.optimize
                 return optimized if Constant === optimized
+                return optimized.node if Parent === optimized
                 With.new(optimized, nodes.map(&:optimize), block)
             end
         end
