@@ -242,6 +242,21 @@ describe Babl::Operators::Switch do
             }
         end
 
+        context 'chained switches' do
+            template {
+                nullable.switch(
+                    null? => :a,
+                    -> { true } => :b
+                )
+            }
+
+            let(:object) { { a: 1, b: 2 } }
+
+            it { expect(dependencies).to eq(b: {}) }
+            it { expect(unoptimized_dependencies).to eq(a: {}, b: {}) }
+            it { expect(json).to eq 2 }
+        end
+
         context 'with dependencies' do
             template { nav(:test).switch(nav(:keke) => parent.nav(:lol)) }
             it { expect(dependencies).to eq(test: { keke: {} }, lol: {}) }

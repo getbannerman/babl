@@ -38,10 +38,17 @@ module Babl
                     optimize_truthy_conditions ||
                     optimize_always_same_outputs ||
                     optimize_same_conditions ||
+                    optimize_continue_to_switch ||
                     self
             end
 
             private
+
+            def optimize_continue_to_switch
+                cond, val = nodes.last
+                return unless Switch === val && Constant === cond && cond.value
+                Switch.new(nodes[0...-1] + val.nodes).optimize
+            end
 
             def optimize_same_conditions
                 conds = Set.new
