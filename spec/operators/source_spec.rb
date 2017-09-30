@@ -31,6 +31,19 @@ describe Babl::Operators::Source do
             it { expect(json).to eq('a' => true) }
         end
 
+        context 'define method in a template' do
+            template {
+                source <<-RUBY
+                    def test(val)
+                        object(v: val)
+                    end
+                    object(test: test(42))
+                RUBY
+            }
+
+            it { expect(json).to eq('test' => { 'v' => 42 }) }
+        end
+
         context 'both string & block template' do
             template { source('object(a: static(true))', 'file.rb', 3) { 1 } }
 

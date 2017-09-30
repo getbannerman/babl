@@ -39,7 +39,6 @@ module Babl
             def initialize(receiver, fallback)
                 @__receiver__ = receiver
                 @__fallback__ = fallback
-                freeze
             end
         end
     end
