@@ -26,7 +26,7 @@ module Babl
                 optimized_nodes = nodes.map(&:optimize)
                 fixed_array = FixedArray.new(optimized_nodes)
                 return fixed_array unless optimized_nodes.all? { |node| Constant === node }
-                Constant.new(fixed_array.render(nil).freeze, fixed_array.schema)
+                Constant.new(fixed_array.nodes.map(&:value).freeze, fixed_array.schema)
             end
         end
     end
