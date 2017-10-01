@@ -1,4 +1,12 @@
-# BABL Changelog
+# Changelog
+
+## 0.3.4 (September 30, 2017)
+- Validate parameters passed to `source()` [#62](https://github.com/getbannerman/babl/pull/62)
+- More consistent handling of `Symbol`s. [#63](https://github.com/getbannerman/babl/pull/63)
+- Defensively copy parameters passed to operators, in order to guarantee that template's behavior cannot change. [#65](https://github.com/getbannerman/babl/pull/65)
+- Type-checking assertion `string` allows symbols. [#66](https://github.com/getbannerman/babl/pull/66)
+- Re-enable dependency tracking if `parent` is used after `with`. [#67](https://github.com/getbannerman/babl/pull/67)
+- Optimize away multiple invocations of `nullable`. [#70](https://github.com/getbannerman/babl/pull/70)
 
 ## 0.3.3 (September 20, 2017)
 - Forward method calls to the original receiver of the block passed to `source`. [#60](https://github.com/getbannerman/babl/pull/60)
