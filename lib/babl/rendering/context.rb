@@ -51,7 +51,7 @@ module Babl
 
             # Return an array containing the navigation history
             def stack
-                (parent ? parent.stack : []) + [key].compact
+                (parent ? parent.stack : Utils::Array::EMPTY) + [key].compact
             end
         end
     end

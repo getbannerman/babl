@@ -9,8 +9,8 @@ module Babl
                 super(properties.to_set.freeze, additional)
             end
 
-            EMPTY = new([], false)
-            EMPTY_WITH_ADDITIONAL = new([], true)
+            EMPTY = new(Utils::Array::EMPTY, false)
+            EMPTY_WITH_ADDITIONAL = new(Utils::Array::EMPTY, true)
 
             class Property < Utils::Value.new(:name, :value, :required)
                 def initialize(name, value, required)

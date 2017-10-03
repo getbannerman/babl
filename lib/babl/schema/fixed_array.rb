@@ -4,11 +4,11 @@ require 'babl/utils'
 module Babl
     module Schema
         class FixedArray < Utils::Value.new(:items)
-            EMPTY = new([])
+            EMPTY = new(Utils::Array::EMPTY)
 
             def json
                 if items.empty?
-                    { enum: [[]] }
+                    { enum: [Utils::Array::EMPTY] }
                 else
                     { type: 'array', items: items.map(&:json), additionalItems: false }
                 end
