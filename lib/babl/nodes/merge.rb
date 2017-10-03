@@ -29,8 +29,8 @@ module Babl
             def optimize
                 optimize_empty ||
                     optimize_single ||
-                    optimize_merged_objects ||
                     optimize_nested_merges ||
+                    optimize_merged_objects ||
                     optimize_premergeable_objects ||
                     self
             end
@@ -45,14 +45,17 @@ module Babl
                 return unless nodes.size == 1
                 optimized = nodes.first.optimize
                 case
-                when Object === optimized then optimized
-                when Constant === optimized && optimized.value.nil? then Object::EMPTY
+                when Object === optimized
+                    optimized
+                when Constant === optimized
+                    optimized.value.nil? ? Object::EMPTY : optimized
                 end
             end
 
             def optimize_merged_objects
                 optimized_nodes = nodes.map(&:optimize)
-                optimized_nodes == nodes ? nil : Merge.new(optimized_nodes).optimize
+                return if optimized_nodes == nodes
+                Merge.new(optimized_nodes).optimize
             end
 
             def optimize_nested_merges
@@ -80,6 +83,8 @@ module Babl
                     Object.new(constant.schema.property_set.map { |property|
                         [property.name, Constant.new(constant.value[property.name], property.value)]
                     }.to_h)
+                when Schema::Primitive::NULL
+                    Object::EMPTY
                 end
             end
 

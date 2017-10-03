@@ -46,6 +46,13 @@ describe Babl::Operators::Merge do
             }
         end
 
+        context 'fully constant' do
+            template { merge(object(a: 1), object(b: 2)) }
+
+            it { expect(json).to eq('a' => 1, 'b' => 2) }
+            it { expect(compiled.render(nil)).to equal(compiled.render(nil)) }
+        end
+
         context 'merge nothing' do
             template { merge }
 
@@ -158,7 +165,9 @@ describe Babl::Operators::Merge do
                         object(a: _, b: _, c: _),
                         merge(merge(object(a: 1))),
                         object(c: 2)
-                    )
+                    ),
+                    nullable.merge,
+                    nil
                 )
             }
 
