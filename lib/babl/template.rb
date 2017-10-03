@@ -6,6 +6,7 @@ module Babl
     class Template < Babl::Builder::TemplateBase
         include Operators::Array::DSL
         include Operators::Call::DSL
+        include Operators::Concat::DSL
         include Operators::Continue::DSL
         include Operators::Default::DSL
         include Operators::Dep::DSL

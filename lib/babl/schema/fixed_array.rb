@@ -7,7 +7,11 @@ module Babl
             EMPTY = new([])
 
             def json
-                { type: 'array', items: items.map(&:json) }
+                if items.empty?
+                    { enum: [[]] }
+                else
+                    { type: 'array', items: items.map(&:json), additionalItems: false }
+                end
             end
         end
     end

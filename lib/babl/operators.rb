@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'babl/operators/array'
 require 'babl/operators/call'
+require 'babl/operators/concat'
 require 'babl/operators/continue'
 require 'babl/operators/default'
 require 'babl/operators/dep'

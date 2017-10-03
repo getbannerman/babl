@@ -6,6 +6,8 @@ require 'babl/nodes/constant'
 module Babl
     module Nodes
         class FixedArray < Utils::Value.new(:nodes)
+            EMPTY = new(Utils::Array::EMPTY)
+
             def schema
                 Schema::FixedArray.new(nodes.map(&:schema))
             end

@@ -26,6 +26,8 @@ module Babl
                     simplify_push_down_dyn_array ||
                     simplify_dyn_and_fixed_array ||
                     simplify_merge_objects ||
+                    simplify_integer_is_number ||
+                    simplify_many_fixed_arrays ||
                     self
             end
 
@@ -34,6 +36,31 @@ module Babl
             end
 
             private
+
+            def simplify_integer_is_number
+                return unless choice_set.include?(Typed::INTEGER) && choice_set.include?(Typed::NUMBER)
+                AnyOf.canonicalized(choice_set - [Typed::INTEGER])
+            end
+
+            # AnyOf[FixedArray(Item1, Item2), FixedArray(Item3, Item4)] can be summarized
+            # by DynArray(AnyOf(Item1, Item2, Item3, Item4)). It is a lossy transformation
+            # but it will help reducing the number of permutations when the operator concat() is used.
+            def simplify_many_fixed_arrays
+                choice_set.each_with_index { |obj1, index1|
+                    next unless FixedArray === obj1
+
+                    choice_set.each_with_index { |obj2, index2|
+                        break if index2 >= index1
+                        next unless FixedArray === obj2
+
+                        return AnyOf.canonicalized(choice_set - [obj1, obj2] + [
+                            DynArray.new(AnyOf.new(obj1.items + obj2.items))
+                        ])
+                    }
+                }
+
+                nil
+            end
 
             # We can completely get rid of the AnyOf element of there is only one possible schema.
             def simplify_single
@@ -96,7 +123,7 @@ module Babl
                 nil
             end
 
-            # Merge all objects together. This is the only lossy simplification, but it will greatly reduce the size
+            # Merge all objects together. This is a lossy simplification, but it will greatly reduce the size
             # of the generated schema. On top of that, when the JSON-Schema is translated into Typescript, it produces
             # a much more workable type definition (union of anonymous object types is not practical to use)
             def simplify_merge_objects
