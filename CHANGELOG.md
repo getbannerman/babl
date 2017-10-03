@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 (October 3, 2017)
+- Fix: constant propagation was not always working with `merge`. [#73](https://github.com/getbannerman/babl/pull/73)
+- New operator: `concat`. Similar to `merge`, but for `Array`s. [#72](https://github.com/getbannerman/babl/pull/72)
+
 ## 0.3.4 (September 30, 2017)
 - Validate parameters passed to `source()` [#62](https://github.com/getbannerman/babl/pull/62)
 - More consistent handling of `Symbol`s. [#63](https://github.com/getbannerman/babl/pull/63)
