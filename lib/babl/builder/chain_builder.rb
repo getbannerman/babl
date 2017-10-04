@@ -57,11 +57,7 @@ module Babl
             end
 
             def wrap
-                rescope { |bound| yield bind(bound) }
-            end
-
-            def rescope(&block)
-                dup.tap { |tb| tb.instance_variable_set(:@scope, block) }
+                self.class.new { |bound| yield bind(bound) }
             end
         end
 

@@ -4,24 +4,26 @@ require 'spec_helper'
 describe Babl::Operators::Partial do
     extend SpecHelper::OperatorTesting
 
-    let(:custom_lookup_context) {
+    let(:lookup_context) {
         TestLookupContext.new(
             blabla: TestLookupContext.new(
-                "[partial('navi').partial('miche'), partial('muche')]",
-
-                miche: TestLookupContext.new(
-                    "partial('blabla')",
-
-                    blabla: TestLookupContext.new('call { 1 + self }')
-                ),
-
+                "[partial('navi'), partial('muche')]",
                 muche: TestLookupContext.new('23'),
-                navi: TestLookupContext.new(':some_property')
+                navi: TestLookupContext.new(
+                    "partial('navi')",
+                    navi: TestLookupContext.new(
+                        "partial('miche')",
+                        miche: TestLookupContext.new(
+                            "partial('blabla')",
+                            blabla: TestLookupContext.new('call { 1 + self }')
+                        )
+                    )
+                )
             )
         )
     }
-    let(:dsl) { Babl::Template.new.with_lookup_context(custom_lookup_context) }
-    let(:object) { { some_property: 12 } }
+
+    let(:object) { 12 }
 
     context 'missing partial' do
         template { partial('i_do_not_exist') }

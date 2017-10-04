@@ -4,13 +4,12 @@ require 'spec_helper'
 describe Babl::Operators::Extends do
     extend SpecHelper::OperatorTesting
 
-    let(:custom_lookup_context) {
+    let(:lookup_context) {
         TestLookupContext.new(
             object_partial: TestLookupContext.new('object(a: 1, b: 3)'),
             string_partial: TestLookupContext.new('"lol"')
         )
     }
-    let(:dsl) { Babl::Template.new.with_lookup_context(custom_lookup_context) }
     let(:object) { [nil] }
 
     context 'simple use case' do

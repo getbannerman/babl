@@ -13,7 +13,7 @@ module Babl
                 protected
 
                 # Override TemplateBase#precompile to add parent dependencies verification
-                def precompile
+                def precompile(*)
                     Nodes::Parent::Verifier.new(super)
                 end
             end

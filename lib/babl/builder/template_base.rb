@@ -15,10 +15,10 @@ module Babl
                 super(builder)
             end
 
-            def compile(preloader: Rendering::NoopPreloader, pretty: true, optimize: true)
+            def compile(preloader: Rendering::NoopPreloader, pretty: true, optimize: true, lookup_context: nil)
                 # Compute dependencies & schema on the non-simplified node tree in order
                 # to catch all errors.
-                tree = precompile
+                tree = precompile(lookup_context: lookup_context)
                 dependencies = tree.dependencies
                 schema = tree.schema
 
@@ -40,13 +40,13 @@ module Babl
             end
 
             def unscoped
-                self.class.new builder.rescope(&:itself)
+                self.class.new
             end
 
             protected
 
-            def precompile
-                builder.precompile(Nodes::TerminalValue.instance)
+            def precompile(node = Nodes::TerminalValue.instance, **context)
+                builder.precompile(node, **context)
             end
 
             def construct_node(**new_context, &block)

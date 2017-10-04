@@ -7,31 +7,51 @@ require 'babl/operators'
 
 module Babl
     class Config
-        attr_accessor :search_path, :preloader, :pretty, :cache_templates
+        attr_accessor :preloader, :pretty, :cache_templates, :lookup_context
 
         def initialize
-            @search_path = nil
             @preloader = Rendering::NoopPreloader
             @pretty = true
             @cache_templates = false
+            @lookup_context = nil
+        end
+    end
+
+    class AbsoluteLookupContext
+        attr_reader :search_path
+
+        def initialize(search_path)
+            @search_path = search_path
+            raise Errors::InvalidTemplate, 'Missing search path' unless search_path
+        end
+
+        def find(partial_name)
+            query = File.join(search_path, "{#{partial_name}}{.babl,}")
+            path = Dir[query].first
+            return unless path
+            source = File.read(path)
+            [Babl.source(source, path, 0), self]
         end
     end
 
     class << self
-        def compile(&block)
-            source(&block).compile(
+        def compile(*args, &block)
+            raise ArgumentError, 'Wrong number of arguments' if args.size > 1
+            raise ArgumentError, 'Template or block expected' unless args.empty? ^ block.nil?
+
+            (args.empty? ? source(&block) : template.call(args.first)).compile(
                 pretty: config.pretty,
-                preloader: config.preloader
+                preloader: config.preloader,
+                lookup_context: config.lookup_context
             )
         end
 
-        def source(&block)
-            template = Template.new
-            if config.search_path
-                ctx = Operators::Partial::AbsoluteLookupContext.new(config.search_path)
-                template = template.with_lookup_context(ctx)
-            end
-            template.source(&block)
+        def template
+            Template.new
+        end
+
+        def source(*args, &block)
+            template.source(*args, &block)
         end
 
         def configure

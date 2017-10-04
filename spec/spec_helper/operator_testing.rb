@@ -12,10 +12,10 @@ module SpecHelper
 
         def self.extended(base)
             base.include SchemaUtils
-
+            base.let(:lookup_context) { nil }
             base.let(:dsl) { Babl::Template.new }
-            base.let(:compiled) { template.compile }
-            base.let(:unoptimized_compiled) { template.compile(optimize: false) }
+            base.let(:compiled) { template.compile(lookup_context: lookup_context) }
+            base.let(:unoptimized_compiled) { template.compile(optimize: false, lookup_context: lookup_context) }
             base.let(:unchecked_json) { ::MultiJson.load(compiled.json(object)) }
             base.let(:unoptimized_unchecked_json) { ::MultiJson.load(unoptimized_compiled.json(object)) }
             base.let(:dependencies) {
@@ -55,7 +55,7 @@ module SpecHelper
                     def find(name)
                         name = name.to_sym
                         return unless childs[name]
-                        [name.to_s, childs[name].code, childs[name]]
+                        [Babl.source(childs[name].code), childs[name]]
                     end
                 })
             }
