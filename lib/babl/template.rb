@@ -24,6 +24,7 @@ module Babl
         include Operators::Pin::DSL
         include Operators::Source::DSL
         include Operators::Static::DSL
+        include Operators::Using::DSL
         include Operators::Switch::DSL
         include Operators::Typed::DSL
         include Operators::With::DSL

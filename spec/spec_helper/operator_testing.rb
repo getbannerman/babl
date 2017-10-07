@@ -7,7 +7,7 @@ require 'spec_helper/schema_utils'
 module SpecHelper
     module OperatorTesting
         def template(&block)
-            let(:template) { dsl.source { instance_eval(&block) } }
+            let(:template) { dsl.source { instance_exec(&block) } }
         end
 
         def self.extended(base)
@@ -52,10 +52,10 @@ module SpecHelper
                         @childs = childs
                     end
 
-                    def find(name)
+                    def find(current_template, name)
                         name = name.to_sym
                         return unless childs[name]
-                        [Babl.source(childs[name].code), childs[name]]
+                        [current_template.source(childs[name].code), childs[name]]
                     end
                 })
             }

@@ -4,18 +4,26 @@ require 'spec_helper'
 describe Babl::Operators::Partial do
     extend SpecHelper::OperatorTesting
 
+    before {
+        stub_const('MyExt', Module.new {
+            def say_hello
+                source { 'hello' }
+            end
+        })
+    }
+
     let(:lookup_context) {
         TestLookupContext.new(
             blabla: TestLookupContext.new(
                 "[partial('navi'), partial('muche')]",
                 muche: TestLookupContext.new('23'),
                 navi: TestLookupContext.new(
-                    "partial('navi')",
+                    "using(MyExt) { partial('navi') }",
                     navi: TestLookupContext.new(
                         "partial('miche')",
                         miche: TestLookupContext.new(
                             "partial('blabla')",
-                            blabla: TestLookupContext.new('call { 1 + self }')
+                            blabla: TestLookupContext.new('[say_hello, call { 1 + self }]')
                         )
                     )
                 )
@@ -34,6 +42,6 @@ describe Babl::Operators::Partial do
     context 'found partial' do
         template { partial('blabla') }
 
-        it { expect(json).to eq [13, 23] }
+        it { expect(json).to eq [['hello', 13], 23] }
     end
 end

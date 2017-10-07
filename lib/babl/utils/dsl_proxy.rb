@@ -33,7 +33,7 @@ module Babl
             end
 
             def self.eval(dsl, &block)
-                new(dsl, block.binding.receiver).instance_eval(&block)
+                new(dsl, block.binding.receiver).instance_exec(&block)
             end
 
             def initialize(receiver, fallback)

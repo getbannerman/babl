@@ -8,7 +8,7 @@ module Babl
     module Builder
         # TemplateBase is a thin wrapper around Builder.
         #
-        # Since the BABL code is run via #instance_eval within an instance of this class, we want to
+        # Since the BABL code is run via #instance_exec within an instance of this class, we want to
         # define as few methods as possible here.
         class TemplateBase < Utils::Value.new(:builder)
             def initialize(builder = ChainBuilder.new(&:itself))
