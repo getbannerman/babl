@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.0 (October 3, 2017)
+- Revamp handling of partials. Breaking changes:
+    - `partial` becomes a terminal operator.
+    - Partials are now resolved during compilation instead of immediately.
+    - Replaced `Babl.config.search_path` by `Babl.config.lookup_content`. Use `Babl::AbsoluteLookupContext`
+    to get the old behavior.
+
+    See [#75](https://github.com/getbannerman/babl/pull/75)
+
+- New operator: `using`, to cleanly extend BABL with user-defined operators. [#76](https://github.com/getbannerman/babl/pull/76)
+- Fix: `BABL::Template` is not a subclass of `Struct` anymore. I was causing namespace pollution. [#77](https://github.com/getbannerman/babl/pull/77)
+
 ## 0.4.0 (October 3, 2017)
 - Fix: constant propagation was not always working with `merge`. [#73](https://github.com/getbannerman/babl/pull/73)
 - New operator: `concat`. Similar to `merge`, but for `Array`s. [#72](https://github.com/getbannerman/babl/pull/72)
