@@ -10,9 +10,12 @@ module Babl
         #
         # Since the BABL code is run via #instance_exec within an instance of this class, we want to
         # define as few methods as possible here.
-        class TemplateBase < Utils::Value.new(:builder)
+        class TemplateBase
+            attr_reader :builder
+
             def initialize(builder = ChainBuilder.new(&:itself))
-                super(builder)
+                @builder = builder
+                freeze
             end
 
             def compile(preloader: Rendering::NoopPreloader, pretty: true, optimize: true, lookup_context: nil)
