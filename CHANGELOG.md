@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.5.0 (October 3, 2017)
+## 0.5.0 (October 27, 2017)
 - Revamp handling of partials. Breaking changes:
     - `partial` becomes a terminal operator.
     - Partials are now resolved during compilation instead of immediately.
