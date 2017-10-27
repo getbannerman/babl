@@ -5,35 +5,44 @@ module Babl
     module Utils
         # Construct deeply immutable value objects
         # Similar to Struct, but:
-        # - Properties are assumed deeply immutable (#hash is assumed constant)
+        # - Properties are assumed deeply immutable (#hash is assumed constant & store permanently)
         # - Constructor requires all arguments
         # - #== has the same meaning as #eql?
-        class Value
+        # - The object is frozen
+        #
+        # Goals :
+        # - Create completely immutable value objects
+        # - Fast comparison between instances (using precomputed hash values)
+        # - Low overhead (relies on native Ruby Struct)
+        class Value < Struct
             def self.new(*fields)
-                ::Class.new(::Struct.new(:_cached_hash, *fields)) do
-                    field_aliases = ::Array.new(fields.size) { |i| "v#{i}" }
-                    const_set(:FIELDS, fields.map(&:to_sym))
-                    class_eval <<-RUBY
-                        def initialize(#{field_aliases.join(',')})
-                            super(#{['nil', field_aliases].join(',')})
-                            hash
-                            freeze
-                        end
+                fields = fields.map(&:to_sym)
+                field_aliases = ::Array.new(fields.size) { |i| "v#{i}" }
 
-                        def hash
-                            self._cached_hash ||= super
-                        end
+                clazz = super(:_cached_hash, *fields)
+                clazz.const_set(:FIELDS, fields)
+                clazz.class_eval <<-RUBY
+                    def initialize(#{field_aliases.join(',')})
+                        super(#{['nil', field_aliases].join(',')})
+                        hash
+                        freeze
+                    end
+                RUBY
 
-                        def ==(other)
-                            eql?(other)
-                        end
+                clazz
+            end
 
-                        def self.with(hash = Utils::Hash::EMPTY)
-                            raise ::ArgumentError unless ::Hash === hash && (hash.keys - FIELDS).empty?
-                            new(*FIELDS.map { |f| hash.fetch(f) })
-                        end
-                    RUBY
-                end
+            def hash
+                self._cached_hash ||= super
+            end
+
+            def ==(other)
+                eql?(other)
+            end
+
+            def self.with(hash = Utils::Hash::EMPTY)
+                raise ::ArgumentError unless ::Hash === hash && (hash.keys - self::FIELDS).empty?
+                new(*self::FIELDS.map { |f| hash.fetch(f) })
             end
         end
     end
