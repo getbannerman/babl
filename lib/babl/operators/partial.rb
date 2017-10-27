@@ -8,7 +8,7 @@ module Babl
                 # Load a partial template given its name
                 # A 'lookup_context' must be defined
                 def partial(partial_name)
-                    current_template = self
+                    current_template = unscoped
                     construct_terminal { |ctx|
                         lookup_context = ctx[:lookup_context]
                         raise Errors::InvalidTemplate, 'Cannot use partial without lookup context' unless lookup_context

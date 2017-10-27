@@ -15,7 +15,7 @@ describe Babl::Operators::Partial do
     let(:lookup_context) {
         TestLookupContext.new(
             blabla: TestLookupContext.new(
-                "[partial('navi'), partial('muche')]",
+                "[{x: _.partial('navi')}, partial('muche')]",
                 muche: TestLookupContext.new('23'),
                 navi: TestLookupContext.new(
                     "using(MyExt) { partial('navi') }",
@@ -31,7 +31,7 @@ describe Babl::Operators::Partial do
         )
     }
 
-    let(:object) { 12 }
+    let(:object) { { x: 12 } }
 
     context 'missing partial' do
         template { partial('i_do_not_exist') }
@@ -42,6 +42,6 @@ describe Babl::Operators::Partial do
     context 'found partial' do
         template { partial('blabla') }
 
-        it { expect(json).to eq [['hello', 13], 23] }
+        it { expect(json).to eq [{ 'x' => ['hello', 13] }, 23] }
     end
 end
