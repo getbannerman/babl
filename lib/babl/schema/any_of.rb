@@ -12,12 +12,7 @@ module Babl
             end
 
             def json
-                primitives, complex = choice_set.partition { |choice| Primitive === choice }
-
-                simple_enum = { enum: primitives.map(&:value) }
-                return simple_enum if complex.empty?
-
-                { anyOf: complex.map(&:json) + (primitives.empty? ? [] : [simple_enum]) }
+                json_only_primitives || json_coalesced_types || json_general_case
             end
 
             # Perform simple transformations in order to reduce the size of the generated
@@ -41,6 +36,34 @@ module Babl
             end
 
             private
+
+            def json_only_primitives
+                return { enum: choice_set.map(&:value) } if choice_set.all? { |c| Primitive === c }
+            end
+
+            def json_coalesced_types
+                remaining = choice_set.dup
+                json_types = []
+
+                [Primitive::NULL, Typed::INTEGER, Typed::BOOLEAN, Typed::NUMBER, Typed::STRING].each do |coalescible|
+                    if remaining.include?(coalescible)
+                        json_types << coalescible.json[:type]
+                        remaining.delete(coalescible)
+                    end
+                end
+
+                # Note: ideally, we would like to turn :
+                #   {"anyOf": [{"type": "null"},{"type": "object", ...}]}
+                # into
+                #   {"type": ["null", "object"], ...}
+                # but https://github.com/bcherny/json-schema-to-typescript has trouble converting
+                # from the latter format and that's an issue for us.
+                return { type: json_types.uniq } if remaining.empty?
+            end
+
+            def json_general_case
+                { anyOf: choice_set.map(&:json) }
+            end
 
             def simplify_integer_is_number
                 return unless choice_set.include?(Typed::INTEGER) && choice_set.include?(Typed::NUMBER)
