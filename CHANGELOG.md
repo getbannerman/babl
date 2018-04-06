@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.1 (April 6, 2018)
+- Improve JSON-Schema generation: avoid nesting multiple `enum` inside `anyOf`. [#82](https://github.com/getbannerman/babl/pull/82)
+
 ## 0.5.0 (October 27, 2017)
 - Revamp handling of partials. Breaking changes:
     - `partial` becomes a terminal operator.
