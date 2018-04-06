@@ -12,7 +12,12 @@ module Babl
             end
 
             def json
-                { anyOf: choice_set.map(&:json) }
+                primitives, complex = choice_set.partition { |choice| Primitive === choice }
+
+                simple_enum = { enum: primitives.map(&:value) }
+                return simple_enum if complex.empty?
+
+                { anyOf: complex.map(&:json) + (primitives.empty? ? [] : [simple_enum]) }
             end
 
             # Perform simple transformations in order to reduce the size of the generated
