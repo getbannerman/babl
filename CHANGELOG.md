@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.2 (April 6, 2018)
+- Improve JSON-Schema generation: simplify handling of nullable properties. [#83](https://github.com/getbannerman/babl/pull/83)
+
 ## 0.5.1 (April 6, 2018)
 - Improve JSON-Schema generation: avoid nesting multiple `enum` inside `anyOf`. [#82](https://github.com/getbannerman/babl/pull/82)
 
