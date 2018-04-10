@@ -18,6 +18,16 @@ describe Babl::Operators::Typed do
             let(:object) { 12.5 }
             it { expect { json }.to raise_error Babl::Errors::RenderingError }
         end
+
+        context do
+            let(:object) { nil }
+            it {
+                expect { json }.to raise_error(
+                    Babl::Errors::RenderingError,
+                    "Expected an integer, got nil\nBABL @ __root__"
+                )
+            }
+        end
     end
 
     describe '#number' do

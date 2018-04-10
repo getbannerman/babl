@@ -34,7 +34,7 @@ module Babl
                     return value.to_s if ::Symbol === value
 
                     raise Errors::RenderingError,
-                        "Expected a string, got #{value}\n#{ctx.formatted_stack}"
+                        "Expected a string, got #{value.inspect}\n#{ctx.formatted_stack}"
                 end
             end
 
@@ -48,7 +48,7 @@ module Babl
                     return value if ::Integer === value
 
                     raise Errors::RenderingError,
-                        "Expected an integer, got #{value}\n#{ctx.formatted_stack}"
+                        "Expected an integer, got #{value.inspect}\n#{ctx.formatted_stack}"
                 end
             end
 
@@ -63,7 +63,7 @@ module Babl
                     return value.to_f if ::Numeric === value
 
                     raise Errors::RenderingError,
-                        "Expected a number, got #{value}\n#{ctx.formatted_stack}"
+                        "Expected a number, got #{value.inspect}\n#{ctx.formatted_stack}"
                 end
             end
 
@@ -77,7 +77,7 @@ module Babl
                     return value if true == value || false == value
 
                     raise Errors::RenderingError,
-                        "Expected a boolean, got #{value}\n#{ctx.formatted_stack}"
+                        "Expected a boolean, got #{value.inspect}\n#{ctx.formatted_stack}"
                 end
             end
         end

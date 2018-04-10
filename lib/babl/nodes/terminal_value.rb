@@ -37,7 +37,7 @@ module Babl
                 when ::Symbol then obj.to_s
                 when ::Hash then render_hash(obj, stack || [])
                 when ::Array then render_array(obj, stack || [])
-                else raise TerminalValueError.new("Only primitives can be serialized: #{obj}", stack || [])
+                else raise TerminalValueError.new("Only primitives can be serialized: #{obj.inspect}", stack || [])
                 end
             end
 
@@ -76,7 +76,7 @@ module Babl
                 when ::FalseClass then :false
                 # rubocop:enable Lint/BooleanSymbol
                 when ::Numeric, ::NilClass then :"#{key}"
-                else raise TerminalValueError.new("Invalid key for JSON object: #{key}", stack)
+                else raise TerminalValueError.new("Invalid key for JSON object: #{key.inspect}", stack)
                 end
             end
 

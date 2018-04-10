@@ -27,7 +27,7 @@ module Babl
             def render(ctx)
                 collection = ctx.object
                 unless Enumerable === collection
-                    raise Errors::RenderingError, "Not enumerable : #{collection}\n#{ctx.formatted_stack}"
+                    raise Errors::RenderingError, "Not enumerable : #{collection.inspect}\n#{ctx.formatted_stack}"
                 end
                 collection.each_with_index.map { |value, idx| node.render(ctx.move_forward(value, idx)) }
             end
