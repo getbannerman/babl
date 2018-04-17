@@ -32,9 +32,26 @@ module Babl
             end
 
             def render(frame)
-                out = {}
-                nodes.each { |k, v| out[k] = v.render(frame) }
-                out
+                generate_render_method
+                render_impl(frame)
+            end
+
+            def generate_render_method
+                return if @generated
+
+                ruby_props = nodes.each_with_index.map do |(key, node), index|
+                    varname = "@node_#{index}"
+                    instance_variable_set(varname, node)
+                    "#{key.inspect} => #{varname}.render(frame)"
+                end
+
+                singleton_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+                    def render_impl(frame)
+                        {#{ruby_props.join(',')}}
+                    end
+                RUBY
+
+                @generated = true
             end
         end
     end
