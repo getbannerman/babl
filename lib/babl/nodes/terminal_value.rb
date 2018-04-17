@@ -24,10 +24,10 @@ module Babl
                 Utils::Hash::EMPTY
             end
 
-            def render(ctx)
-                render_object(ctx.object)
+            def render(context, frame)
+                render_object(frame.object)
             rescue TerminalValueError => e
-                raise Errors::RenderingError, "#{e.message}\n" + ctx.formatted_stack(e.babl_stack), e.backtrace
+                raise Errors::RenderingError, "#{e.message}\n" + context.formatted_stack(frame, e.babl_stack), e.backtrace
             end
 
             def render_object(obj, stack = nil)

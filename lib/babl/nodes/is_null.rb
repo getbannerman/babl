@@ -20,8 +20,8 @@ module Babl
                 Utils::Hash::EMPTY
             end
 
-            def render(ctx)
-                ::NilClass === ctx.object
+            def render(_context, frame)
+                ::NilClass === frame.object
             end
 
             def optimize

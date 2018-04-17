@@ -27,8 +27,8 @@ module Babl
                 Utils::Hash::EMPTY
             end
 
-            def render(ctx)
-                ctx.object
+            def render(_context, frame)
+                frame.object
             end
 
             def optimize

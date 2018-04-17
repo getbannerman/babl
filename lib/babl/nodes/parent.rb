@@ -22,8 +22,8 @@ module Babl
                     node.pinned_dependencies
                 end
 
-                def render(ctx)
-                    node.render(ctx)
+                def render(context, frame)
+                    node.render(context, frame)
                 end
 
                 def optimize
@@ -43,8 +43,10 @@ module Babl
                 { PARENT_MARKER => node.dependencies }
             end
 
-            def render(ctx)
-                node.render(ctx.move_backward)
+            def render(context, frame)
+                context.move_backward(frame) do |new_frame|
+                    node.render(context, new_frame)
+                end
             end
 
             def optimize

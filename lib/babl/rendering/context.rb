@@ -4,54 +4,87 @@ require 'babl/utils'
 
 module Babl
     module Rendering
-        # The rendering context stores the 'current' object.
-        # Additionally, the context also:
-        # - Keep a reference to the parent context, in order to implement the parent operation (Parent)
-        # - Keep a reference to all pinned contexts, in order to goto a pinned context at any time (GotoPin)
-        #
-        # It is important to keep this object as small as possible, since an instance is created each time
-        # we navigate into a property.
         class Context
-            attr_reader :key, :object, :parent, :pins
+            class Frame
+                attr_accessor :object, :key, :parent, :pins
 
-            def initialize(object, key = nil, parent = nil, pins = nil)
-                @key = key
-                @object = object
-                @parent = parent
-                @pins = pins
+                def initialize(object = nil)
+                    @object = object
+                end
             end
 
-            # Standard navigation (enter into property)
-            def move_forward(new_object, key)
-                Context.new(new_object, key, self, pins)
+            def initialize
+                @freelist = []
             end
 
-            # Go back to parent
-            def move_backward
-                raise Errors::RenderingError, 'There is no parent element' unless parent
-                Context.new(parent.object, parent.key, parent.parent, pins)
+            def move_forward(current_frame, new_object, key)
+                with_frame do |new_frame|
+                    new_frame.object = new_object
+                    new_frame.key = key
+                    new_frame.parent = current_frame
+                    new_frame.pins = current_frame.pins
+
+                    yield new_frame
+                end
             end
 
-            # Go to a pinned context
-            def goto_pin(ref)
-                pin = pins&.[](ref)
-                raise Errors::RenderingError, 'Pin reference cannot be used here' unless pin
-                Context.new(pin.object, pin.key, pin.parent, (pin.pins || Utils::Hash::EMPTY).merge(pins))
+            def move_backward(current_frame)
+                with_frame do |new_frame|
+                    parent_frame = current_frame.parent
+                    raise Errors::RenderingError, 'There is no parent element' unless parent_frame
+
+                    new_frame.object = parent_frame.object
+                    new_frame.parent = parent_frame.parent
+                    new_frame.key = parent_frame.key
+                    new_frame.pins = current_frame.pins
+
+                    yield new_frame
+                end
             end
 
-            # Associate a pin to current context
-            def create_pin(ref)
-                Context.new(object, key, parent, (pins || Utils::Hash::EMPTY).merge(ref => self))
+            def goto_pin(current_frame, ref)
+                current_pins = current_frame.pins || Utils::Hash::EMPTY
+                pin_frame = current_pins[ref]
+                raise Errors::RenderingError, 'Pin reference cannot be used here' unless pin_frame
+
+                with_frame do |new_frame|
+                    new_frame.object = pin_frame.object
+                    new_frame.parent = pin_frame.parent
+                    new_frame.key = pin_frame.key
+                    new_frame.pins = (pin_frame.pins || Utils::Hash::EMPTY).merge(current_pins)
+
+                    yield new_frame
+                end
             end
 
-            def formatted_stack(*additional_stack_items)
-                stack_trace = ([:__root__] + stack + additional_stack_items).join('.')
+            def create_pin(current_frame, ref)
+                with_frame do |new_frame|
+                    new_frame.parent = current_frame.parent
+                    new_frame.object = current_frame.object
+                    new_frame.key = current_frame.key
+                    new_frame.pins = (current_frame.pins || Utils::Hash::EMPTY).merge(ref => new_frame)
+
+                    yield new_frame
+                end
+            end
+
+            def stack(current_frame)
+                parent_frame = current_frame.parent
+                (parent_frame ? stack(parent_frame) : Utils::Array::EMPTY) + [current_frame.key].compact
+            end
+
+            def formatted_stack(current_frame, *additional_stack_items)
+                stack_trace = ([:__root__] + stack(current_frame) + additional_stack_items).join('.')
                 "BABL @ #{stack_trace}"
             end
 
-            # Return an array containing the navigation history
-            def stack
-                (parent ? parent.stack : Utils::Array::EMPTY) + [key].compact
+            private
+
+            def with_frame
+                frame = @freelist.pop || Frame.new
+                yield frame
+            ensure
+                @freelist << frame
             end
         end
     end

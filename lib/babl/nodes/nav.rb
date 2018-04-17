@@ -24,13 +24,17 @@ module Babl
                 node.pinned_dependencies
             end
 
-            def render(ctx)
+            def render(context, frame)
                 value = begin
-                    ::Hash === ctx.object ? ctx.object.fetch(property) : ctx.object.send(property)
+                    object = frame.object
+                    ::Hash === object ? object.fetch(property) : object.send(property)
                 rescue StandardError => e
-                    raise Errors::RenderingError, "#{e.message}\n" + ctx.formatted_stack(property), e.backtrace
+                    raise Errors::RenderingError, "#{e.message}\n" + context.formatted_stack(frame, property), e.backtrace
                 end
-                node.render(ctx.move_forward(value, property))
+
+                context.move_forward(frame, value, property) do |new_frame|
+                    node.render(context, new_frame)
+                end
             end
 
             def optimize

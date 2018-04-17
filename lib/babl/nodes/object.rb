@@ -22,9 +22,9 @@ module Babl
                 Schema::Object.new(properties, false)
             end
 
-            def render(ctx)
+            def render(context, frame)
                 out = {}
-                nodes.each { |k, v| out[k] = v.render(ctx) }
+                nodes.each { |k, v| out[k] = v.render(context, frame) }
                 out
             end
 

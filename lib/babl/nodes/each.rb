@@ -24,12 +24,17 @@ module Babl
                 node.pinned_dependencies
             end
 
-            def render(ctx)
-                collection = ctx.object
+            def render(context, frame)
+                collection = frame.object
                 unless Enumerable === collection
-                    raise Errors::RenderingError, "Not enumerable : #{collection.inspect}\n#{ctx.formatted_stack}"
+                    raise Errors::RenderingError, "Not enumerable : #{collection.inspect}\n#{context.formatted_stack(frame)}"
                 end
-                collection.each_with_index.map { |value, idx| node.render(ctx.move_forward(value, idx)) }
+
+                collection.each_with_index.map do |value, idx|
+                    context.move_forward(frame, value, idx) do |new_frame|
+                        node.render(context, new_frame)
+                    end
+                end
             end
 
             def optimize

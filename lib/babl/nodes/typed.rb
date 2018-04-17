@@ -28,13 +28,13 @@ module Babl
                     Schema::Typed::STRING
                 end
 
-                def render(ctx)
-                    value = ctx.object
+                def render(context, frame)
+                    value = frame.object
                     return value if ::String === value
                     return value.to_s if ::Symbol === value
 
                     raise Errors::RenderingError,
-                        "Expected a string, got #{value.inspect}\n#{ctx.formatted_stack}"
+                        "Expected a string, got #{value.inspect}\n#{context.formatted_stack(frame)}"
                 end
             end
 
@@ -43,12 +43,12 @@ module Babl
                     Schema::Typed::INTEGER
                 end
 
-                def render(ctx)
-                    value = ctx.object
+                def render(context, frame)
+                    value = frame.object
                     return value if ::Integer === value
 
                     raise Errors::RenderingError,
-                        "Expected an integer, got #{value.inspect}\n#{ctx.formatted_stack}"
+                        "Expected an integer, got #{value.inspect}\n#{context.formatted_stack(frame)}"
                 end
             end
 
@@ -57,13 +57,13 @@ module Babl
                     Schema::Typed::NUMBER
                 end
 
-                def render(ctx)
-                    value = ctx.object
+                def render(context, frame)
+                    value = frame.object
                     return value if ::Integer === value
                     return value.to_f if ::Numeric === value
 
                     raise Errors::RenderingError,
-                        "Expected a number, got #{value.inspect}\n#{ctx.formatted_stack}"
+                        "Expected a number, got #{value.inspect}\n#{context.formatted_stack(frame)}"
                 end
             end
 
@@ -72,12 +72,12 @@ module Babl
                     Schema::Typed::BOOLEAN
                 end
 
-                def render(ctx)
-                    value = ctx.object
+                def render(context, frame)
+                    value = frame.object
                     return value if true == value || false == value
 
                     raise Errors::RenderingError,
-                        "Expected a boolean, got #{value.inspect}\n#{ctx.formatted_stack}"
+                        "Expected a boolean, got #{value.inspect}\n#{context.formatted_stack(frame)}"
                 end
             end
         end

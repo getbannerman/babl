@@ -19,9 +19,10 @@ module Babl
                 nodes.map(&:schema).reduce(Schema::Object::EMPTY) { |a, b| merge_doc(a, b) }
             end
 
-            def render(ctx)
-                nodes.map { |node| node.render(ctx) }.compact.reduce({}) { |acc, val|
-                    raise Errors::RenderingError, "Only objects can be merged\n" + ctx.formatted_stack unless ::Hash === val
+            def render(context, frame)
+                nodes.map { |node| node.render(context, frame) }.compact.reduce({}) { |acc, val|
+                    raise Errors::RenderingError, "Only objects can be merged\n" +
+                        context.formatted_stack(frame) unless ::Hash === val
                     acc.merge!(val)
                 }
             end

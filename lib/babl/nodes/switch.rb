@@ -27,8 +27,8 @@ module Babl
                 Schema::AnyOf.canonicalized(nodes.map(&:last).map(&:schema))
             end
 
-            def render(ctx)
-                nodes.each { |cond, value| return value.render(ctx) if cond.render(ctx) }
+            def render(context, frame)
+                nodes.each { |cond, value| return value.render(context, frame) if cond.render(context, frame) }
                 raise Errors::RenderingError, 'A least one switch() condition must be taken'
             end
 

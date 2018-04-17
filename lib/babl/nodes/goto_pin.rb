@@ -17,8 +17,10 @@ module Babl
                 node.schema
             end
 
-            def render(ctx)
-                node.render(ctx.goto_pin(ref))
+            def render(context, frame)
+                context.goto_pin(frame, ref) do |new_frame|
+                    node.render(context, new_frame)
+                end
             end
 
             def optimize
