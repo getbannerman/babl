@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.3 (April 24, 2018)
+-  Reduced number of object allocations during rendering. [#85](https://github.com/getbannerman/babl/pull/85)
+
 ## 0.5.2 (April 6, 2018)
 - Improve JSON-Schema generation: simplify handling of nullable properties. [#83](https://github.com/getbannerman/babl/pull/83)
 
