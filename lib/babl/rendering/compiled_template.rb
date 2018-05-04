@@ -13,9 +13,9 @@ module Babl
 
             def render(root)
                 preloaded_data = preloader.preload([root], dependencies).first
-                context = Context.new
-                frame = Context::Frame.new(preloaded_data)
-                node.render(context, frame)
+                frame = Context.new
+                frame.object = preloaded_data
+                node.render(frame)
             end
         end
     end

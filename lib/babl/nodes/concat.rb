@@ -18,14 +18,14 @@ module Babl
                 nodes.map(&:schema).reduce(Schema::FixedArray::EMPTY) { |a, b| merge_doc(a, b) }
             end
 
-            def render(context, frame)
+            def render(frame)
                 out = []
                 nodes.each { |node|
-                    values = node.render(context, frame)
+                    values = node.render(frame)
                     case values
                     when ::NilClass then nil
                     when ::Array then out.concat(values)
-                    else raise Errors::RenderingError, "Only arrays can be concatenated\n" + context.formatted_stack(frame)
+                    else raise Errors::RenderingError, "Only arrays can be concatenated\n" + frame.formatted_stack
                     end
                 }
                 out

@@ -5,7 +5,7 @@ require 'babl/utils'
 module Babl
     module Nodes
         class Constant < Utils::Value.new(:value, :schema)
-            def render(_context, _frame)
+            def render(_frame)
                 value
             end
 

@@ -24,16 +24,16 @@ module Babl
                 node.pinned_dependencies
             end
 
-            def render(context, frame)
+            def render(frame)
                 value = begin
                     object = frame.object
                     ::Hash === object ? object.fetch(property) : object.send(property)
                 rescue StandardError => e
-                    raise Errors::RenderingError, "#{e.message}\n" + context.formatted_stack(frame, property), e.backtrace
+                    raise Errors::RenderingError, "#{e.message}\n" + frame.formatted_stack(property), e.backtrace
                 end
 
-                context.move_forward(frame, value, property) do |new_frame|
-                    node.render(context, new_frame)
+                frame.move_forward(value, property) do |new_frame|
+                    node.render(new_frame)
                 end
             end
 

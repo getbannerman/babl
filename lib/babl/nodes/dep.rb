@@ -4,8 +4,8 @@ require 'babl/utils'
 module Babl
     module Nodes
         class Dep < Utils::Value.new(:node, :path)
-            def render(context, frame)
-                node.render(context, frame)
+            def render(frame)
+                node.render(frame)
             end
 
             def schema

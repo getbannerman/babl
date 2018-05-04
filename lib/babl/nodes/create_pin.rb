@@ -4,9 +4,9 @@ require 'babl/utils'
 module Babl
     module Nodes
         class CreatePin < Utils::Value.new(:node, :ref)
-            def render(context, frame)
-                context.create_pin(frame, ref) do |new_frame|
-                    node.render(context, new_frame)
+            def render(frame)
+                frame.create_pin(ref) do |new_frame|
+                    node.render(new_frame)
                 end
             end
 

@@ -32,7 +32,7 @@ describe 'Reference benchmark' do
         let(:object) {
             nested_struct = Struct.new(:prop1, :prop2, :prop3, :prop4, :prop5, :prop6)
 
-            Array.new(100) { |i|
+            Array.new(200) { |i|
                 {
                     id: i,
                     prop4: 1,

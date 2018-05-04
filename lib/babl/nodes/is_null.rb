@@ -20,7 +20,7 @@ module Babl
                 Utils::Hash::EMPTY
             end
 
-            def render(_context, frame)
+            def render(frame)
                 ::NilClass === frame.object
             end
 

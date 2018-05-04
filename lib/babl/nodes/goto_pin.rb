@@ -17,9 +17,9 @@ module Babl
                 node.schema
             end
 
-            def render(context, frame)
-                context.goto_pin(frame, ref) do |new_frame|
-                    node.render(context, new_frame)
+            def render(frame)
+                frame.goto_pin(ref) do |new_frame|
+                    node.render(new_frame)
                 end
             end
 

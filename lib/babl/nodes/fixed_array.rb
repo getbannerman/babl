@@ -20,8 +20,8 @@ module Babl
                 nodes.map(&:pinned_dependencies).reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
 
-            def render(context, frame)
-                nodes.map { |node| node.render(context, frame) }
+            def render(frame)
+                nodes.map { |node| node.render(frame) }
             end
 
             def optimize

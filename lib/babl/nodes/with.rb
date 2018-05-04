@@ -23,16 +23,16 @@ module Babl
                     .reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
             end
 
-            def render(context, frame)
-                values = nodes.map { |n| n.render(context, frame) }
+            def render(frame)
+                values = nodes.map { |n| n.render(frame) }
                 value = begin
                     block.arity.zero? ? frame.object.instance_exec(&block) : block.call(*values)
                 rescue StandardError => e
-                    raise Errors::RenderingError, "#{e.message}\n" + context.formatted_stack(frame, :__block__), e.backtrace
+                    raise Errors::RenderingError, "#{e.message}\n" + frame.formatted_stack(:__block__), e.backtrace
                 end
 
-                context.move_forward(frame, value, :__block__) do |new_frame|
-                    node.render(context, new_frame)
+                frame.move_forward(value, :__block__) do |new_frame|
+                    node.render(new_frame)
                 end
             end
 
