@@ -1,7 +1,11 @@
 # Changelog
 
+## 0.5.4 (May 29, 2018)
+- Slightly improve rendering speed. [#87](https://github.com/getbannerman/babl/pull/87)
+- Implement support for "named pins". [#88](https://github.com/getbannerman/babl/pull/88)
+
 ## 0.5.3 (April 24, 2018)
--  Reduced number of object allocations during rendering. [#85](https://github.com/getbannerman/babl/pull/85)
+- Reduced number of object allocations during rendering. [#85](https://github.com/getbannerman/babl/pull/85)
 
 ## 0.5.2 (April 6, 2018)
 - Improve JSON-Schema generation: simplify handling of nullable properties. [#83](https://github.com/getbannerman/babl/pull/83)
