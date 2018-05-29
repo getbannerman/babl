@@ -18,23 +18,28 @@ module Babl
 
                 def cached_call(template)
                     cached_templates[template.identifier] ||= Babl.compile {
-                        source(template.source, template.identifier)
+                        pin { |root|
+                            nav(:context).named_pin(:rails_context).call(root.nav(:locals))
+                                .source(template.source, template.identifier)
+                        }
                     }
 
                     <<-RUBY
                         compiled = ::Babl::ActionView::TemplateHandler.cached_templates[#{template.identifier.inspect}]
-                        compiled.json(local_assigns)
+                        compiled.json(locals: local_assigns, context: self)
                     RUBY
                 end
 
                 def uncached_call(template)
                     <<-RUBY
                         Babl.compile {
-                            source(
+                            pin do |root|
+                                nav(:context).named_pin(:rails_context).call(root.nav(:locals)).source(
                                 #{template.source.inspect},
                                 #{template.identifier.inspect}
-                            )
-                        }.json(local_assigns)
+                                )
+                            end
+                        }.json(locals: local_assigns, context: self)
                     RUBY
                 end
             end

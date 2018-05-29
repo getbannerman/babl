@@ -8,25 +8,31 @@ module Babl
         module Pin
             module DSL
                 # Create a pin
-                def pin(navigation = nil, &block)
-                    return pin { |p| block[p.call(navigation)] } if navigation
+                def pin(navigation = unscoped, &block)
                     ref = Utils::Ref.new
+                    named_pin(ref).call(block[unscoped.goto_pin(ref).call(navigation)])
+                end
 
-                    referenced_scope = unscoped.construct_node(key: nil, continue: nil) { |node|
-                        Nodes::GotoPin.new(node, ref)
-                    }
-
+                def named_pin(ref)
+                    check_pin_ref(ref)
                     construct_node(continue: nil) { |node| Nodes::CreatePin.new(node, ref) }
-                        .call(block[referenced_scope])
+                end
+
+                def goto_pin(ref)
+                    check_pin_ref(ref)
+                    construct_node(key: nil, continue: nil) { |node| Nodes::GotoPin.new(node, ref) }
                 end
 
                 protected
 
-                # Override TemplateBase#precompile to ensure that all pin dependencies are satisfied.
-                def precompile(*)
-                    super.tap do |node|
-                        raise Errors::InvalidTemplate, 'Unresolved pin' unless node.pinned_dependencies.empty?
-                    end
+                def validate(tree)
+                    name = tree.pinned_dependencies.keys.first
+                    raise Errors::InvalidTemplate, "Unresolved pin: #{name}" if name
+                    super
+                end
+
+                def check_pin_ref(ref)
+                    raise Errors::InvalidTemplate, 'Pin name must be a symbol' unless Utils::Ref === ref || ::Symbol === ref
                 end
             end
         end

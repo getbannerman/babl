@@ -22,6 +22,8 @@ module Babl
                 # Compute dependencies & schema on the non-simplified node tree in order
                 # to catch all errors.
                 tree = precompile(lookup_context: lookup_context)
+                validate(tree)
+
                 dependencies = tree.dependencies
                 schema = tree.schema
 
@@ -47,6 +49,10 @@ module Babl
             end
 
             protected
+
+            def validate(tree)
+                # NOOP
+            end
 
             def precompile(node = Nodes::TerminalValue.instance, **context)
                 builder.precompile(node, **context)

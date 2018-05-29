@@ -31,6 +31,21 @@ describe Babl::Operators::Pin do
             }
         end
 
+        context 'named pin' do
+            template { nav(:prop).named_pin(:pouet).parent.nav(:prop3).goto_pin(:pouet).nav(:prop2) }
+            let(:object) { { prop: { prop2: 42 }, prop3: 3 } }
+
+            it { expect(json).to eq 42 }
+            it { expect(dependencies).to eq(prop: { prop2: {} }, prop3: {}) }
+            it { expect(unoptimized_dependencies).to eq(prop: { prop2: {} }, prop3: {}) }
+            it { expect(schema).to eq s_anything }
+        end
+
+        context 'non existing pin' do
+            template { named_pin(:b).goto_pin(:a) }
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
+        end
+
         context 'un-used pin' do
             template {
                 pin(:oki) { |ref|

@@ -12,9 +12,11 @@ module Babl
 
                 protected
 
-                # Override TemplateBase#precompile to add parent dependencies verification
-                def precompile(*)
-                    Nodes::Parent::Verifier.new(super)
+                def validate(tree)
+                    if tree.dependencies.key? Nodes::Parent::PARENT_MARKER
+                        raise Errors::InvalidTemplate, 'Out of context parent dependency'
+                    end
+                    super
                 end
             end
         end
