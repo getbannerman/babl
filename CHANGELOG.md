@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.5 (July 4, 2018)
+- Reduce template compilation time:
+  - Faster `deep_merge` implementation (#89)
+  - Fix: dependencies were computed multiple times in some cases (#90)
+
 ## 0.5.4 (May 29, 2018)
 - Slightly improve rendering speed. [#87](https://github.com/getbannerman/babl/pull/87)
 - Implement support for "named pins". [#88](https://github.com/getbannerman/babl/pull/88)
