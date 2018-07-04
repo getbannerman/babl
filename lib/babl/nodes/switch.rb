@@ -13,24 +13,19 @@ module Babl
                 super
             end
 
-            def dependencies
+            memoize def dependencies
                 Babl::Utils::Hash.deep_merge(*nodes.flatten(1).map(&:dependencies))
             end
 
-            def pinned_dependencies
+            memoize def pinned_dependencies
                 Babl::Utils::Hash.deep_merge(*nodes.flatten(1).map(&:pinned_dependencies))
             end
 
-            def schema
+            memoize def schema
                 Schema::AnyOf.canonicalized(nodes.map(&:last).map(&:schema))
             end
 
-            def render(frame)
-                nodes.each { |cond, value| return value.render(frame) if cond.render(frame) }
-                raise Errors::RenderingError, 'A least one switch() condition must be taken'
-            end
-
-            def optimize
+            memoize def optimize
                 optimize_condition_and_values ||
                     optimize_falsy_conditions ||
                     optimize_truthy_conditions ||
@@ -38,6 +33,11 @@ module Babl
                     optimize_same_conditions ||
                     optimize_continue_to_switch ||
                     self
+            end
+
+            def render(frame)
+                nodes.each { |cond, value| return value.render(frame) if cond.render(frame) }
+                raise Errors::RenderingError, 'A least one switch() condition must be taken'
             end
 
             private

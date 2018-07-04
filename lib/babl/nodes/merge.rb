@@ -7,16 +7,25 @@ require 'babl/nodes/constant'
 module Babl
     module Nodes
         class Merge < Utils::Value.new(:nodes)
-            def dependencies
+            memoize def dependencies
                 Babl::Utils::Hash.deep_merge(*nodes.map(&:dependencies))
             end
 
-            def pinned_dependencies
+            memoize def pinned_dependencies
                 Babl::Utils::Hash.deep_merge(*nodes.map(&:pinned_dependencies))
             end
 
-            def schema
+            memoize def schema
                 nodes.map(&:schema).reduce(Schema::Object::EMPTY) { |a, b| merge_doc(a, b) }
+            end
+
+            memoize def optimize
+                optimize_empty ||
+                    optimize_single ||
+                    optimize_nested_merges ||
+                    optimize_merged_objects ||
+                    optimize_premergeable_objects ||
+                    self
             end
 
             def render(frame)
@@ -25,15 +34,6 @@ module Babl
                         frame.formatted_stack unless ::Hash === val
                     acc.merge!(val)
                 }
-            end
-
-            def optimize
-                optimize_empty ||
-                    optimize_single ||
-                    optimize_nested_merges ||
-                    optimize_merged_objects ||
-                    optimize_premergeable_objects ||
-                    self
             end
 
             private

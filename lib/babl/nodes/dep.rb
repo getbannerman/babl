@@ -8,20 +8,21 @@ module Babl
                 node.render(frame)
             end
 
-            def schema
+            memoize def schema
                 node.schema
             end
 
-            def pinned_dependencies
+            memoize def pinned_dependencies
                 node.pinned_dependencies
             end
 
-            def dependencies
+            memoize def dependencies
                 Babl::Utils::Hash.deep_merge(node.dependencies, path)
             end
 
-            def optimize
-                Dep.new(node.optimize, path)
+            memoize def optimize
+                optimized = node.optimize
+                optimized.equal?(node) ? self : Dep.new(optimized, path)
             end
         end
     end

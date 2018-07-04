@@ -10,21 +10,27 @@ module Babl
                 end
             end
 
-            def schema
+            memoize def schema
                 node.schema
             end
 
-            def dependencies
+            memoize def dependencies
                 Babl::Utils::Hash.deep_merge(node.dependencies, node.pinned_dependencies[ref] || Utils::Hash::EMPTY)
             end
 
-            def pinned_dependencies
+            memoize def pinned_dependencies
                 node.pinned_dependencies.reject { |k, _v| k == ref }
             end
 
-            def optimize
+            memoize def optimize
                 optimized = node.optimize
-                optimized.pinned_dependencies[ref] ? CreatePin.new(optimized, ref) : optimized
+                if !optimized.pinned_dependencies[ref]
+                    optimized
+                elsif optimized.equal?(node)
+                    self
+                else
+                    CreatePin.new(optimized, ref)
+                end
             end
         end
     end

@@ -7,27 +7,29 @@ module Babl
         class Parent < Utils::Value.new(:node)
             PARENT_MARKER = Utils::Ref.new
 
-            def schema
+            memoize def schema
                 node.schema
             end
 
-            def pinned_dependencies
+            memoize def pinned_dependencies
                 node.pinned_dependencies
             end
 
-            def dependencies
+            memoize def dependencies
                 { PARENT_MARKER => node.dependencies }
+            end
+
+            memoize def optimize
+                optimized = node.optimize
+                return optimized if Constant === optimized
+                return self if optimized.equal?(node)
+                Parent.new(optimized)
             end
 
             def render(frame)
                 frame.move_backward do |new_frame|
                     node.render(new_frame)
                 end
-            end
-
-            def optimize
-                optimized = node.optimize
-                Constant === optimized ? optimized : Parent.new(optimized)
             end
         end
     end

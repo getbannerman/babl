@@ -6,7 +6,7 @@ require 'babl/nodes/parent'
 module Babl
     module Nodes
         class Nav < Utils::Value.new(:property, :node)
-            def dependencies
+            memoize def dependencies
                 node_deps = node.dependencies
                 child_deps = node_deps.reject { |key, _| key == Parent::PARENT_MARKER }
 
@@ -16,12 +16,20 @@ module Babl
                 )
             end
 
-            def schema
+            memoize def schema
                 node.schema
             end
 
-            def pinned_dependencies
+            memoize def pinned_dependencies
                 node.pinned_dependencies
+            end
+
+            memoize def optimize
+                optimized = node.optimize
+                return optimized if Constant === optimized
+                return optimized.node if Parent === optimized
+                return self if optimized.equal?(node)
+                Nav.new(property, optimized)
             end
 
             def render(frame)
@@ -35,13 +43,6 @@ module Babl
                 frame.move_forward(value, property) do |new_frame|
                     node.render(new_frame)
                 end
-            end
-
-            def optimize
-                optimized = node.optimize
-                return optimized if Constant === optimized
-                return optimized.node if Parent === optimized
-                Nav.new(property, optimized)
             end
         end
     end

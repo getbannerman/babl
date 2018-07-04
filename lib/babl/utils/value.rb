@@ -8,7 +8,6 @@ module Babl
         # - Properties are assumed deeply immutable (#hash is assumed constant & store permanently)
         # - Constructor requires all arguments
         # - #== has the same meaning as #eql?
-        # - The object is frozen
         #
         # Goals :
         # - Create completely immutable value objects
@@ -25,9 +24,12 @@ module Babl
                     def initialize(#{field_aliases.join(',')})
                         super(#{['nil', field_aliases].join(',')})
                         hash
-                        freeze
                     end
                 RUBY
+
+                fields.each { |field|
+                    clazz.send(:define_method, :"#{field}=") { |*| raise ::RuntimeError, 'Object is immutable' }
+                }
 
                 clazz
             end
@@ -40,9 +42,25 @@ module Babl
                 eql?(other)
             end
 
-            def self.with(hash = Utils::Hash::EMPTY)
-                raise ::ArgumentError unless ::Hash === hash && (hash.keys - self::FIELDS).empty?
-                new(*self::FIELDS.map { |f| hash.fetch(f) })
+            class << self
+                def with(hash = Utils::Hash::EMPTY)
+                    raise ::ArgumentError unless ::Hash === hash && (hash.keys - self::FIELDS).empty?
+                    new(*self::FIELDS.map { |f| hash.fetch(f) })
+                end
+
+                private
+
+                def memoize(method_name)
+                    old_name = :"_unmemoized_#{method_name}"
+                    alias_method old_name, method_name
+
+                    class_eval <<-SQL
+                        def #{method_name}
+                            return @#{old_name} if defined? @#{old_name}
+                            @#{old_name} = #{old_name}
+                        end
+                    SQL
+                end
             end
         end
     end

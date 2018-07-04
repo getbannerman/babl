@@ -5,27 +5,33 @@ require 'babl/nodes/constant'
 module Babl
     module Nodes
         class GotoPin < Utils::Value.new(:node, :ref)
-            def dependencies
+            memoize def dependencies
                 Utils::Hash::EMPTY
             end
 
-            def pinned_dependencies
+            memoize def pinned_dependencies
                 Babl::Utils::Hash.deep_merge(node.pinned_dependencies, ref => node.dependencies)
             end
 
-            def schema
+            memoize def schema
                 node.schema
+            end
+
+            memoize def optimize
+                optimized = node.optimize
+                if Constant === optimized
+                    optimized
+                elsif optimized.equal?(node)
+                    self
+                else
+                    GotoPin.new(optimized, ref)
+                end
             end
 
             def render(frame)
                 frame.goto_pin(ref) do |new_frame|
                     node.render(new_frame)
                 end
-            end
-
-            def optimize
-                optimized = node.optimize
-                Constant === optimized ? optimized : GotoPin.new(optimized, ref)
             end
         end
     end

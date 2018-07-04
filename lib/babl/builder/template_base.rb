@@ -40,7 +40,7 @@ module Babl
                     pretty: pretty,
                     node: tree,
                     dependencies: dependencies,
-                    json_schema: schema.json
+                    schema: schema
                 )
             end
 

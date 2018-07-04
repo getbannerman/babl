@@ -6,16 +6,24 @@ require 'babl/schema'
 module Babl
     module Nodes
         class Concat < Utils::Value.new(:nodes)
-            def dependencies
+            memoize def dependencies
                 Babl::Utils::Hash.deep_merge(*nodes.map(&:dependencies))
             end
 
-            def pinned_dependencies
+            memoize def pinned_dependencies
                 Babl::Utils::Hash.deep_merge(*nodes.map(&:pinned_dependencies))
             end
 
-            def schema
+            memoize def schema
                 nodes.map(&:schema).reduce(Schema::FixedArray::EMPTY) { |a, b| merge_doc(a, b) }
+            end
+
+            memoize def optimize
+                optimize_empty ||
+                    optimize_single ||
+                    optimize_concatenated_arrays ||
+                    optimize_preconcat_constant ||
+                    self
             end
 
             def render(frame)
@@ -29,14 +37,6 @@ module Babl
                     end
                 }
                 out
-            end
-
-            def optimize
-                optimize_empty ||
-                    optimize_single ||
-                    optimize_concatenated_arrays ||
-                    optimize_preconcat_constant ||
-                    self
             end
 
             private

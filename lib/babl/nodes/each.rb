@@ -6,7 +6,7 @@ require 'babl/utils'
 module Babl
     module Nodes
         class Each < Utils::Value.new(:node)
-            def dependencies
+            memoize def dependencies
                 node_deps = node.dependencies
                 child_deps = node_deps.reject { |key, _| key == Parent::PARENT_MARKER }
 
@@ -16,12 +16,17 @@ module Babl
                 )
             end
 
-            def schema
+            memoize def schema
                 Schema::DynArray.new(node.schema)
             end
 
-            def pinned_dependencies
+            memoize def pinned_dependencies
                 node.pinned_dependencies
+            end
+
+            memoize def optimize
+                optimized = node.optimize
+                optimized.equal?(node) ? self : Each.new(node.optimize)
             end
 
             def render(frame)
@@ -35,10 +40,6 @@ module Babl
                         node.render(new_frame)
                     end
                 end
-            end
-
-            def optimize
-                Each.new(node.optimize)
             end
         end
     end
