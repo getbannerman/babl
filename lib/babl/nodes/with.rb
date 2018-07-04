@@ -11,16 +11,13 @@ module Babl
 
             def dependencies
                 Babl::Utils::Hash.deep_merge(
-                    node.dependencies[Parent::PARENT_MARKER] || Utils::Hash::EMPTY,
-                    nodes.map(&:dependencies).reduce(Utils::Hash::EMPTY) { |a, b|
-                        Babl::Utils::Hash.deep_merge(a, b)
-                    }
+                    *nodes.map(&:dependencies),
+                    node.dependencies[Parent::PARENT_MARKER] || Utils::Hash::EMPTY
                 )
             end
 
             def pinned_dependencies
-                (nodes + [node]).map(&:pinned_dependencies)
-                    .reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                Babl::Utils::Hash.deep_merge(*(nodes + [node]).map(&:pinned_dependencies))
             end
 
             def render(frame)

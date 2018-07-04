@@ -8,7 +8,7 @@ module Babl
         class Nav < Utils::Value.new(:property, :node)
             def dependencies
                 node_deps = node.dependencies
-                child_deps = node.dependencies.reject { |key, _| key == Parent::PARENT_MARKER }
+                child_deps = node_deps.reject { |key, _| key == Parent::PARENT_MARKER }
 
                 Babl::Utils::Hash.deep_merge(
                     node_deps[Parent::PARENT_MARKER] || Utils::Hash::EMPTY,
