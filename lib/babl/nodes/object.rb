@@ -9,12 +9,11 @@ module Babl
             EMPTY = new(Utils::Hash::EMPTY)
 
             def dependencies
-                nodes.values.map(&:dependencies).reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                Babl::Utils::Hash.deep_merge(*nodes.values.map(&:dependencies))
             end
 
             def pinned_dependencies
-                nodes.values.map(&:pinned_dependencies)
-                    .reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                Babl::Utils::Hash.deep_merge(*nodes.values.map(&:pinned_dependencies))
             end
 
             def schema

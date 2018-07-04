@@ -14,13 +14,11 @@ module Babl
             end
 
             def dependencies
-                nodes.flatten(1).map(&:dependencies)
-                    .reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                Babl::Utils::Hash.deep_merge(*nodes.flatten(1).map(&:dependencies))
             end
 
             def pinned_dependencies
-                nodes.flatten(1).map(&:pinned_dependencies)
-                    .reduce(Utils::Hash::EMPTY) { |a, b| Babl::Utils::Hash.deep_merge(a, b) }
+                Babl::Utils::Hash.deep_merge(*nodes.flatten(1).map(&:pinned_dependencies))
             end
 
             def schema

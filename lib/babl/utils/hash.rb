@@ -4,10 +4,16 @@ module Babl
         class Hash
             EMPTY = {}.freeze
 
-            # Source: http://stackoverflow.com/a/9381776/1434017 (Jon M)
-            def self.deep_merge(first, second)
-                merger = proc { |_key, v1, v2| ::Hash === v1 && ::Hash === v2 ? v1.merge(v2, &merger) : v2 }
-                first.merge(second, &merger)
+            def self.deep_merge(*hashes)
+                filtered_hashes = hashes.reject(&:empty?)
+                return EMPTY if filtered_hashes.empty?
+                return filtered_hashes.first if filtered_hashes.size == 1
+                filtered_hashes.reduce({}) { |out, hash| deep_merge_inplace(out, hash) }
+            end
+
+            def self.deep_merge_inplace(target, source)
+                source.each { |k, v| target[k] = deep_merge_inplace(target[k] || {}, v) }
+                target
             end
         end
     end
