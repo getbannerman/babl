@@ -8,7 +8,11 @@ module Babl
             module DSL
                 # Interpret whatever is passed to this method as BABL template. It is idempotent.
                 def call(*args, &block)
-                    return with(*args, &block) unless block.nil?
+                    if block
+                        raise Errors::InvalidTemplate, 'call() expects no argument when a block is given' unless args.empty?
+                        return with(&block)
+                    end
+
                     raise Errors::InvalidTemplate, 'call() expects exactly 1 argument (unless block)' unless args.size == 1
 
                     arg = args.first

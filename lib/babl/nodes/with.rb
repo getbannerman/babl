@@ -30,9 +30,9 @@ module Babl
             end
 
             def render(frame)
-                values = nodes.map { |n| n.render(frame) }
+                values = nodes.empty? ? nil : nodes.map { |n| n.render(frame) }
                 value = begin
-                    block.arity.zero? ? frame.object.instance_exec(&block) : block.call(*values)
+                    nodes.empty? ? frame.object.instance_exec(&block) : block.call(*values)
                 rescue StandardError => e
                     raise Errors::RenderingError, "#{e.message}\n" + frame.formatted_stack(:__block__), e.backtrace
                 end
