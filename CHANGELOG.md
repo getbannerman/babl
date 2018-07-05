@@ -1,9 +1,13 @@
 # Changelog
 
+## 0.5.6 (July 5, 2018)
+- Fix: operator `with` should not change its behavior based on the arity of the passed block [#92](https://github.com/getbannerman/babl/pull/92)
+- Reduce compilation time thanks to memoization [#91](https://github.com/getbannerman/babl/pull/91)
+
 ## 0.5.5 (July 4, 2018)
 - Reduce template compilation time:
-  - Faster `deep_merge` implementation (#89)
-  - Fix: dependencies were computed multiple times in some cases (#90)
+  - Faster `deep_merge` implementation [#89](https://github.com/getbannerman/babl/pull/89)
+  - Fix: dependencies were computed multiple times in some cases [#90](https://github.com/getbannerman/babl/pull/90)
 
 ## 0.5.4 (May 29, 2018)
 - Slightly improve rendering speed. [#87](https://github.com/getbannerman/babl/pull/87)
