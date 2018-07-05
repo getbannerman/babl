@@ -24,7 +24,7 @@ describe Babl::Operators::Nav do
         context 'navigate to BigDecimal' do
             template { nav(:a) }
 
-            let(:object) { { a: BigDecimal.new('1.3') } }
+            let(:object) { { a: BigDecimal('1.3') } }
 
             it { expect(json).to eq 1.3 }
             it { expect(schema).to eq s_anything }

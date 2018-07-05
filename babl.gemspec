@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
     gem.add_development_dependency 'pry', '~> 0'
     gem.add_development_dependency 'rabl', '~> 0.13'
     gem.add_development_dependency 'rspec', '~> 3'
-    gem.add_development_dependency 'rubocop', '0.51'
+    gem.add_development_dependency 'rubocop', '0.57'
 
     gem.add_dependency 'multi_json', '~> 1'
 end

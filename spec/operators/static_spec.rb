@@ -44,7 +44,7 @@ describe Babl::Operators::Static do
         end
 
         context 'static BigDecimal' do
-            template { static(BigDecimal.new('1.1')) }
+            template { static(BigDecimal('1.1')) }
 
             it { expect(schema).to eq s_primitive(1.1) }
             it { expect(json).to eq 1.1 }

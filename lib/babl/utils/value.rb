@@ -20,7 +20,7 @@ module Babl
 
                 clazz = super(:_cached_hash, *fields)
                 clazz.const_set(:FIELDS, fields)
-                clazz.class_eval <<-RUBY
+                clazz.class_eval <<-RUBY, __FILE__, __LINE__ + 1
                     def initialize(#{field_aliases.join(',')})
                         super(#{['nil', field_aliases].join(',')})
                         hash
@@ -54,12 +54,12 @@ module Babl
                     old_name = :"_unmemoized_#{method_name}"
                     alias_method old_name, method_name
 
-                    class_eval <<-SQL
+                    class_eval <<-RUBY, __FILE__, __LINE__ + 1
                         def #{method_name}
                             return @#{old_name} if defined? @#{old_name}
                             @#{old_name} = #{old_name}
                         end
-                    SQL
+                    RUBY
                 end
             end
         end

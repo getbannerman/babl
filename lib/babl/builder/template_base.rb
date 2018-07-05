@@ -11,8 +11,6 @@ module Babl
         # Since the BABL code is run via #instance_exec within an instance of this class, we want to
         # define as few methods as possible here.
         class TemplateBase
-            attr_reader :builder
-
             def initialize(builder = ChainBuilder.new(&:itself))
                 @builder = builder
                 freeze
@@ -50,6 +48,8 @@ module Babl
 
             protected
 
+            attr_reader :builder
+
             def validate(tree)
                 # NOOP
             end
@@ -65,8 +65,6 @@ module Babl
             def construct_terminal(&block)
                 self.class.new builder.construct_terminal(&block)
             end
-
-            protected :builder
         end
     end
 end

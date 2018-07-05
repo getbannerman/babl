@@ -17,7 +17,7 @@ module Babl
                 undef_method(method) unless NON_PROXIED_METHODS.include?(method)
             end
 
-            # rubocop:disable Style/MethodMissing
+            # rubocop:disable Style/MethodMissingSuper
             def method_missing(method, *args, &block)
                 if @__receiver__.respond_to?(method)
                     @__receiver__.__send__(method, *args, &block)
@@ -25,7 +25,7 @@ module Babl
                     @__fallback__.__send__(method, *args, &block)
                 end
             end
-            # rubocop:enable Style/MethodMissing
+            # rubocop:enable Style/MethodMissingSuper
 
             def respond_to_missing?(method, include_private = false)
                 @__receiver__.respond_to?(method, include_private) ||

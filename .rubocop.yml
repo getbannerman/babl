@@ -2,6 +2,7 @@ AllCops:
   Include:
     - Gemfile
     - '**/*.babl'
+    - '**/*.rb'
   TargetRubyVersion: 2.3
 
 # Begin -- Keep the following
@@ -75,13 +76,13 @@ Layout/IndentHeredoc:
 Layout/MultilineMethodCallIndentation:
     Enabled: False
 
+Layout/EndAlignment:
+    Enabled: True
+
 Lint/AmbiguousBlockAssociation:
     Enabled: True
 
 Lint/EmptyWhen:
-    Enabled: True
-
-Lint/EndAlignment:
     Enabled: True
 
 Lint/InheritException:
