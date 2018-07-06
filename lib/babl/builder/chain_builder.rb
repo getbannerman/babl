@@ -70,16 +70,12 @@ module Babl
             end
 
             def precompile(node)
-                scope[node]
+                @scope[node]
             end
 
             def nest(context)
-                self.class.new(context) { |node| scope[yield node] }
+                self.class.new(context) { |node| @scope[yield node] }
             end
-
-            private
-
-            attr_reader :scope
         end
     end
 end

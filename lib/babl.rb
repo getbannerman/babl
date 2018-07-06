@@ -75,12 +75,12 @@ module Babl
 
         def template
             cached = @cached_template
-            return cached.last if cached && config.using == cached.first
+            return cached.last if cached && [config.using].flatten == cached.first
             # Calling 'using' is a very inefficient operation, because
             # it creates a new class. We can avoid that cost most of the
             # time, assuming 'config.using' does not change often (typically
             # it should only change once at startup)
-            modules = config.using.dup
+            modules = [config.using].flatten.dup
             template = Template.new.using(*modules)
             @cached_template = [modules, template]
             template

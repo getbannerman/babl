@@ -42,8 +42,12 @@ module Babl
                 )
             end
 
+            def self.unscoped
+                @unscoped ||= new
+            end
+
             def unscoped
-                self.class.new
+                self.class.unscoped
             end
 
             protected
