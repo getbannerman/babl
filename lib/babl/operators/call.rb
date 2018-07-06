@@ -10,7 +10,11 @@ module Babl
                 def call(*args, &block)
                     if block
                         raise Errors::InvalidTemplate, 'call() expects no argument when a block is given' unless args.empty?
-                        return with(&block)
+
+                        # The 'block' is wrapped by #selfify such that there is no implicit closure referencing the current
+                        # template. Ideally, once a template has been compiled, all intermediate template objects should be
+                        # garbage collectable.
+                        return with(unscoped, &Utils::Proc.selfify(block))
                     end
 
                     raise Errors::InvalidTemplate, 'call() expects exactly 1 argument (unless block)' unless args.size == 1

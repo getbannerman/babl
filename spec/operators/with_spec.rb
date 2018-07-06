@@ -30,6 +30,45 @@ describe Babl::Operators::With do
             it { expect(dependencies).to eq({}) }
         end
 
+        context 'when the templates are constants' do
+            template {
+                with(
+                    switch(true => 42),
+                    'test'
+                ) { |val1, val2| val1 + val2.size }
+            }
+
+            it { expect(json).to eq 46 }
+        end
+
+        context 'when the templates are constants and the block fails during compilation' do
+            template {
+                with(1) { |_| raise 'oops' }
+            }
+
+            it { expect { compiled }.to raise_error Babl::Errors::InvalidTemplate }
+        end
+
+        context 'when an input template fails during rendering' do
+            template {
+                nav(:a).with(nav(:b).call { raise 'oops' }) { |_| }
+            }
+
+            let(:object) { { a: { b: 1 } } }
+
+            it { expect { json }.to raise_error "oops\nBABL @ __root__.a.b.__block__" }
+        end
+
+        context 'when the rest of the chain fails during rendering' do
+            template {
+                with(nav(:a), &:itself).nav(:b).call { raise 'oops' }
+            }
+
+            let(:object) { { a: { b: 1 } } }
+
+            it { expect { json }.to raise_error "oops\nBABL @ __root__.__block__.b.__block__" }
+        end
+
         context 'with + parent + nav' do
             template { with { 3 }.dep(:ignored_dep).parent.nav(:a) }
 

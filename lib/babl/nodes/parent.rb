@@ -21,7 +21,7 @@ module Babl
 
             memoize def optimize
                 optimized = node.optimize
-                return optimized if Constant === optimized
+                return optimized if Constant === optimized || GotoPin === optimized
                 return self if optimized.equal?(node)
                 Parent.new(optimized)
             end

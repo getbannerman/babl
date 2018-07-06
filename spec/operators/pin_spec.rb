@@ -36,7 +36,7 @@ describe Babl::Operators::Pin do
             let(:object) { { prop: { prop2: 42 }, prop3: 3 } }
 
             it { expect(json).to eq 42 }
-            it { expect(dependencies).to eq(prop: { prop2: {} }, prop3: {}) }
+            it { expect(dependencies).to eq(prop: { prop2: {} }) }
             it { expect(unoptimized_dependencies).to eq(prop: { prop2: {} }, prop3: {}) }
             it { expect(schema).to eq s_anything }
         end
