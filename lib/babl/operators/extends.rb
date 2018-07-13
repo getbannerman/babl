@@ -3,10 +3,12 @@ module Babl
     module Operators
         module Extends
             module DSL
-                def extends(partial_path, *args)
+                def extends(*partial_paths, extended_with)
                     source {
-                        partial_template = partial(partial_path)
-                        args.empty? ? partial_template : merge(partial_template, *args)
+                        merge(
+                            *partial_paths.map { |path| partial(path) },
+                            extended_with
+                        )
                     }
                 end
             end
