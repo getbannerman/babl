@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.7 (July 13, 2018)
+- Multiple inheritance is supported by `extends`. This is a breaking change but it is unlikely to cause issues in real code. [#96](https://github.com/getbannerman/babl/pull/96)
+- Reduce compilation time, again. [#94](https://github.com/getbannerman/babl/pull/94) [#97](https://github.com/getbannerman/babl/pull/97)
+- Improvements around the implementation of the operator `with`. [#95](https://github.com/getbannerman/babl/pull/95)
+
 ## 0.5.6 (July 5, 2018)
 - Fix: operator `with` should not change its behavior based on the arity of the passed block [#92](https://github.com/getbannerman/babl/pull/92)
 - Reduce compilation time thanks to memoization [#91](https://github.com/getbannerman/babl/pull/91)
