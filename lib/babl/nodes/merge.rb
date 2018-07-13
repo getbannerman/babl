@@ -45,11 +45,14 @@ module Babl
             def optimize_single
                 return unless nodes.size == 1
                 optimized = nodes.first.optimize
-                case
-                when Object === optimized
-                    optimized
-                when Constant === optimized
-                    optimized.value.nil? ? Object::EMPTY : optimized
+
+                case optimized
+                when Object then optimized
+                when Constant
+                    case optimized.value
+                    when ::Hash then optimized
+                    when ::NilClass then Object::EMPTY
+                    end
                 end
             end
 

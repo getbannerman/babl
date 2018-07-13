@@ -17,28 +17,16 @@ module Babl
             end
 
             def compile(preloader: Rendering::NoopPreloader, pretty: true, optimize: true, lookup_context: nil)
-                # Compute dependencies & schema on the non-simplified node tree in order
-                # to catch all errors.
                 tree = precompile(lookup_context: lookup_context)
+                tree = tree.optimize if optimize
                 validate(tree)
-
-                dependencies = tree.dependencies
-                schema = tree.schema
-
-                # Recompute dependencies & schema on the simplified tree before
-                # exposing them to the user.
-                if optimize
-                    tree = tree.optimize
-                    dependencies = tree.dependencies
-                    schema = tree.schema
-                end
 
                 Rendering::CompiledTemplate.with(
                     preloader: preloader,
                     pretty: pretty,
                     node: tree,
-                    dependencies: dependencies,
-                    schema: schema
+                    dependencies: tree.dependencies,
+                    schema: tree.schema
                 )
             end
 

@@ -48,11 +48,14 @@ module Babl
             def optimize_single
                 return unless nodes.size == 1
                 optimized = nodes.first.optimize
-                case
-                when FixedArray === optimized
-                    optimized
-                when Constant === optimized
-                    optimized.value.nil? ? FixedArray::EMPTY : optimized
+
+                case optimized
+                when FixedArray then optimized
+                when Constant
+                    case optimized.value
+                    when ::Array then optimized
+                    when ::NilClass then FixedArray::EMPTY
+                    end
                 end
             end
 
