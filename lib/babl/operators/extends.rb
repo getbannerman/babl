@@ -3,11 +3,15 @@ module Babl
     module Operators
         module Extends
             module DSL
-                def extends(*partial_paths, extended_with)
+                def extends(*args)
                     source {
                         merge(
-                            *partial_paths.map { |path| partial(path) },
-                            extended_with
+                            *args.map { |arg|
+                                case arg
+                                when Template, ::Hash, ::NilClass then arg
+                                else partial(arg)
+                                end
+                            }
                         )
                     }
                 end

@@ -19,7 +19,7 @@ describe Babl::Operators::Extends do
     end
 
     context 'multiple extensions' do
-        template { each.extends('object_partial', 'object_partial_2', x: 1) }
+        template { each.extends('object_partial', nil, 'object_partial_2', x: 1) }
         it { expect(json).to eq(['a' => 1, 'x' => 1, 'b' => 4]) }
     end
 
