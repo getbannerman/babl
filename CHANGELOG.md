@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.8 (July 17, 2018)
+- Make it possible to use `extends` with partials only. [#98](https://github.com/getbannerman/babl/pull/98)
+
 ## 0.5.7 (July 13, 2018)
 - Multiple inheritance is supported by `extends`. This is a breaking change but it is unlikely to cause issues in real code. [#96](https://github.com/getbannerman/babl/pull/96)
 - Reduce compilation time, again. [#94](https://github.com/getbannerman/babl/pull/94) [#97](https://github.com/getbannerman/babl/pull/97)
