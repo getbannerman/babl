@@ -49,16 +49,26 @@ describe 'Reference benchmark' do
         before { compiled }
         before { object }
 
-        it {
+        around { |example|
             GC.start
             GC.disable
             nb_before = GC.stat[:total_allocated_objects]
             Benchmark.bm { |x|
-                x.report('Reference BABL benchmark') { 10.times { compiled.render(object) } }
+                x.report(label) { example.run }
             }
             nb_after = GC.stat[:total_allocated_objects]
             GC.enable
             puts "Allocations: #{nb_after - nb_before}"
         }
+
+        context 'runtime perfs' do
+            let(:label) { 'BABL runtime benchmark' }
+            it { 10.times { compiled.render(object) } }
+        end
+
+        context 'compile perfs' do
+            let(:label) { 'BABL compile benchmark' }
+            it { 3000.times { template.compile } }
+        end
     end
 end

@@ -5,6 +5,10 @@ require 'babl/utils'
 module Babl
     module Nodes
         class Constant < Utils::Value.new(:value, :schema)
+            NULL = new(nil, Schema::Primitive::NULL)
+            TRUE = new(true, Schema::Primitive::TRUE)
+            FALSE = new(false, Schema::Primitive::FALSE)
+
             def render(_frame)
                 value
             end
