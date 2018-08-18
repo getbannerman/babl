@@ -35,8 +35,9 @@ module Babl
                     raise Errors::RenderingError, "Not enumerable : #{collection.inspect}\n#{frame.formatted_stack}"
                 end
 
-                collection.map.with_index do |value, idx|
-                    frame.move_forward(value, idx) do |new_frame|
+                idx = -1
+                collection.map do |value|
+                    frame.move_forward(value, idx += 1) do |new_frame|
                         node.render(new_frame)
                     end
                 end
