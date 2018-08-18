@@ -43,17 +43,30 @@ module Babl
             end
 
             def render(frame)
-                values = nodes.map { |n| n.render(frame) }
-
-                value = begin
-                    block.call(*values)
-                rescue StandardError => e
-                    raise Errors::RenderingError, "#{e.message}\n" + frame.formatted_stack(:__block__), e.backtrace
-                end
+                # When there is only 0 or 1 input node, we can avoid the allocation of an array
+                value =
+                    case nodes.size
+                    when 0
+                        rescue_errors(frame) { block.call }
+                    when 1
+                        input = nodes.first.render(frame)
+                        rescue_errors(frame) { block.call(input) }
+                    else
+                        inputs = nodes.map { |node| node.render(frame) }
+                        rescue_errors(frame) { block.call(*inputs) }
+                    end
 
                 frame.move_forward(value, :__block__) do |new_frame|
                     node.render(new_frame)
                 end
+            end
+
+            private
+
+            def rescue_errors(frame)
+                yield
+            rescue StandardError => e
+                raise Errors::RenderingError, "#{e.message}\n" + frame.formatted_stack(:__block__), e.backtrace
             end
         end
     end

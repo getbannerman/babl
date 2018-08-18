@@ -22,7 +22,7 @@ describe 'Reference benchmark' do
                             prop4: _,
                             prop5: _,
                             prop6: _,
-                            parent_id: [parent.parent.parent.nav(:id)]
+                            parent_id: [parent.parent.parent.nav(&:itself).nav(:id)]
                         )
                     )
                 }
