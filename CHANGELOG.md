@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.9 (September 3, 2018)
+- Reduce the number of memory allocations. [#99](https://github.com/getbannerman/babl/pull/99), [#101](https://github.com/getbannerman/babl/pull/101) and [#100](https://github.com/getbannerman/babl/pull/100).
+
 ## 0.5.8 (July 17, 2018)
 - Make it possible to use `extends` with partials only. [#98](https://github.com/getbannerman/babl/pull/98)
 
