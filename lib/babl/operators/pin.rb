@@ -15,12 +15,12 @@ module Babl
 
                 def named_pin(ref)
                     check_pin_ref(ref)
-                    construct_node(continue: nil) { |node| Nodes::CreatePin.new(node, ref) }
+                    construct_node { |node| Nodes::CreatePin.new(node, ref) }.reset_continue
                 end
 
                 def goto_pin(ref)
                     check_pin_ref(ref)
-                    construct_node(key: nil, continue: nil) { |node| Nodes::GotoPin.new(node, ref) }
+                    construct_node { |node| Nodes::GotoPin.new(node, ref) }.reset_key.reset_continue
                 end
 
                 protected
@@ -28,6 +28,7 @@ module Babl
                 def validate(tree)
                     name = tree.pinned_dependencies.keys.first
                     raise Errors::InvalidTemplate, "Unresolved pin: #{name}" if name
+
                     super
                 end
 

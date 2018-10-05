@@ -7,7 +7,7 @@ module Babl
             module DSL
                 # Navigate to the parent of the current object.
                 def parent
-                    construct_node(key: nil, continue: nil) { |node| Nodes::Parent.new(node) }
+                    construct_node { |node| Nodes::Parent.new(node) }.reset_key.reset_continue
                 end
 
                 protected
@@ -16,6 +16,7 @@ module Babl
                     if tree.dependencies.key? Nodes::Parent::PARENT_MARKER
                         raise Errors::InvalidTemplate, 'Out of context parent dependency'
                     end
+
                     super
                 end
             end

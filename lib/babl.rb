@@ -52,6 +52,7 @@ module Babl
             query = File.join(search_path, "{#{partial_name}}{.babl,}")
             path = Dir[query].first
             return unless path
+
             source = File.read(path)
             [current_template.source(source, path, 0), self]
         end
@@ -76,6 +77,7 @@ module Babl
         def template
             cached = @cached_template
             return cached.last if cached && [config.using].flatten == cached.first
+
             # Calling 'using' is a very inefficient operation, because
             # it creates a new class. We can avoid that cost most of the
             # time, assuming 'config.using' does not change often (typically

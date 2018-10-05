@@ -67,6 +67,7 @@ module Babl
 
             def simplify_integer_is_number
                 return unless choice_set.include?(Typed::INTEGER) && choice_set.include?(Typed::NUMBER)
+
                 AnyOf.canonicalized(choice_set - [Typed::INTEGER])
             end
 
@@ -103,6 +104,7 @@ module Babl
             # AnyOf[true, false] is just boolean
             def simplify_boolean
                 return unless choice_set.include?(Primitive::TRUE) && choice_set.include?(Primitive::FALSE)
+
                 AnyOf.canonicalized(choice_set - [Primitive::TRUE, Primitive::FALSE] + [Typed::BOOLEAN])
             end
 
@@ -113,10 +115,12 @@ module Babl
             def simplify_typed_and_static
                 choice_set.each do |typed|
                     next unless Typed === typed
+
                     instances = choice_set.select { |instance|
                         Primitive === instance && typed.classes.any? { |clazz| clazz === instance.value }
                     }
                     next if instances.empty?
+
                     return AnyOf.canonicalized(choice_set - instances)
                 end
                 nil
@@ -126,8 +130,10 @@ module Babl
             # We can get rid of the former and only keep the DynArray
             def simplify_empty_array
                 return unless choice_set.include?(FixedArray::EMPTY)
+
                 choice_set.each do |other|
                     next unless DynArray === other
+
                     new_other = DynArray.new(other.item)
                     return AnyOf.canonicalized(choice_set - [other, FixedArray::EMPTY] + [new_other])
                 end
@@ -142,6 +148,7 @@ module Babl
 
                 choice_set.each do |dyn|
                     next unless DynArray === dyn
+
                     fixed_arrays.each do |fixed|
                         new_dyn = DynArray.new(dyn.item)
                         return AnyOf.canonicalized(choice_set - [fixed, dyn] + [new_dyn]) if dyn.item == fixed.items.first
@@ -170,8 +177,8 @@ module Babl
                         next if obj1props.any? { |name, p1|
                             p2 = obj2props[name]
                             next name if p2 && Primitive === p2.value &&
-                                    Primitive === p1.value &&
-                                    p1.value.value != p2.value.value
+                                Primitive === p1.value &&
+                                p1.value.value != p2.value.value
                         }
 
                         new_properties = (obj1props.keys + obj2props.keys).uniq.map { |name|
@@ -197,9 +204,11 @@ module Babl
             def simplify_push_down_dyn_array
                 choice_set.each_with_index { |arr1, index1|
                     next unless DynArray === arr1
+
                     choice_set.each_with_index { |arr2, index2|
                         break if index2 >= index1
                         next unless DynArray === arr2
+
                         new_arr = DynArray.new(AnyOf.canonicalized([arr1.item, arr2.item]))
                         return AnyOf.canonicalized(choice_set - [arr1, arr2] + [new_arr])
                     }

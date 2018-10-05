@@ -27,6 +27,7 @@ module Babl
                 object ||= Object.new(optimized_nodes)
 
                 return object unless optimized_nodes.values.all? { |node| Constant === node }
+
                 Constant.new(optimized_nodes.map { |k, v| [k, v.value] }.to_h.freeze, object.schema)
             end
 

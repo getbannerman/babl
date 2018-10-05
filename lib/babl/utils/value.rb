@@ -45,6 +45,7 @@ module Babl
             class << self
                 def with(hash = Utils::Hash::EMPTY)
                     raise ::ArgumentError unless ::Hash === hash && (hash.keys - self::FIELDS).empty?
+
                     new(*self::FIELDS.map { |f| hash.fetch(f) })
                 end
 

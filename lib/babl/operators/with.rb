@@ -9,14 +9,14 @@ module Babl
                 def with(*templates, &block)
                     templates = templates.map { |t| unscoped.call(t) }
 
-                    construct_node(key: nil, continue: nil) do |node, context|
+                    construct_node { |node, context|
                         Nodes::With.new(node, templates.map { |t|
                             t.builder.precompile(
                                 Nodes::InternalValue.instance,
                                 context.merge(continue: nil)
                             )
                         }, block)
-                    end
+                    }.reset_key.reset_continue
                 end
             end
         end

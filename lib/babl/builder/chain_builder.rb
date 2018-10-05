@@ -43,16 +43,23 @@ module Babl
                     unless [Nodes::InternalValue.instance, Nodes::TerminalValue.instance].include?(node)
                         raise Errors::InvalidTemplate, 'Chaining is not allowed after a terminal operator'
                     end
+
                     yield context
                 end
             end
 
             # Append an operator to the chain, and return a new Builder object
-            def construct_node(**new_context)
+            def construct_node
                 wrap { |bound|
-                    bound.nest(bound.context.merge(new_context)) { |node|
+                    bound.nest(bound.context) { |node|
                         yield(node, bound.context)
                     }
+                }
+            end
+
+            def construct_context
+                wrap { |bound|
+                    bound.nest(yield(bound.context), &:itself)
                 }
             end
 

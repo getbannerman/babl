@@ -21,10 +21,12 @@ module Babl
             def json
                 { type: 'object' }.tap { |out|
                     next if property_set.empty?
+
                     out[:properties] = property_set.map { |property| [property.name, property.value.json] }.to_h
                     out[:additionalProperties] = additional
                     required_properties = property_set.select(&:required)
                     next if required_properties.empty?
+
                     out[:required] = property_set.select(&:required).map(&:name).map(&:to_s)
                 }
             end

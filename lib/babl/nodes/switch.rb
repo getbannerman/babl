@@ -10,6 +10,7 @@ module Babl
         class Switch < Utils::Value.new(:nodes)
             def initialize(nodes)
                 raise Errors::InvalidTemplate, 'A least one switch() condition must be taken' if nodes.empty?
+
                 super
             end
 
@@ -45,6 +46,7 @@ module Babl
             def optimize_continue_to_switch
                 cond, val = nodes.last
                 return unless Switch === val && Constant === cond && cond.value
+
                 Switch.new(nodes[0...-1] + val.nodes).optimize
             end
 
@@ -52,6 +54,7 @@ module Babl
                 conds = Set.new
                 new_nodes = nodes.map { |cond, val|
                     next if conds.include?(cond)
+
                     conds << cond
                     [cond, val]
                 }.compact
@@ -61,6 +64,7 @@ module Babl
             def optimize_always_same_outputs
                 return unless nodes.map(&:first).any? { |node| Constant === node && node.value }
                 return unless nodes.map(&:last).uniq.size == 1
+
                 nodes.first.last.optimize
             end
 

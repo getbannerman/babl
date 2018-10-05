@@ -55,6 +55,7 @@ module SpecHelper
                     def find(current_template, name)
                         name = name.to_sym
                         return unless childs[name]
+
                         [current_template.source(childs[name].code), childs[name]]
                     end
                 })

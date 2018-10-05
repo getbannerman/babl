@@ -10,7 +10,7 @@ module Babl
                 def switch(conds = Utils::Hash::EMPTY)
                     conds = conds.map { |cond, value| [unscoped.call(cond), unscoped.call(value)] }
 
-                    construct_node(continue: nil) { |node, context|
+                    construct_node { |node, context|
                         nodes = conds.map { |cond, value|
                             cond_node = cond.builder.precompile(
                                 Nodes::InternalValue.instance,
@@ -26,7 +26,7 @@ module Babl
                         }
 
                         Nodes::Switch.new(nodes)
-                    }
+                    }.reset_continue
                 end
             end
         end

@@ -44,6 +44,7 @@ module Babl
 
             def optimize_single
                 return unless nodes.size == 1
+
                 optimized = nodes.first.optimize
 
                 case optimized
@@ -59,11 +60,13 @@ module Babl
             def optimize_merged_objects
                 optimized_nodes = nodes.map(&:optimize)
                 return if optimized_nodes == nodes
+
                 Merge.new(optimized_nodes).optimize
             end
 
             def optimize_nested_merges
                 return unless nodes.any? { |node| Merge === node }
+
                 Merge.new(nodes.flat_map { |node| Merge === node ? node.nodes : [node] }).optimize
             end
 
@@ -73,6 +76,7 @@ module Babl
                     obj2 = constant_to_object(obj2) if Constant === obj2
 
                     next unless Object === obj1 && Object === obj2
+
                     new_nodes = nodes.dup
                     new_nodes[idx] = Object.new(obj1.nodes.merge(obj2.nodes))
                     new_nodes[idx + 1] = nil

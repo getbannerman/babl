@@ -29,16 +29,17 @@ module Babl
                 return optimized if Constant === optimized || GotoPin === optimized
                 return optimized.node if Parent === optimized
                 return self if optimized.equal?(node)
+
                 Nav.new(property, optimized)
             end
 
             def render(frame)
                 value = begin
-                    object = frame.object
-                    ::Hash === object ? object.fetch(property) : object.send(property)
-                rescue StandardError => e
-                    raise Errors::RenderingError, "#{e.message}\n" + frame.formatted_stack(property), e.backtrace
-                end
+                            object = frame.object
+                            ::Hash === object ? object.fetch(property) : object.send(property)
+                        rescue StandardError => e
+                            raise Errors::RenderingError, "#{e.message}\n" + frame.formatted_stack(property), e.backtrace
+                        end
 
                 frame.move_forward(value, property) do |new_frame|
                     node.render(new_frame)

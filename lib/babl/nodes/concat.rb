@@ -47,6 +47,7 @@ module Babl
 
             def optimize_single
                 return unless nodes.size == 1
+
                 optimized = nodes.first.optimize
 
                 case optimized
@@ -62,6 +63,7 @@ module Babl
             def optimize_concatenated_arrays
                 optimized_nodes = nodes.map(&:optimize)
                 return if optimized_nodes == nodes
+
                 Concat.new(optimized_nodes).optimize
             end
 
@@ -70,6 +72,7 @@ module Babl
                     obj1 = constant_to_array(obj1) if Constant === obj1
                     obj2 = constant_to_array(obj2) if Constant === obj2
                     next unless FixedArray === obj1 && FixedArray === obj2
+
                     new_nodes = nodes.dup
                     new_nodes[idx] = FixedArray.new(obj1.nodes + obj2.nodes)
                     new_nodes[idx + 1] = nil

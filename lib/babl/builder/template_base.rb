@@ -50,8 +50,12 @@ module Babl
                 builder.precompile(node, **context)
             end
 
-            def construct_node(**new_context, &block)
-                self.class.new builder.construct_node(**new_context, &block)
+            def construct_node(&block)
+                self.class.new builder.construct_node(&block)
+            end
+
+            def construct_context(&block)
+                self.class.new builder.construct_context(&block)
             end
 
             def construct_terminal(&block)

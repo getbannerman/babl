@@ -17,7 +17,7 @@ module Babl
                 # but without navigating.
                 def dep(*path)
                     path = Dep.canonicalize(path)
-                    construct_node(continue: nil) { |node| Nodes::Dep.new(node, path) }
+                    construct_node { |node| Nodes::Dep.new(node, path) }.reset_continue
                 end
             end
         end

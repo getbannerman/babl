@@ -11,8 +11,16 @@ module Babl
                     construct_terminal { |context|
                         node = context[:continue]
                         raise Errors::InvalidTemplate, 'continue() cannot be used outside switch()' unless node
+
                         node
                     }
+                end
+
+                protected
+
+                # Clear contextual information about parent switch for the rest of the chain
+                def reset_continue
+                    construct_context { |context| context.merge(continue: nil) }
                 end
             end
         end

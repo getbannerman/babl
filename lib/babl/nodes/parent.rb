@@ -23,6 +23,7 @@ module Babl
                 optimized = node.optimize
                 return optimized if Constant === optimized || GotoPin === optimized
                 return self if optimized.equal?(node)
+
                 Parent.new(optimized)
             end
 

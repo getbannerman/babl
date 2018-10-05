@@ -9,6 +9,7 @@ module Babl
                     filtered_hashes = hashes.reject(&:empty?)
                     return EMPTY if filtered_hashes.empty?
                     return filtered_hashes.first if filtered_hashes.size == 1
+
                     filtered_hashes.reduce({}) { |out, hash| deep_merge_inplace(out, hash) }
                 end
 

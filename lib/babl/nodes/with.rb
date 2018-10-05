@@ -30,15 +30,16 @@ module Babl
 
                 if optimized_nodes.all? { |n| Constant === n }
                     value = begin
-                        block.call(*optimized_nodes.map(&:value))
-                    rescue StandardError => e
-                        raise Errors::InvalidTemplate, e.message, e.backtrace
-                    end
+                                block.call(*optimized_nodes.map(&:value))
+                            rescue StandardError => e
+                                raise Errors::InvalidTemplate, e.message, e.backtrace
+                            end
                     constant_block = Utils::Proc.constant(value)
                     return With.new(optimized, Utils::Array::EMPTY, constant_block)
                 end
 
                 return self if optimized.equal?(node) && optimized_nodes.each_with_index.all? { |n, idx| n.equal?(nodes[idx]) }
+
                 With.new(optimized, optimized_nodes, block)
             end
 

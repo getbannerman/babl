@@ -8,7 +8,7 @@ module Babl
                 # Construct a JSON array by iterating over the current collection,
                 # using the chained template for rendering each element.
                 def each
-                    construct_node(key: nil, continue: nil) { |node| Nodes::Each.new(node) }
+                    construct_node { |node| Nodes::Each.new(node) }.reset_key.reset_continue
                 end
             end
         end
