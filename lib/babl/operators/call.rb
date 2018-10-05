@@ -24,11 +24,10 @@ module Babl
                     case arg
                     when Template then self.class.new(builder.wrap { |bound| arg.builder.bind(bound) })
                     when Utils::DslProxy then call(arg.itself)
-                    when ::Symbol then nav(arg)
                     when ::Proc then call(&arg)
                     when ::Hash then object(arg)
                     when ::Array then array(*arg)
-                    when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass then static(arg)
+                    when ::String, ::Numeric, ::NilClass, ::TrueClass, ::FalseClass, ::Symbol then static(arg)
                     else raise Errors::InvalidTemplate, "call() received invalid argument: #{arg}"
                     end
                 end

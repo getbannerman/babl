@@ -220,21 +220,6 @@ This is semantically equivalent to this Ruby code:
 }
 ```
 
-## Implicit form
-
-A `Symbol` is always converted into a navigation operator wherever a BABL template is expected. For instance,
-```ruby
-object(
-    value: :my_value
-)
-```
-is expanded as:
-```ruby
-object(
-    value: nav(:my_value)
-)
-```
-
 # <a name="null"></a>`null`
 
 Produce a JSON `null`. It is a shortcut for `static(nil)`. BABL also accepts `nil` wherever a BABL template is expected.

@@ -48,7 +48,7 @@ describe Babl::Operators::Pin do
 
         context 'un-used pin' do
             template {
-                pin(:oki) { |ref|
+                pin(nav(:oki)) { |ref|
                     switch(
                         false => ref,
                         default => 34
@@ -84,7 +84,7 @@ describe Babl::Operators::Pin do
         end
 
         context 'goto pin followed by constant' do
-            template { pin(:lol) { |lol| lol.nav(:x).static(1) } }
+            template { pin(nav(:lol)) { |lol| lol.nav(:x).static(1) } }
 
             it { expect(dependencies).to eq({}) }
             it { expect(json).to eq 1 }
@@ -105,7 +105,7 @@ describe Babl::Operators::Pin do
         context 'when pinning is mixed with a "with" context' do
             template {
                 pin { |root|
-                    with(:a) { |a| a }.object(
+                    with(nav(:a)) { |a| a }.object(
                         x: _,
                         y: root.nav(:lol)
                     )
@@ -128,7 +128,7 @@ describe Babl::Operators::Pin do
 
         context 'navigating pinning' do
             template {
-                pin(:timezone) { |timezone| object(applicant: _.object(:id, tz: timezone)) }
+                pin(nav(:timezone)) { |timezone| object(applicant: _.object(:id, tz: timezone)) }
             }
 
             let(:object) { { applicant: { id: 1 }, timezone: 'LA' } }

@@ -54,7 +54,7 @@ describe Babl::Operators::Switch do
         end
 
         context 'non serializable objects are allowed internally' do
-            template { switch(test: 42) }
+            template { switch(nav(:test) => 42) }
 
             let(:object) { { test: Object.new } }
 
@@ -245,8 +245,8 @@ describe Babl::Operators::Switch do
         context 'chained switches' do
             template {
                 nullable.switch(
-                    null? => :a,
-                    -> { true } => :b
+                    null? => nav(:a),
+                    -> { true } => nav(:b)
                 )
             }
 

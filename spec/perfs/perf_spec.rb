@@ -8,7 +8,7 @@ describe 'Reference benchmark' do
     context 'perf test' do
         template {
             {
-                list: pin(:size) { |size|
+                list: pin(nav(:size)) { |size|
                     each.object(
                         id: _.integer,
                         static_val: { a: 1 },

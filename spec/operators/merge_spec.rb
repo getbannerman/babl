@@ -209,7 +209,7 @@ describe Babl::Operators::Merge do
         context 'merge two switches' do
             template {
                 merge(
-                    switch(a1: { a: 1 }, a2: { a: 2 }),
+                    switch(nav(:a1) => { a: 1 }, nav(:a2) => { a: 2 }),
                     b: 1
                 )
             }

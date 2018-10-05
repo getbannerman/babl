@@ -10,7 +10,7 @@ describe Babl::Operators::With do
                 object(
                     result: with(
                         unscoped,
-                        :msg,
+                        nav(:msg),
                         _.parent.nav(:msg).dep(:lol)
                     ) { |obj, a, b| "#{a} #{b} #{obj[:msg]}" }
                 )
@@ -24,7 +24,7 @@ describe Babl::Operators::With do
         end
 
         context 'with followed by constant' do
-            template { with(:a, :b) { |a, b| a + b }.static(2) }
+            template { with(nav(:a), nav(:b)) { |a, b| a + b }.static(2) }
 
             it { expect(json).to eq 2 }
             it { expect(dependencies).to eq({}) }

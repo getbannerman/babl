@@ -49,7 +49,7 @@ describe Babl::Operators::Call do
         end
 
         context 'array' do
-            template { call(['a', 2, :b]) }
+            template { call(['a', 2, nav(:b)]) }
 
             let(:object) { { b: 42 } }
 
@@ -57,13 +57,11 @@ describe Babl::Operators::Call do
             it { expect(dependencies).to eq(b: {}) }
         end
 
-        context 'block' do
+        context 'symbol' do
             template { call(:lol) }
 
-            let(:object) { OpenStruct.new(lol: 'tam') }
-
-            it { expect(json).to eq 'tam' }
-            it { expect(dependencies).to eq(lol: {}) }
+            it { expect(json).to eq 'lol' }
+            it { expect(dependencies).to eq({}) }
         end
 
         context 'template' do
