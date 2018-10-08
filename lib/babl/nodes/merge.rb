@@ -8,11 +8,11 @@ module Babl
     module Nodes
         class Merge < Utils::Value.new(:nodes)
             memoize def dependencies
-                Babl::Utils::Hash.deep_merge(*nodes.map(&:dependencies))
+                Babl::Utils::Hash.deep_merge(nodes.map(&:dependencies))
             end
 
             memoize def pinned_dependencies
-                Babl::Utils::Hash.deep_merge(*nodes.map(&:pinned_dependencies))
+                Babl::Utils::Hash.deep_merge(nodes.map(&:pinned_dependencies))
             end
 
             memoize def schema

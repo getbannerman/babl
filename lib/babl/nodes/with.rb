@@ -10,14 +10,14 @@ module Babl
             end
 
             memoize def dependencies
-                Babl::Utils::Hash.deep_merge(
+                Babl::Utils::Hash.deep_merge([
                     *nodes.map(&:dependencies),
                     node.dependencies[Parent::PARENT_MARKER] || Utils::Hash::EMPTY
-                )
+                ])
             end
 
             memoize def pinned_dependencies
-                Babl::Utils::Hash.deep_merge(*(nodes + [node]).map(&:pinned_dependencies))
+                Babl::Utils::Hash.deep_merge((nodes + [node]).map(&:pinned_dependencies))
             end
 
             memoize def optimize

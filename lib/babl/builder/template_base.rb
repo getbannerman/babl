@@ -17,7 +17,7 @@ module Babl
             end
 
             def compile(preloader: Rendering::NoopPreloader, pretty: true, optimize: true, lookup_context: nil)
-                tree = precompile(lookup_context: lookup_context)
+                tree = precompile(Nodes::TerminalValue.instance, lookup_context: lookup_context)
                 tree = tree.optimize if optimize
                 validate(tree)
 
@@ -46,8 +46,8 @@ module Babl
                 # NOOP
             end
 
-            def precompile(node = Nodes::TerminalValue.instance, **context)
-                builder.precompile(node, **context)
+            def precompile(node, context)
+                builder.precompile(node, context)
             end
 
             def construct_node(&block)

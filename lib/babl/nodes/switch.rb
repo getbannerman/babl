@@ -15,11 +15,11 @@ module Babl
             end
 
             memoize def dependencies
-                Babl::Utils::Hash.deep_merge(*nodes.flatten(1).map(&:dependencies))
+                Babl::Utils::Hash.deep_merge(nodes.flatten(1).map(&:dependencies))
             end
 
             memoize def pinned_dependencies
-                Babl::Utils::Hash.deep_merge(*nodes.flatten(1).map(&:pinned_dependencies))
+                Babl::Utils::Hash.deep_merge(nodes.flatten(1).map(&:pinned_dependencies))
             end
 
             memoize def schema

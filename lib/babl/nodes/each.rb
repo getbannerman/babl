@@ -10,10 +10,10 @@ module Babl
                 node_deps = node.dependencies
                 child_deps = node_deps.reject { |key, _| key == Parent::PARENT_MARKER }
 
-                Babl::Utils::Hash.deep_merge(
+                Babl::Utils::Hash.deep_merge([
                     node_deps[Parent::PARENT_MARKER] || Utils::Hash::EMPTY,
                     __each__: child_deps
-                )
+                ])
             end
 
             memoize def schema

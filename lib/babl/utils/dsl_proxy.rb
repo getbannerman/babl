@@ -11,7 +11,7 @@ module Babl
             NON_PROXIED_METHODS = Set[
                 :__send__, :send, :object_id, :__id__, :equal?, :instance_eval, :instance_exec,
                 :respond_to?, :method, :freeze
-            ]
+            ].freeze
 
             instance_methods.each do |method|
                 undef_method(method) unless NON_PROXIED_METHODS.include?(method)

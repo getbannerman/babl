@@ -29,8 +29,8 @@ module Babl
                 @scope = block
             end
 
-            def precompile(node, **context)
-                bind(BoundOperator.new(context)).precompile(node)
+            def precompile(node, context)
+                bind(BoundOperator.new(context, &:itself)).scope.call(node)
             end
 
             def bind(bound)
@@ -51,37 +51,30 @@ module Babl
             # Append an operator to the chain, and return a new Builder object
             def construct_node
                 wrap { |bound|
-                    bound.nest(bound.context) { |node|
-                        yield(node, bound.context)
-                    }
+                    BoundOperator.new(bound.context) { |node| bound.scope[yield(node, bound.context)] }
                 }
             end
 
             def construct_context
                 wrap { |bound|
-                    bound.nest(yield(bound.context), &:itself)
+                    new_context = yield(bound.context)
+                    next bound if bound.context.equal?(new_context)
+
+                    BoundOperator.new(new_context, &bound.scope)
                 }
             end
 
             def wrap
-                self.class.new { |bound| yield bind(bound) }
+                ChainBuilder.new { |bound| yield bind(bound) }
             end
         end
 
         class BoundOperator
-            attr_reader :context
+            attr_reader :context, :scope
 
             def initialize(context, &scope)
                 @context = context
-                @scope = scope || :itself.to_proc
-            end
-
-            def precompile(node)
-                @scope[node]
-            end
-
-            def nest(context)
-                self.class.new(context) { |node| @scope[yield node] }
+                @scope = scope
             end
         end
     end

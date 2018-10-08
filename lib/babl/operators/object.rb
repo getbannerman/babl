@@ -18,7 +18,7 @@ module Babl
                     templates = args
                         .map { |name| [name.to_sym, unscoped.nav(name)] }.to_h
                         .merge(kwargs)
-                        .map { |k, v| [k, unscoped.call(v)] }
+                        .map { |k, v| [k, unscoped.reset_continue.call(v)] }
 
                     construct_terminal { |ctx|
                         Nodes::Object.new(templates.map { |key, template|
@@ -26,7 +26,7 @@ module Babl
                                 key.to_sym,
                                 template.builder.precompile(
                                     Nodes::TerminalValue.instance,
-                                    ctx.merge(key: key, continue: nil)
+                                    ctx.merge(key: key)
                                 )
                             ]
                         }.to_h)

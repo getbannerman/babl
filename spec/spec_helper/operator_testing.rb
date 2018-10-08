@@ -20,7 +20,7 @@ module SpecHelper
             base.let(:unoptimized_unchecked_json) { ::MultiJson.load(unoptimized_compiled.json(object)) }
             base.let(:dependencies) {
                 deps = compiled.send(:dependencies)
-                expect(Babl::Utils::Hash.deep_merge(deps, unoptimized_dependencies)).to eq unoptimized_dependencies
+                expect(Babl::Utils::Hash.deep_merge([deps, unoptimized_dependencies])).to eq unoptimized_dependencies
                 deps
             }
             base.let(:unoptimized_dependencies) { unoptimized_compiled.send(:dependencies) }

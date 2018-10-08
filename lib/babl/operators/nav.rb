@@ -12,13 +12,12 @@ module Babl
                 # is disabled for the rest of the chain.
                 def nav(*path, &block)
                     if path.empty?
-                        return (block ? with(unscoped, &block) : construct_node { |node| node }).reset_key.reset_continue
+                        return (block ? with(unscoped, &block) : reset_key.reset_continue)
                     end
 
                     property = path.first.dup.freeze
                     construct_node { |node| Nodes::Nav.new(property, node) }
                         .nav(*path[1..-1], &block)
-                        .reset_key.reset_continue
                 end
             end
         end

@@ -7,11 +7,11 @@ module Babl
             module DSL
                 # Produce an fixed-size array, using the provided templates to populate its elements.
                 def array(*templates)
-                    templates = templates.map { |t| unscoped.call(t) }
+                    templates = templates.map { |t| unscoped.reset_continue.call(t) }
 
                     construct_terminal { |ctx|
                         Nodes::FixedArray.new(templates.map { |t|
-                            t.builder.precompile(Nodes::TerminalValue.instance, ctx.merge(continue: nil))
+                            t.builder.precompile(Nodes::TerminalValue.instance, ctx)
                         })
                     }
                 end

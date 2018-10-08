@@ -15,7 +15,7 @@ module Babl
             end
 
             memoize def dependencies
-                Babl::Utils::Hash.deep_merge(node.dependencies, node.pinned_dependencies[ref] || Utils::Hash::EMPTY)
+                Babl::Utils::Hash.deep_merge([node.dependencies, node.pinned_dependencies[ref] || Utils::Hash::EMPTY])
             end
 
             memoize def pinned_dependencies

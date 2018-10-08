@@ -25,5 +25,14 @@ describe Babl::Operators::Enter do
                 it { expect(json).to eq('a' => 42) }
             end
         end
+
+        context '_? variant' do
+            template { object(a: _?, 'b' => _?) }
+
+            let(:object) { { a?: 2, 'b?' => 1 } }
+
+            it { expect(json).to eq('a' => 2, 'b' => 1) }
+            it { expect(dependencies).to eq(a?: {}, 'b?' => {}) }
+        end
     end
 end

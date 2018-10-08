@@ -17,7 +17,7 @@ module Babl
             end
 
             memoize def dependencies
-                Babl::Utils::Hash.deep_merge(node.dependencies, path)
+                Babl::Utils::Hash.deep_merge([node.dependencies, path])
             end
 
             memoize def optimize

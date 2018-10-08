@@ -5,7 +5,7 @@ module Babl
             EMPTY = {}.freeze
 
             class << self
-                def deep_merge(*hashes)
+                def deep_merge(hashes)
                     filtered_hashes = hashes.reject(&:empty?)
                     return EMPTY if filtered_hashes.empty?
                     return filtered_hashes.first if filtered_hashes.size == 1

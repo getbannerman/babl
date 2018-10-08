@@ -20,7 +20,11 @@ module Babl
 
                 # Clear contextual information about parent switch for the rest of the chain
                 def reset_continue
-                    construct_context { |context| context.merge(continue: nil) }
+                    construct_context { |context|
+                        next context unless context.key?(:continue)
+
+                        context.reject { |k, _v| :continue == k }
+                    }
                 end
             end
         end

@@ -10,15 +10,12 @@ module Babl
                 def merge(*templates)
                     return call(Utils::Hash::EMPTY) if templates.empty?
 
-                    templates = templates.map { |t| unscoped.call(t) }
+                    templates = templates.map { |t| unscoped.reset_continue.call(t) }
 
                     construct_terminal { |context|
                         Nodes::Merge.new(
                             templates.map { |t|
-                                t.builder.precompile(
-                                    Nodes::TerminalValue.instance,
-                                    context.merge(continue: nil)
-                                )
+                                t.builder.precompile(Nodes::TerminalValue.instance, context)
                             }
                         )
                     }
