@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0 (October 8, 2018)
+- Breaking change: treat naked symbols as constant strings instead of implicit nav(). [#104](https://github.com/getbannerman/babl/pull/104)
+- Add convenience operator: `_?` & add some infrastructure to ease the creation of this kind of operators at user-level. [#105](https://github.com/getbannerman/babl/pull/105) and [#103](https://github.com/getbannerman/babl/pull/103)
+
+
 ## 0.5.9 (September 3, 2018)
 - Reduce the number of memory allocations. [#99](https://github.com/getbannerman/babl/pull/99), [#101](https://github.com/getbannerman/babl/pull/101) and [#100](https://github.com/getbannerman/babl/pull/100).
 
